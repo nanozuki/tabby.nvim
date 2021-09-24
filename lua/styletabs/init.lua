@@ -15,6 +15,7 @@ end
 
 function styletabs.update()
 	local tabs = vim.api.nvim_list_tabpages()
+	local config = require("styletabs.config").get()
 	local tablines = {}
 	for _, tabid in ipairs(tabs) do
 		if tabid == vim.api.nvim_get_current_tabpage() then
