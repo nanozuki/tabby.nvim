@@ -1,22 +1,22 @@
-local styletabs = {}
+local tabby = {}
 
-local defaults = require("styletabs.defaults")
-local render = require("styletabs.render")
+local defaults = require("tabby.defaults")
+local render = require("tabby.render")
 
-function styletabs.setup()
+function tabby.setup()
 	if vim.api.nvim_get_vvar("vim_did_enter") then
-		styletabs.init()
+		tabby.init()
 	else
-		vim.cmd("au VimEnter * lua require'styletabs'.init()")
+		vim.cmd("au VimEnter * lua require'tabby'.init()")
 	end
 end
 
-function styletabs.init()
+function tabby.init()
 	vim.o.showtabline = 2
-	vim.o.tabline = "%!StyletabsRender()"
+	vim.o.tabline = "%!TabbyTabline()"
 end
 
-function styletabs.update()
+function tabby.update()
 	local tabs = vim.api.nvim_list_tabpages()
 	local tablines = {}
 	for _, head_item in ipairs(defaults.head) do
@@ -45,9 +45,9 @@ function styletabs.update()
 	return line
 end
 
-function styletabs.handle_buf_click()
-	-- function styletabs.handle_buf_click(minwid, clicks, button, modifier)
+function tabby.handle_buf_click()
+	-- function tabby.handle_buf_click(minwid, clicks, button, modifier)
 	-- print("buf click: ", minwid, clicks, button, modifier)
 end
 
-return styletabs
+return tabby

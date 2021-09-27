@@ -1,6 +1,6 @@
 local render = {}
 
-local defaults = require("styletabs.defaults")
+local defaults = require("tabby.defaults")
 
 local text_default = {
 	align = "left",
@@ -59,7 +59,7 @@ function render.parse_hl(hl)
 		return ""
 	end
 	if hl.name == "" then
-		hl.name = string.gsub(string.format("StyledTabsHl_%s_%s_%s", hl.fg, hl.bg, hl.style), "#", "")
+		hl.name = string.gsub(string.format("TabbyHl_%s_%s_%s", hl.fg, hl.bg, hl.style), "#", "")
 	end
 	local cmd = { "hi", hl.name }
 	if hl.fg ~= "" then
@@ -150,7 +150,7 @@ function render.active_tab_win(winid, opt)
 	local left_sep = render.text({ opt.left_sep, hl = opt.left_sep_hl })
 	local right_sep = render.text({ opt.right_sep, hl = opt.right_sep_hl })
 	local bufid = vim.api.nvim_win_get_buf(winid)
-	return table.concat({ "%", bufid, "@StyletabsBufClickHandler@", left_sep, label, right_sep, "%T" })
+	return table.concat({ "%", bufid, "@TabbyBufClickHandler@", left_sep, label, right_sep, "%T" })
 end
 
 return render
