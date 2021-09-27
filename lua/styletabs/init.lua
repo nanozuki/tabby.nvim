@@ -10,32 +10,38 @@ end
 
 function styletabs.init()
 	vim.o.showtabline = 2
-	vim.o.tabline = "%!v:lua.styletabs()"
+	vim.o.tabline = "%!StyletabsRender()"
 end
 
 function styletabs.update()
 	local tabs = vim.api.nvim_list_tabpages()
-	local config = require("styletabs.config").get()
 	local tablines = {}
 	for _, tabid in ipairs(tabs) do
 		if tabid == vim.api.nvim_get_current_tabpage() then
-			local wins = vim.api.nvim_tabpage_list_wins(tabid)
 			local tab_texts = {}
+			local tab_label = require("styletabs.render").active_tab(tabid, {})
+			table.insert(tab_texts, tab_label)
+
+			local wins = vim.api.nvim_tabpage_list_wins(tabid)
 			for _, winid in ipairs(wins) do
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
-				table.insert(tab_texts, vim.fn.fnamemodify(buf_name, ":~:."))
+				local text = require("styletabs.render").active_tab_win(winid, {})
+				table.insert(tab_texts, text)
 			end
-			table.insert(tablines, "【tab:" .. tabid .. "】" .. table.concat(tab_texts, ","))
+
+			table.insert(tablines, table.concat(tab_texts))
 		else
-			table.insert(tablines, "[tab:" .. tabid .. "]")
+			local label = require("styletabs.render").inactive_tab(tabid, {})
+			table.insert(tablines, label)
 		end
 	end
-	return table.concat(tablines, " ")
+	table.insert(tablines, "%#TabLineFill#")
+	local line = table.concat(tablines, " ")
+	print("tabline", line)
+	return line
 end
 
-function _G.styletabs()
-	return require("styletabs").update()
+function styletabs.handle_buf_click(minwid, clicks, button, modifier)
+	print("buf click: ", minwid, clicks, button, modifier)
 end
 
 return styletabs

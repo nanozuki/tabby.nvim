@@ -7,8 +7,12 @@ local defaults = {
 			return "tab:" .. tabid
 		end,
 		hl = "TabLineSel",
-		left_sep = "【",
-		right_sep = "】 ",
+		left_sep = "┃",
+		left_sep_hl = "【",
+		right_sep_hl = "┃",
+		max_width = 0,
+		min_width = 0,
+		aligh = "left",
 	},
 	inactive_tab = {
 		label = function(tabid)
