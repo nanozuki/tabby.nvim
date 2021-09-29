@@ -1,3 +1,6 @@
+--- lowest level specs, can be render to statusline-format text directly
+local element = {}
+
 ---@class TabbyHighlight
 ---@field fg    string hex color for foreground
 ---@field bg    string hex color for background
@@ -11,34 +14,10 @@ local highlight_defaults = {
 	name = "",
 }
 
----@class TabbyLayout
----@field max_width number
----@field min_width number
----@field justify   "left"|"right" default is left
-
-local layout_defaults = {
-	max_width = 0,
-	min_width = 0,
-	justify = "left",
-}
-
----@class TabbyText
----@field [1] string text content
----@field hl nil|string|TabbyHighlight
----@field lo nil|TabbyLayout
-
-local text_defaults = {
-	"",
-	hl = "",
-	lo = {},
-}
-
-local raw = {}
-
 --- render highlight to statusline text
 ---@param hl string|TabbyHighlight highlight name or highlight object
 ---@return string statusline format text
-function raw.render_highlight(hl)
+function element.render_highlight(hl)
 	if type(hl) == "string" then
 		return string.format("%%#%s#", hl)
 	end
@@ -64,10 +43,21 @@ function raw.render_highlight(hl)
 	return string.format("%%#%s#", hl.name)
 end
 
+---@class TabbyLayout
+---@field max_width number
+---@field min_width number
+---@field justify   "left"|"right" default is left
+
+local layout_defaults = {
+	max_width = 0,
+	min_width = 0,
+	justify = "left",
+}
+
 --- render text layout to statusline text
 ---@param lo TabbyLayout
 ---@return string statusline text's prefix, string statusline text's suffix
-function raw.render_layout(lo)
+function element.render_layout(lo)
 	lo = vim.tbl_extend("force", layout_defaults, lo)
 	if lo.max_width == 0 and lo.min_width == 0 and lo.justify == "right" then
 		return "", ""
@@ -88,17 +78,33 @@ function raw.render_layout(lo)
 	return head .. width, "%)"
 end
 
+---@class TabbyText
+---@field [1] string text content
+---@field hl nil|string|TabbyHighlight
+---@field lo nil|TabbyLayout
+
+local text_defaults = {
+	"",
+	hl = "",
+	lo = {},
+}
+
 --- render text object to statusline text
 ---@param text string|TabbyText
 ---@return string statusline string
-function raw.render_text(text)
+function element.render_text(text)
 	if type(text) == "string" then
 		return text
 	end
 	text = vim.tbl_extend("force", text_defaults, text)
-	local hl = raw.render_highlight(text.hl)
-	local pre, suf = raw.render_layout(text.lo)
+	local hl = element.render_highlight(text.hl)
+	local pre, suf = element.render_layout(text.lo)
 	return table.concat({ pre, hl, text[1], suf })
 end
 
-return raw
+---@return string statusline string
+function element.render_spring()
+	return "%="
+end
+
+return element
