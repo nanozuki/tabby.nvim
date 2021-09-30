@@ -4,7 +4,7 @@ local component = require("tabby.component")
 local option = {}
 
 ---@class TabbyTabLabelOpt
----@field label string|function(tabid):TabbyText
+---@field label string|fun(tabid:number):TabbyText
 ---@field left_sep string|TabbyText
 ---@field right_sep string|TabbyText
 
@@ -14,7 +14,7 @@ local option = {}
 
 ---@class TabbyWinLabelOpt
 ---@field mode TabbyWinLabelMode
----@field label string|function(winid):TabbyText
+---@field label string|fun(winid:number):TabbyText
 ---@field left_sep string|TabbyText
 ---@field inner_sep string|TabbyText won't works in "front-only" mode
 ---@field right_sep string|TabbyText
@@ -30,8 +30,8 @@ local option = {}
 ---@field tail? TabbyText[]
 
 ---@class TabbyOption
----@field tabline? TabbyTablineOpt                high-level api
----@field components? function():TabbyComponent[] low-level api
+---@field tabline? TabbyTablineOpt           high-level api
+---@field components? fun():TabbyComponent[] low-level api
 
 local hl_tabline = util.extract_nvim_hl("TabLine")
 local hl_tabline_sel = util.extract_nvim_hl("TabLineSel")
