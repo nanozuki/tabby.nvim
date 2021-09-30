@@ -26,27 +26,23 @@ function tabby.update()
 			text = head_item,
 		})
 	end
+	local active_id
 	for _, tabid in ipairs(tabs) do
 		if tabid == vim.api.nvim_get_current_tabpage() then
 			local cfg = defaults.active_tab
 			table.insert(coms, render.tab(tabid, cfg))
-			local wins = vim.api.nvim_tabpage_list_wins(tabid)
-			for _, winid in ipairs(wins) do
-				cfg = defaults.active_tab_win
-				table.insert(coms, render.active_tab_win(winid, cfg))
-			end
+			active_id = tabid
 		else
 			local cfg = defaults.inactive_tab
 			table.insert(coms, render.tab(tabid, cfg))
 		end
 	end
-	table.insert(coms, {
-		type = "text",
-		text = {
-			"",
-			hl = defaults.hl,
-		},
-	})
+
+	local wins = vim.api.nvim_tabpage_list_wins(active_id)
+	local cfg = defaults.active_tab_win
+	render.active_tab_wins(coms, wins, cfg)
+
+	table.insert(coms, { type = "text", text = { "", hl = defaults.hl } })
 	local tablines = table.concat(vim.tbl_map(component.render, coms))
 	return tablines
 end

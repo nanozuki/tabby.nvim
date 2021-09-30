@@ -49,12 +49,14 @@ local defaults = {
 		label = function(winid)
 			local bufid = vim.api.nvim_win_get_buf(winid)
 			local buf_name = vim.api.nvim_buf_get_name(bufid)
-			return vim.fn.fnamemodify(buf_name, ":~:.")
+			return "  " .. vim.fn.fnamemodify(buf_name, ":~:.")
 		end,
 		hl = "TabLineFill",
-		left_sep = "",
-		right_sep = "",
+		left_sep = "%=",
+		right_sep = "",
+		inner_sep = "",
 		left_sep_hl = "",
+		inner_sep_hl = "",
 		right_sep_hl = "",
 	},
 }
