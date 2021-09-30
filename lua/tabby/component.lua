@@ -11,16 +11,14 @@ local element = require("tabby.element")
 
 ---@class TabbyComWin
 ---@field type "win"
----@field bufid number
+---@field winid number
 ---@field label TabbyText
 ---@field left_sep TabbyText
 ---@field right_sep TabbyText
 
 ---@class TabbyComText
 ---@field type "text"
----@field label TabbyText
----@field left_sep TabbyText
----@field right_sep TabbyText
+---@field text TabbyText
 
 ---@class TabbyComSpring
 ---@field type "spring"
@@ -40,13 +38,14 @@ local function render_tab(tab)
 		"%T",
 	})
 end
+-- close tab: %<tabid>X<icon>%X
 
 ---@param win TabbyComWin
 ---@return string statusline-format string
 local function render_win(win)
 	return table.concat({
 		"%",
-		win.bufid,
+		win.winid,
 		"@TabbyBufClickHandler@",
 		element.render_text(win.left_sep),
 		element.render_text(win.label),
@@ -59,9 +58,7 @@ end
 ---@return string statusline-format string
 local function render_text(text)
 	return table.concat({
-		element.render_text(text.left_sep),
-		element.render_text(text.label),
-		element.render_text(text.right_sep),
+		element.render_text(text.text),
 	})
 end
 

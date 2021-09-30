@@ -1,6 +1,7 @@
 local tabby = {}
 
 local defaults = require("tabby.defaults")
+local component = require("tabby.component")
 local render = require("tabby.render")
 
 function tabby.setup()
@@ -17,32 +18,37 @@ function tabby.init()
 end
 
 function tabby.update()
+	local coms = {} ---@see TabbyComponent[]
 	local tabs = vim.api.nvim_list_tabpages()
-	local tablines = {}
 	for _, head_item in ipairs(defaults.head) do
-		table.insert(tablines, render.text(head_item))
+		table.insert(coms, {
+			type = "text",
+			text = head_item,
+		})
 	end
 	for _, tabid in ipairs(tabs) do
 		if tabid == vim.api.nvim_get_current_tabpage() then
-			local tab_texts = {}
-			local tab_label = render.active_tab(tabid, {})
-			table.insert(tab_texts, tab_label)
-
+			local cfg = defaults.active_tab
+			table.insert(coms, render.tab(tabid, cfg))
 			local wins = vim.api.nvim_tabpage_list_wins(tabid)
 			for _, winid in ipairs(wins) do
-				local text = render.active_tab_win(winid, {})
-				table.insert(tab_texts, text)
+				cfg = defaults.active_tab_win
+				table.insert(coms, render.active_tab_win(winid, cfg))
 			end
-
-			table.insert(tablines, table.concat(tab_texts))
 		else
-			local label = render.inactive_tab(tabid, {})
-			table.insert(tablines, label)
+			local cfg = defaults.inactive_tab
+			table.insert(coms, render.tab(tabid, cfg))
 		end
 	end
-	table.insert(tablines, string.format("%%#%s#", render.parse_hl(defaults.hl)))
-	local line = table.concat(tablines, "")
-	return line
+	table.insert(coms, {
+		type = "text",
+		text = {
+			"",
+			hl = defaults.hl,
+		},
+	})
+	local tablines = table.concat(vim.tbl_map(component.render, coms))
+	return tablines
 end
 
 function tabby.handle_buf_click()

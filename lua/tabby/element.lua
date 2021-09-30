@@ -59,7 +59,7 @@ local layout_defaults = {
 ---@return string statusline text's prefix, string statusline text's suffix
 function element.render_layout(lo)
 	lo = vim.tbl_extend("force", layout_defaults, lo)
-	if lo.max_width == 0 and lo.min_width == 0 and lo.justify == "right" then
+	if lo.max_width == 0 and lo.min_width == 0 then
 		return "", ""
 	end
 
@@ -75,7 +75,7 @@ function element.render_layout(lo)
 		width = lo.min_width
 	end
 
-	return head .. width, "%)"
+	return head .. width .. "(", "%)"
 end
 
 ---@class TabbyText

@@ -1,7 +1,5 @@
 local render = {}
 
-local defaults = require("tabby.defaults")
-
 local text_default = {
 	align = "left",
 	maxwid = 0,
@@ -76,81 +74,59 @@ function render.parse_hl(hl)
 	return hl.name
 end
 
-function render.active_tab(tabid, opt)
-	opt = vim.tbl_extend("force", defaults.active_tab, opt)
-	local label = opt.label
-	if type(label) == "function" then
-		label = label(tabid)
-	end
-	local hl = render.parse_hl(opt.hl)
-	label = render.text({
-		label,
-		hl = hl,
-		maxwid = opt.max_width,
-		minwid = opt.min_width,
-		aligh = opt.aligh,
-	})
-	if opt.left_sep_hl == "" then
-		opt.left_sep_hl = hl
-	end
-	if opt.right_sep_hl == "" then
-		opt.right_sep_hl = hl
-	end
-	local left_sep = render.text({ opt.left_sep, hl = opt.left_sep_hl })
-	local right_sep = render.text({ opt.right_sep, hl = opt.right_sep_hl })
-	return table.concat({ "%", tabid, "T", left_sep, label, right_sep, "%T" })
-	-- close tab: %<tabid>X<icon>%X
+---@param tabid number tab id
+---@param cfg table config
+---@return TabbyComTab
+function render.tab(tabid, cfg)
+	return {
+		type = "tab",
+		tabid = tabid,
+		label = {
+			cfg.label(tabid),
+			hl = cfg.hl,
+			layout = {
+				min_width = cfg.min_width,
+				max_width = cfg.max_width,
+				justify = cfg.align,
+			},
+		},
+		left_sep = {
+			cfg.left_sep,
+			hl = cfg.left_sep_hl,
+		},
+		right_sep = {
+			cfg.right_sep,
+			hl = cfg.right_sep_hl,
+		},
+	}
 end
 
-function render.inactive_tab(tabid, opt)
-	opt = vim.tbl_extend("force", defaults.inactive_tab, opt)
-	local label = opt.label
-	if type(label) == "function" then
-		label = label(tabid)
+---@param winid number window id
+---@param cfg table config
+---@return TabbyComWin
+function render.active_tab_win(winid, cfg)
+	if cfg.left_sep_hl == "" then
+		cfg.left_sep_hl = cfg.hl
 	end
-	local hl = render.parse_hl(opt.hl)
-	label = render.text({
-		label,
-		hl = hl,
-		maxwid = opt.max_width,
-		minwid = opt.min_width,
-		aligh = opt.aligh,
-	})
-	if opt.left_sep_hl == "" then
-		opt.left_sep_hl = hl
+	if cfg.right_sep_hl == "" then
+		cfg.right_sep_hl = cfg.hl
 	end
-	if opt.right_sep_hl == "" then
-		opt.right_sep_hl = hl
-	end
-	local left_sep = render.text({ opt.left_sep, hl = opt.left_sep_hl })
-	local right_sep = render.text({ opt.right_sep, hl = opt.right_sep_hl })
-	return table.concat({ "%", tabid, "T", left_sep, label, right_sep, "%T" })
-end
-
-function render.active_tab_win(winid, opt)
-	opt = vim.tbl_extend("force", defaults.active_tab_win, opt)
-	local label = opt.label
-	if type(label) == "function" then
-		label = label(winid)
-	end
-	local hl = render.parse_hl(opt.hl)
-	label = render.text({
-		label,
-		hl = hl,
-		maxwid = opt.max_width,
-		minwid = opt.min_width,
-		aligh = opt.aligh,
-	})
-	if opt.left_sep_hl == "" then
-		opt.left_sep_hl = hl
-	end
-	if opt.right_sep_hl == "" then
-		opt.right_sep_hl = hl
-	end
-	local left_sep = render.text({ opt.left_sep, hl = opt.left_sep_hl })
-	local right_sep = render.text({ opt.right_sep, hl = opt.right_sep_hl })
-	local bufid = vim.api.nvim_win_get_buf(winid)
-	return table.concat({ "%", bufid, "@TabbyBufClickHandler@", left_sep, label, right_sep, "%T" })
+	return {
+		type = "win",
+		winid = winid,
+		label = {
+			cfg.label(winid),
+			hl = cfg.hl,
+		},
+		left_sep = {
+			cfg.left_sep,
+			hl = cfg.left_sep_hl,
+		},
+		right_sep = {
+			cfg.right_sep,
+			hl = cfg.right_sep_hl,
+		},
+	}
 end
 
 return render
