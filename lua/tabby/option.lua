@@ -1,33 +1,6 @@
 local util = require("tabby.util")
-local component = require("tabby.component")
 
 local option = {}
-
----@class TabbyTabLabelOpt
----@field label string|fun(tabid:number):TabbyText
----@field left_sep string|TabbyText
----@field right_sep string|TabbyText
-
----@alias TabbyWinLabelMode
----| "active-only" # windows in active tab will be display
----| "front-only"  # only display the front window. (the window will focus when you enter a tabpage.)
-
----@class TabbyWinLabelOpt
----@field mode TabbyWinLabelMode
----@field label string|fun(winid:number):TabbyText
----@field left_sep string|TabbyText
----@field inner_sep string|TabbyText won't works in "front-only" mode
----@field right_sep string|TabbyText
-
----@class TabbyTablineOpt
----@field head? TabbyText[]
----@field active_tab TabbyTabLabelOpt
----@field inactive_tab TabbyTabLabelOpt
----@field window_mode TabbyWinLabelMode
----@field active_win TabbyWinLabelOpt
----@field active_front_win? TabbyWinLabelOpt need by "active-only", fallback to active_win if this is nil
----@field inactive_win? TabbyWinLabelOpt
----@field tail? TabbyText[]
 
 ---@class TabbyOption
 ---@field tabline? TabbyTablineOpt           high-level api
