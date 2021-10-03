@@ -1,6 +1,6 @@
 # tabby.nvim
 
-A minimal, configurable, neovim style tableline.
+A minimal, configurable, neovim style tabline.
 
 ### status
 
