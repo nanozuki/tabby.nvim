@@ -97,6 +97,9 @@ function element.render_text(text)
 		return text
 	end
 	text = vim.tbl_extend("force", text_defaults, text)
+	if (text[1] or "") == "" then
+		return ""
+	end
 	local hl = element.render_highlight(text.hl)
 	local pre, suf = element.render_layout(text.lo)
 	return table.concat({ pre, hl, text[1], suf })
