@@ -59,6 +59,110 @@ local presets = {
 			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
 		},
 	},
+	active_tab_with_wins = {
+		hl = "TabLine",
+		layout = "active_tab_with_wins",
+		head = {
+			{ "  ", hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "italic" } },
+			{ "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		active_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
+		},
+		inactive_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		top_win = {
+			label = function(winid)
+				local bufid = vim.api.nvim_win_get_buf(winid)
+				local buf_name = vim.api.nvim_buf_get_name(bufid)
+				return {
+					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		win = {
+			label = function(winid)
+				local bufid = vim.api.nvim_win_get_buf(winid)
+				local buf_name = vim.api.nvim_buf_get_name(bufid)
+				return {
+					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+	},
+	tab_with_top_win = {
+		hl = "TabLine",
+		layout = "tab_with_top_win",
+		head = {
+			{ "  ", hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "italic" } },
+			{ "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		active_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
+		},
+		inactive_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		active_win = {
+			label = function(winid)
+				local bufid = vim.api.nvim_win_get_buf(winid)
+				local buf_name = vim.api.nvim_buf_get_name(bufid)
+				return {
+					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		win = {
+			label = function(winid)
+				local bufid = vim.api.nvim_win_get_buf(winid)
+				local buf_name = vim.api.nvim_buf_get_name(bufid)
+				return {
+					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+	},
 }
 
 return presets

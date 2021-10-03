@@ -98,8 +98,8 @@ function tabline.render(opt)
 					local win_opt = opt.win
 					if winid == top_win and opt.top_win ~= nil then
 						win_opt = opt.top_win
-						table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 					end
+					table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 				end
 			end
 		else
