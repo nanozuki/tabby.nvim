@@ -45,7 +45,7 @@ use {
 }
 ```
 
-## Use presets
+### Use presets
 
 Built-in presets only use the highlight group `Tabline`, `TablineSel`, `TablineFill` and `Normal`,
 in case to support most colorschemes.
@@ -169,7 +169,7 @@ You can edit one of the three built-in layouts. (Corresponding to the three pres
 
 You can find three [presets](./lua/tabby/presets.lua) config for example.
 
-## Customize with low level apis
+### Customize with low level apis
 
 If built-in layouts do not satisfy you,
 you can also use the low-level API to define the tabline from scratch by setting `TabbyOption.components`.
