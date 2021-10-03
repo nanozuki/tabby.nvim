@@ -23,8 +23,9 @@ function tabby.init()
 end
 
 function tabby.update()
-	if tabby_opt.components ~= nil and #tabby_opt.components > 0 then
-		return table.concat(vim.tbl_map(component.render, tabby_opt.components), "")
+	if tabby_opt.components ~= nil then
+		local components = tabby_opt.components()
+		return table.concat(vim.tbl_map(component.render, components), "")
 	elseif tabby_opt.tabline ~= nil then
 		return tabline.render(tabby_opt.tabline)
 	else
