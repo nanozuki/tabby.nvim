@@ -5,30 +5,29 @@ local tabline = {}
 
 ---@class TabbyTablineOpt
 ---@field hl TabbyHighlight background highlight
----@field head? TabbyText[]
+---@field head? TabbyText[] display at start of tabline
 ---@field active_tab TabbyTabLabelOpt
 ---@field inactive_tab TabbyTabLabelOpt
----@field window_mode TabbyWinLabelMode
----@field active_win TabbyWinLabelOpt
----@field active_front_win? TabbyWinLabelOpt need by "active-only", fallback to active_win if this is nil
----@field inactive_win? TabbyWinLabelOpt
----@field tail? TabbyText[]
+---@field layout TabbyTablineLayout
+---@field win TabbyWinLabelOpt
+---@field active_win? WinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
+---@field top_win? TabbyWinLabelOpt need by "active_tab_with_wins" and "active_wins_at_end", fallback to win if this is nil
+---@field tail? TabbyText[] display at end of tabline
 
 ---@class TabbyTabLabelOpt
 ---@field label string|TabbyText|fun(tabid:number):TabbyText
 ---@field left_sep string|TabbyText
 ---@field right_sep string|TabbyText
 
----@alias TabbyWinLabelMode
----| "after-active-tab" # windows label follow active tab
----| "active-wins-at-end" # windows in active tab will be display at end of all tab labels
----| "front-only"  # only display the front window. (the window will focus when you enter a tabpage.)
+---@alias TabbyTablineLayout
+---| "active_tab_with_wins" # windows label follow active tab
+---| "active_wins_at_end" # windows in active tab will be display at end of all tab labels
+---| "tab_with_top_win"  # the top window display after each tab.
 
 ---@class TabbyWinLabelOpt
----@field mode TabbyWinLabelMode
 ---@field label string|TabbyText|fun(winid:number):TabbyText
 ---@field left_sep string|TabbyText
----@field inner_sep string|TabbyText won't works in "front-only" mode
+---@field inner_sep string|TabbyText won't works in "tab_with_top_win" layout
 ---@field right_sep string|TabbyText
 
 ---@param tabid number tab id
@@ -92,13 +91,13 @@ function tabline.render(opt)
 	for _, tabid in ipairs(tabs) do
 		if tabid == current_tab then
 			table.insert(coms, tabline.render_tab_label(tabid, opt.active_tab))
-			if opt.window_mode == "after-active-tab" then
+			if opt.layout == "active_tab_with_wins" then
 				local wins = vim.api.nvim_tabpage_list_wins(current_tab)
 				local top_win = vim.api.nvim_tabpage_get_win(current_tab)
 				for i, winid in ipairs(wins) do
-					local win_opt = opt.active_win
-					if winid == top_win and opt.active_front_win ~= nil then
-						win_opt = opt.active_front_win
+					local win_opt = opt.win
+					if winid == top_win and opt.top_win ~= nil then
+						win_opt = opt.top_win
 						table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 					end
 				end
@@ -106,22 +105,22 @@ function tabline.render(opt)
 		else
 			table.insert(coms, tabline.render_tab_label(tabid, opt.inactive_tab))
 		end
-		if opt.window_mode == "front-only" then
-			local win_opt = opt.inactive_win
-			if tabid == current_tab then
+		if opt.layout == "tab_with_top_win" then
+			local win_opt = opt.win
+			if tabid == current_tab and opt.active_win then
 				win_opt = opt.active_win
 			end
 			local winid = vim.api.nvim_tabpage_get_win(tabid)
 			table.insert(coms, tabline.render_win_label(winid, true, true, win_opt))
 		end
 	end
-	if opt.window_mode == "active-wins-at-end" then
+	if opt.layout == "active_wins_at_end" then
 		local wins = vim.api.nvim_tabpage_list_wins(current_tab)
 		local top_win = vim.api.nvim_tabpage_get_win(current_tab)
 		for i, winid in ipairs(wins) do
-			local win_opt = opt.active_win
-			if winid == top_win and opt.active_front_win ~= nil then
-				win_opt = opt.active_front_win
+			local win_opt = opt.win
+			if winid == top_win and opt.top_win ~= nil then
+				win_opt = opt.top_win
 			end
 			table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 		end

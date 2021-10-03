@@ -1,10 +1,15 @@
 local tabby = {}
 
 local option = require("tabby.option")
+local tabline = require("tabby.tabline")
 local component = require("tabby.component")
-local render = require("tabby.render")
 
-function tabby.setup()
+---@type nil|TabbyOption
+local tabby_opt = nil
+
+---@param opt? TabbyOption
+function tabby.setup(opt)
+	tabby_opt = opt or option.defaults
 	if vim.api.nvim_get_vvar("vim_did_enter") then
 		tabby.init()
 	else
@@ -18,10 +23,17 @@ function tabby.init()
 end
 
 function tabby.update()
-	return option.render_tabline(option.defaults.tabline)
+	if tabby_opt.components ~= nil and #tabby_opt.components > 0 then
+		return table.concat(vim.tbl_map(component.render, tabby_opt.components), "")
+	elseif tabby_opt.tabline ~= nil then
+		return tabline.render(tabby_opt.tabline)
+	else
+		return tabline.render(option.defaults)
+	end
 end
 
 function tabby.handle_buf_click()
+	-- do nothing at now, only recording the sign for function
 	-- function tabby.handle_buf_click(minwid, clicks, button, modifier)
 	-- print("buf click: ", minwid, clicks, button, modifier)
 end
