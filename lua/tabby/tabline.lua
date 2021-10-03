@@ -58,8 +58,8 @@ function tabline.render_win_label(winid, is_first, is_last, opt)
 	if type(opt.label) == "function" then
 		label = opt.label(winid)
 	end
-	local left_sep = opt.inner_sep
-	local right_sep = opt.inner_sep
+	local left_sep = opt.inner_sep or opt.left_sep
+	local right_sep = opt.inner_sep or opt.right_sep
 	if is_first then
 		left_sep = opt.left_sep
 	end
@@ -122,8 +122,8 @@ function tabline.render(opt)
 			local win_opt = opt.active_win
 			if winid == top_win and opt.active_front_win ~= nil then
 				win_opt = opt.active_front_win
-				table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 			end
+			table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
 		end
 	end
 	-- empty space in line
