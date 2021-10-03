@@ -1,4 +1,3 @@
---- lowest level specs, can be render to statusline-format text directly
 local element = {}
 
 ---@class TabbyHighlight

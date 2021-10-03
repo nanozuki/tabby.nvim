@@ -1,4 +1,4 @@
--- tabn define the spec for tab's render
+--- lowest level specs, can be render to statusline-format text directly
 local component = {}
 local element = require("tabby.element")
 
