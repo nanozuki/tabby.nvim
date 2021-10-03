@@ -10,7 +10,7 @@ A minimal, configurable, neovim style tabline. Use your nvim tabs as workspace m
 
 ### tabby.nvim is not buffers' list
 
-Tabby.nvim focuses on a vim-style tab instead of buffers list, so tabby only displays the buffers in tabline(although you can use low-level API to write a bufferline). On the other hand, If you use some plugin such as "fzf" or "telescope," you will find the bufferline unnecessary. In that case, you may want to use the tab as its original feature: be a windows layout multiplexer. That might be the reason why you choose tabby.nvim.
+Tabby.nvim focuses on a vim-style tab instead of buffers list, so tabby only displays the buffers in tabpage(although you can use low-level API to write a bufferline). On the other hand, If you use some plugin such as "fzf" or "telescope," you will find the bufferline unnecessary. In that case, you may want to use the tab as its original feature: be a windows layout multiplexer. That might be the reason why you choose tabby.nvim.
 
 ### highly configurable and easy to start
 
