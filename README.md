@@ -47,8 +47,7 @@ use {
 
 ### Use presets
 
-Built-in presets only use the highlight group `Tabline`, `TablineSel`, `TablineFill` and `Normal`,
-in case to support most colorschemes.
+Built-in presets only use the highlight group `Tabline`, `TablineSel`, `TablineFill` and `Normal`, to support most colorschemes.
 there are three [presets](https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua) for now:
 
 * active_wins_at_end [default]
