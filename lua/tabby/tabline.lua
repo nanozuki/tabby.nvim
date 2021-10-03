@@ -4,11 +4,11 @@ local component = require("tabby.component")
 local tabline = {}
 
 ---@class TabbyTablineOpt
+---@field layout TabbyTablineLayout
 ---@field hl TabbyHighlight background highlight
 ---@field head? TabbyText[] display at start of tabline
 ---@field active_tab TabbyTabLabelOpt
 ---@field inactive_tab TabbyTabLabelOpt
----@field layout TabbyTablineLayout
 ---@field win TabbyWinLabelOpt
 ---@field active_win? WinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
 ---@field top_win? TabbyWinLabelOpt need by "active_tab_with_wins" and "active_wins_at_end", fallback to win if this is nil

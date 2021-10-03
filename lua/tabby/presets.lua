@@ -11,7 +11,7 @@ local presets = {
 		hl = "TabLine",
 		layout = "active_wins_at_end",
 		head = {
-			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = "italic" } },
+			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
 			{ "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
 		},
 		active_tab = {
