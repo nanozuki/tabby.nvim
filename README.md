@@ -6,9 +6,16 @@ A minimal, configurable, neovim style tabline. Use your nvim tabs as workspace m
 ![](./assets/tabby-default-2.png)
 ![](./assets/tabby-default-3.png)
 
-### status
+## Feature
 
-Need to improve documents.
+### tabby.nvim is not buffers' list
+
+Tabby.nvim focuses on a vim-style tab instead of buffers list, so tabby only displays the buffers in tabline(although you can use low-level API to write a bufferline). On the other hand, If you use some plugin such as "fzf" or "telescope," you will find the bufferline unnecessary. In that case, you may want to use the tab as its original feature: be a windows layout multiplexer. That might be the reason why you choose tabby.nvim.
+
+### highly configurable and easy to start
+
+With tabby.nvim, you can config your own tabline from scratch. And won't worry the complexy, you can start from presets and example.
+As tabby.nvim have complete type annotations (powered by EmmyLua), so you can write config with the help of lua-language-server.
 
 ## Quick start
 
@@ -229,3 +236,10 @@ TabbyComSpring mark a separation point. Each separation point will be print as e
 For example, we can use low-level api to define the presets `active_wins_at_end`:
 
 [active_wins_at_end](./examples/low-level-example.lua)
+
+## TODO
+
+- [ ] Rename tab
+- [ ] Unique short name for window label
+- [ ] Button for close tab and add tab
+- [ ] Custom click handler
