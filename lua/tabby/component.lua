@@ -1,6 +1,7 @@
 --- lowest level specs, can be render to statusline-format text directly
-local component = {}
 local element = require("tabby.element")
+
+local component = {}
 
 ---@class TabbyComTab
 ---@field type "tab"

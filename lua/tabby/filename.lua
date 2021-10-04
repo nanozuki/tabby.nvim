@@ -1,3 +1,5 @@
+local filename = {}
+
 local function relative(name)
 	return vim.fn.fnamemodify(name, ":~:.")
 end
@@ -100,8 +102,6 @@ function unique_names:get_name(bufid)
 	end
 	return self.names[bufid]
 end
-
-local filename = {}
 
 function filename.flush_unique_name_cache()
 	unique_names:init()
