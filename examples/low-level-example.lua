@@ -36,7 +36,7 @@ local components = function()
 				left_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
 				right_sep = { "", hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
 			})
-			local wins = vim.api.nvim_tabpage_list_wins(current_tab)
+			local wins = util.tabpage_list_wins(current_tab)
 			local top_win = vim.api.nvim_tabpage_get_win(current_tab)
 			for _, winid in ipairs(wins) do
 				local icon = "  "

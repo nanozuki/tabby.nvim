@@ -12,4 +12,18 @@ function util.extract_nvim_hl(name)
 	}
 end
 
+function util.list_wins()
+	local winids = vim.api.nvim_list_wins()
+	return vim.tbl_filter(function(winid)
+		return vim.api.nvim_win_get_config(winid).relative == ""
+	end, winids)
+end
+
+function util.tabpage_list_wins(tabid)
+	local winids = vim.api.nvim_tabpage_list_wins(tabid)
+	return vim.tbl_filter(function(winid)
+		return vim.api.nvim_win_get_config(winid).relative == ""
+	end, winids)
+end
+
 return util
