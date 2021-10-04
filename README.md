@@ -239,7 +239,7 @@ For example, we can use low-level api to define the presets `active_wins_at_end`
 ## TODO
 
 - [ ] Rename tab
-- [ ] Unique short name for window label
+- [x] Unique short name for window label
 - [ ] Button for close tab and add tab
 - [ ] Custom click handler
 - [ ] Telescope support
