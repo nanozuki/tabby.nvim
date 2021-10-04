@@ -1,3 +1,4 @@
+local filename = require("tabby.filename")
 local util = require("tabby.util")
 
 local hl_tabline = util.extract_nvim_hl("TabLine")
@@ -36,10 +37,8 @@ local presets = {
 		},
 		top_win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
@@ -48,10 +47,8 @@ local presets = {
 		},
 		win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
@@ -88,10 +85,8 @@ local presets = {
 		},
 		top_win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
@@ -100,10 +95,8 @@ local presets = {
 		},
 		win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
@@ -140,10 +133,8 @@ local presets = {
 		},
 		active_win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
@@ -152,10 +143,8 @@ local presets = {
 		},
 		win = {
 			label = function(winid)
-				local bufid = vim.api.nvim_win_get_buf(winid)
-				local buf_name = vim.api.nvim_buf_get_name(bufid)
 				return {
-					"  " .. vim.fn.fnamemodify(buf_name, ":~:.") .. " ",
+					"  " .. filename.unique(winid) .. " ",
 					hl = "TabLine",
 				}
 			end,
