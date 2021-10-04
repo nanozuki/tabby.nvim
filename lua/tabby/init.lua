@@ -1,8 +1,9 @@
-local tabby = {}
-
+local component = require("tabby.component")
+local filename = require("tabby.filename")
 local option = require("tabby.option")
 local tabline = require("tabby.tabline")
-local component = require("tabby.component")
+
+local tabby = {}
 
 ---@type nil|TabbyOption
 local tabby_opt = nil
@@ -23,6 +24,7 @@ function tabby.init()
 end
 
 function tabby.update()
+	filename.flush_unique_name_cache()
 	if tabby_opt.components ~= nil then
 		local components = tabby_opt.components()
 		return table.concat(vim.tbl_map(component.render, components), "")

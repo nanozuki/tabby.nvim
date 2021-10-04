@@ -10,7 +10,7 @@ local tabline = {}
 ---@field active_tab TabbyTabLabelOpt
 ---@field inactive_tab TabbyTabLabelOpt
 ---@field win TabbyWinLabelOpt
----@field active_win? WinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
+---@field active_win? TabbyWinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
 ---@field top_win? TabbyWinLabelOpt need by "active_tab_with_wins" and "active_wins_at_end", fallback to win if this is nil
 ---@field tail? TabbyText[] display at end of tabline
 
