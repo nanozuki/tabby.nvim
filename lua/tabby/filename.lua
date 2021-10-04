@@ -48,7 +48,28 @@ function unique_names:set(bufid, name)
 	self.names[bufid] = name
 end
 
+local debug = false
+
+function unique_names:log_index()
+	if not debug then
+		return
+	end
+	print(">> unique_names.indexes")
+	for t_name, items in pairs(self.indexes) do
+		if #items > 0 then
+			for i, item in ipairs(items) do
+				if i == 1 then
+					print(string.format("%s: %s - %d", t_name, item.h, item.n))
+				else
+					print(string.format("    * %s - %d", item.h, item.n))
+				end
+			end
+		end
+	end
+end
+
 function unique_names:update_index()
+	self:log_index()
 	local has_dup = false
 	local count = 0
 	for t_name, items in pairs(self.indexes) do
@@ -70,7 +91,7 @@ function unique_names:update_index()
 			count = count + 1
 		end
 	end
-	return has_dup or count == 0
+	return not has_dup or count == 0
 end
 
 function unique_names:build()
