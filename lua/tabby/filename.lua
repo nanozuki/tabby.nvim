@@ -1,3 +1,5 @@
+local util = require("tabby.util")
+
 local filename = {}
 
 local function relative(name)
@@ -98,7 +100,7 @@ function unique_names:build()
 	self.indexes = {}
 	self.names = {}
 
-	local wins = vim.api.nvim_list_wins()
+	local wins = util.list_wins()
 	local buffer_ids = {}
 	for _, winid in ipairs(wins) do
 		local bufid = vim.api.nvim_win_get_buf(winid)
