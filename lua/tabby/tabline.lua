@@ -21,9 +21,10 @@ local tabline = {}
 ---@field right_sep string|TabbyText
 
 ---@alias TabbyTablineLayout
----| "active_tab_with_wins" # windows label follow active tab
+---| "active_wins_at_tail" # windows in active tab will be display at end of tabline
 ---| "active_wins_at_end" # windows in active tab will be display at end of all tab labels
 ---| "tab_with_top_win"  # the top window display after each tab.
+---| "active_tab_with_wins" # windows label follow active tab
 
 ---@class TabbyWinLabelOpt
 ---@field label string|TabbyText|fun(winid:number):TabbyText
@@ -115,7 +116,10 @@ function tabline.render(opt)
 			table.insert(coms, tabline.render_win_label(winid, true, true, win_opt))
 		end
 	end
-	if opt.layout == "active_wins_at_end" then
+	if opt.layout == "active_wins_at_end" or opt.layout == "active_wins_at_tail" then
+		if opt.layout == "active_wins_at_tail" then
+			table.insert(coms, { type = "text", text = { "%=", hl = opt.hl } })
+		end
 		local wins = util.tabpage_list_wins(current_tab)
 		local top_win = vim.api.nvim_tabpage_get_win(current_tab)
 		for i, winid in ipairs(wins) do
@@ -130,7 +134,9 @@ function tabline.render(opt)
 	table.insert(coms, { type = "text", text = { "", hl = opt.hl } })
 	-- tail
 	if opt.tail then
-		table.insert(coms, { type = "text", text = { "%=" } })
+		if opt.layout ~= "active_wins_at_tail" then
+			table.insert(coms, { type = "text", text = { "%=" } })
+		end
 		for _, tail_item in ipairs(opt.tail) do
 			table.insert(coms, { type = "text", text = tail_item })
 		end

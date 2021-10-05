@@ -8,7 +8,7 @@ local option = {}
 
 ---@type TabbyOption
 option.defaults = {
-	tabline = presets.active_wins_at_end,
+	tabline = presets.active_wins_at_tail,
 }
 
 return option

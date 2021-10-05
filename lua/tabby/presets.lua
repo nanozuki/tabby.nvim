@@ -8,8 +8,60 @@ local hl_tabline_fill = util.extract_nvim_hl("TabLineFill")
 
 ---@type table<TabbyTablineLayout, TabbyTablineOpt>
 local presets = {
+	active_wins_at_tail = {
+		hl = "TabLineFill",
+		layout = "active_wins_at_tail",
+		head = {
+			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
+			{ "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		active_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		inactive_tab = {
+			label = function(tabid)
+				return {
+					"  " .. tabid .. " ",
+					hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		top_win = {
+			label = function(winid)
+				return {
+					"  " .. filename.unique(winid) .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		win = {
+			label = function(winid)
+				return {
+					"  " .. filename.unique(winid) .. " ",
+					hl = "TabLine",
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		tail = {
+			{ "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
+		},
+	},
 	active_wins_at_end = {
-		hl = "TabLine",
+		hl = "TabLineFill",
 		layout = "active_wins_at_end",
 		head = {
 			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
@@ -57,7 +109,7 @@ local presets = {
 		},
 	},
 	active_tab_with_wins = {
-		hl = "TabLine",
+		hl = "TabLineFill",
 		layout = "active_tab_with_wins",
 		head = {
 			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = "italic" } },
@@ -105,7 +157,7 @@ local presets = {
 		},
 	},
 	tab_with_top_win = {
-		hl = "TabLine",
+		hl = "TabLineFill",
 		layout = "tab_with_top_win",
 		head = {
 			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = "italic" } },
