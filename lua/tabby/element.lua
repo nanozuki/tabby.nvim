@@ -78,7 +78,7 @@ function element.render_layout(lo)
 end
 
 ---@class TabbyText
----@field [1] string text content
+---@field [1] string|fun():string text content
 ---@field hl nil|string|TabbyHighlight
 ---@field lo nil|TabbyLayout
 
@@ -96,12 +96,16 @@ function element.render_text(text)
 		return text
 	end
 	text = vim.tbl_extend("force", text_defaults, text)
-	if (text[1] or "") == "" then
+	local content = text[1] or ""
+	if type(content) == "function" then
+		content = content()
+	end
+	if content == "" then
 		return ""
 	end
 	local hl = element.render_highlight(text.hl)
 	local pre, suf = element.render_layout(text.lo)
-	return table.concat({ pre, hl, text[1], suf })
+	return table.concat({ pre, hl, content, suf })
 end
 
 ---@return string statusline string

@@ -126,7 +126,7 @@ definiation is:
 
 ```lua
 ---@class TabbyText
----@field [1] string text content
+---@field [1] string|fun():string text content or a function to return context
 ---@field hl  nil|string|TabbyHighlight
 ---@field lo  nil|TabbyLayout
 
@@ -154,6 +154,12 @@ local text3 = {
     "Tab 3",
     hl = { fg = my_hl.fg, bg = my_hl.bg, style = "bold" },
     lo = { min_width = 20, justify = "right" },
+}
+local cwd = {
+    function()
+	return " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. " "
+    end
+    hl = "TablineSel",
 }
 ```
 
