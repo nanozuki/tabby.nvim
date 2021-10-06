@@ -215,7 +215,7 @@ local presets = {
 			label = function(tabid)
 				local focus = vim.api.nvim_tabpage_get_win(tabid)
 				local focus_name = filename.unique(focus)
-				if vim.api.nvim_win_get_config(focus).relative == "" then
+				if vim.api.nvim_win_get_config(focus).relative ~= "" then
 					focus_name = "[Floating]"
 				end
 				local append = ""
@@ -236,7 +236,7 @@ local presets = {
 			label = function(tabid)
 				local focus = vim.api.nvim_tabpage_get_win(tabid)
 				local focus_name = filename.unique(focus)
-				if vim.api.nvim_win_get_config(focus).relative == "" then
+				if vim.api.nvim_win_get_config(focus).relative ~= "" then
 					focus_name = "[Floating]"
 				end
 				local append = ""
