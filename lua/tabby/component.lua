@@ -29,9 +29,10 @@ local component = {}
 ---@param tab TabbyComTab
 ---@return string statusline-format string
 local function render_tab(tab)
+	local number = vim.api.nvim_tabpage_get_number(tab.tabid)
 	return table.concat({
 		"%",
-		tab.tabid,
+		tostring(number),
 		"T",
 		element.render_text(tab.left_sep),
 		element.render_text(tab.label),
