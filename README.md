@@ -3,7 +3,7 @@
 A minimal, configurable, neovim style tabline. Use your nvim tabs as workspace
 multiplexer!
 
-![](./assets/banner.png)
+![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/banner.png)
 
 ## Feature
 
@@ -61,7 +61,7 @@ for now:
 
 - active_wins_at_tail [default]
 
-![](./assets/active_wins_at_tail.png)
+![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_wins_at_tail.png)
 
 Put all windows' labels in active tabpage at end of whold tabline.
 
@@ -70,20 +70,20 @@ Put all windows' labels in active tabpage at end of whold tabline.
 Put all windows' labels in active tabpage after all tags label. In-active
 tabpage's window won't display.
 
-![](./assets/tabby-default-1.png)
+![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tabby-default-1.png)
 
 - tab_with_top_win
 
 Each tab lab with a top window label followed. The `top window` is the focus
 window when you enter a tabpage.
 
-![](./assets/tab_with_top_win.png)
+![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tab_with_top_win.png)
 
 - active_tab_with_wins
 
 Active tabpage's windows' labels is displayed after the active tabpage's label.
 
-![](./assets/active_tab_with_wins.png)
+![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_tab_with_wins.png)
 
 ```lua
 require("tabby").setup({
