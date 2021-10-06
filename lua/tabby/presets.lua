@@ -204,6 +204,60 @@ local presets = {
 			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
 		},
 	},
+	tab_only = {
+		hl = "TabLineFill",
+		layout = "tab_only",
+		head = {
+			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
+			{ "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		active_tab = {
+			label = function(tabid)
+				local focus = vim.api.nvim_tabpage_get_win(tabid)
+				local focus_name = filename.unique(focus)
+				if vim.api.nvim_win_get_config(focus).relative == "" then
+					focus_name = "[Floating]"
+				end
+				local append = ""
+				local length = #(util.tabpage_list_wins(tabid))
+				length = length - 1
+				if length > 0 then
+					append = " [" .. length .. "+]"
+				end
+				return {
+					"  " .. focus_name .. append .. " ",
+					hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+		},
+		inactive_tab = {
+			label = function(tabid)
+				local focus = vim.api.nvim_tabpage_get_win(tabid)
+				local focus_name = filename.unique(focus)
+				if vim.api.nvim_win_get_config(focus).relative == "" then
+					focus_name = "[Floating]"
+				end
+				local append = ""
+				local length = #(util.tabpage_list_wins(tabid))
+				length = length - 1
+				if length > 0 then
+					append = " [" .. length .. "+]"
+				end
+				return {
+					"  " .. focus_name .. append .. " ",
+					hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = "bold" },
+				}
+			end,
+			left_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			right_sep = { "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+		},
+		tail = {
+			{ "", hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg } },
+			{ "  ", hl = { fg = hl_tabline.fg, bg = hl_tabline.bg } },
+		},
+	},
 }
 
 return presets
