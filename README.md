@@ -91,6 +91,14 @@ require("tabby").setup({
 })
 ```
 
+- tab_only
+
+No windows label, only tab. and use focus window to name tab
+
+```
+![](https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png)
+```
+
 ### Key mapping
 
 Tabby use native nvim tab, so you can directly use nvim tab operation. Maybe you
