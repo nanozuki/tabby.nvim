@@ -25,6 +25,7 @@ local tabline = {}
 ---| "active_wins_at_end" # windows in active tab will be display at end of all tab labels
 ---| "tab_with_top_win"  # the top window display after each tab.
 ---| "active_tab_with_wins" # windows label follow active tab
+---| "tab_only" # no windows label, only tab
 
 ---@class TabbyWinLabelOpt
 ---@field label string|TabbyText|fun(winid:number):TabbyText
