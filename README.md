@@ -55,7 +55,15 @@ use {
 ### Use presets
 
 Built-in presets only use the highlight group `Tabline`, `TablineSel`,
-`TablineFill` and `Normal`, to support most colorschemes. there are three
+`TablineFill` and `Normal`, to support most colorschemes. To use presets:
+
+```lua
+require("tabby").setup({
+    tabline = require("tabby.presets").tab_with_top_win,
+})
+```
+
+There are three
 [presets](https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua)
 for now:
 
@@ -85,19 +93,11 @@ Active tabpage's windows' labels is displayed after the active tabpage's label.
 
 ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_tab_with_wins.png)
 
-```lua
-require("tabby").setup({
-    tabline = require("tabby.presets").tab_with_top_win,
-})
-```
-
 - tab_only
 
 No windows label, only tab. and use focus window to name tab
 
-```
 ![](https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png)
-```
 
 ### Key mapping
 
