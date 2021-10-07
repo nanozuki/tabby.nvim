@@ -7,15 +7,15 @@ local component = {}
 ---@field type "tab"
 ---@field tabid number
 ---@field label string|TabbyText
----@field left_sep TabbyText
----@field right_sep TabbyText
+---@field left_sep? TabbyText
+---@field right_sep? TabbyText
 
 ---@class TabbyComWin
 ---@field type "win"
 ---@field winid number
 ---@field label TabbyText
----@field left_sep TabbyText
----@field right_sep TabbyText
+---@field left_sep? TabbyText
+---@field right_sep? TabbyText
 
 ---@class TabbyComText
 ---@field type "text"
@@ -34,9 +34,9 @@ local function render_tab(tab)
     '%',
     tostring(number),
     'T',
-    element.render_text(tab.left_sep),
+    element.render_text(tab.left_sep or ''),
     element.render_text(tab.label),
-    element.render_text(tab.right_sep),
+    element.render_text(tab.right_sep or ''),
     '%T',
   })
 end
@@ -49,9 +49,9 @@ local function render_win(win)
     '%',
     win.winid,
     '@TabbyBufClickHandler@',
-    element.render_text(win.left_sep),
+    element.render_text(win.left_sep or ''),
     element.render_text(win.label),
-    element.render_text(win.right_sep),
+    element.render_text(win.right_sep or ''),
     '%T',
   })
 end
