@@ -1,4 +1,4 @@
-local presets = require("tabby.presets")
+local presets = require('tabby.presets')
 
 local option = {}
 
@@ -8,7 +8,7 @@ local option = {}
 
 ---@type TabbyOption
 option.defaults = {
-	tabline = presets.active_wins_at_tail,
+  tabline = presets.active_wins_at_tail,
 }
 
 return option
