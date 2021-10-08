@@ -28,13 +28,11 @@ help of lua-language-server.
 Use your plugin manager to installing:
 
 ```
-"kyazdani42/nvim-web-devicons",
 "nanozuki/tabby.nvim",
 ```
 
-The `nvim-web-devicons` provide the icon support, you may like to use a
-nerdfonts-patched font. If your config dont use icons, you have no need to
-install that.
+The presets config use nerdfont, should use nerdfonts-patched font to display correctly.
+If you don't want to use nerdfont, here is a config example: [example for no nerdfont](https://github.com/nanozuki/tabby.nvim/blob/main/examples/no-nerd-font-example.lua)
 
 And setup tabby in your config file:
 
@@ -47,7 +45,6 @@ If you use packer:
 ```lua
 use {
     "nanozuki/tabby.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
     config = function() require("tabby").setup() end,
 }
 ```
@@ -101,8 +98,7 @@ No windows label, only tab. and use focus window to name tab
 
 ### Key mapping
 
-Tabby use native nvim tab, so you can directly use nvim tab operation. Maybe you
-can mapping some operation. For example:
+Tabby use native nvim tab, so you can directly use nvim tab operation. Maybe you want mapping some operation. For example:
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
@@ -115,6 +111,20 @@ vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
 -- move current tab to next position
 vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 ```
+
+And In fact, vim has some built-in keymapping, it's better to read `:help tabline`. Here are some useful mapping:
+
+```
+gt					*i_CTRL-<PageDown>* *i_<C-PageDown>*
+		Go to the next tab page.  Wraps around from the last to the
+		first one.
+{count}gt	Go to tab page {count}.  The first tab page has number one.
+g<Tab>		Go to previous (last accessed) tab page.
+gT		Go to the previous tab page.  Wraps around from the first one
+		to the last one.
+```
+
+The `{count}` is the number displyed in presets.
 
 ## Customize
 
