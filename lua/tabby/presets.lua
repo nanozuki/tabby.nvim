@@ -18,7 +18,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -28,7 +28,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
         }
       end,
@@ -70,7 +70,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -80,7 +80,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -118,7 +118,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -128,7 +128,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -166,7 +166,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -176,7 +176,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
