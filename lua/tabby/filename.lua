@@ -108,10 +108,11 @@ function unique_names:build()
     local bufid = vim.api.nvim_win_get_buf(winid)
     if buffer_ids[bufid] == nil then
       buffer_ids[bufid] = {}
-      local name = relative(vim.api.nvim_buf_get_name(bufid))
+      local name = vim.api.nvim_buf_get_name(bufid)
       if name == '' then
         self:set(bufid, noname_placeholder)
       else
+        name = relative(name)
         self:insert_index(bufid, tail(name), head(name))
       end
     end
