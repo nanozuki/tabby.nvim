@@ -2,6 +2,8 @@ local util = require('tabby.util')
 
 local filename = {}
 
+local noname_placeholder = '[No Name]'
+
 local function relative(name)
   return vim.fn.fnamemodify(name, ':~:.')
 end
@@ -107,7 +109,11 @@ function unique_names:build()
     if buffer_ids[bufid] == nil then
       buffer_ids[bufid] = {}
       local name = relative(vim.api.nvim_buf_get_name(bufid))
-      self:insert_index(bufid, tail(name), head(name))
+      if name == '' then
+        self:set(bufid, noname_placeholder)
+      else
+        self:insert_index(bufid, tail(name), head(name))
+      end
     end
   end
 
@@ -132,7 +138,7 @@ end
 
 local function wrap_name(name)
   if (name or '') == '' then
-    return '[No Name]'
+    return noname_placeholder
   end
   return name
 end
