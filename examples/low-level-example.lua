@@ -30,7 +30,7 @@ local components = function()
         type = 'tab',
         tabid = tabid,
         label = {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         },
         left_sep = { '', hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
@@ -58,7 +58,7 @@ local components = function()
         type = 'tab',
         tabid = tabid,
         label = {
-          '  ' .. tabid .. ' ',
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         },
         left_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },

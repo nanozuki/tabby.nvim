@@ -11,7 +11,7 @@ local tabline = {
   active_tab = {
     label = function(tabid)
       return {
-        '  ' .. tabid .. '  ',
+        '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. '  ',
         hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
       }
     end,
@@ -20,7 +20,7 @@ local tabline = {
   inactive_tab = {
     label = function(tabid)
       return {
-        '  ' .. tabid .. '  ',
+        '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. '  ',
         hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
       }
     end,
