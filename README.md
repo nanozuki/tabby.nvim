@@ -311,3 +311,4 @@ For example, we can use low-level api to define the presets
 - [ ] Button for close tab and add tab
 - [ ] Custom click handler
 - [ ] Telescope support
+- [ ] Nvim doc
