@@ -312,3 +312,4 @@ For example, we can use low-level api to define the presets
 - [ ] Custom click handler
 - [ ] Telescope support
 - [ ] Nvim doc
+- [ ] Utils library
