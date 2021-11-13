@@ -2,6 +2,7 @@ local component = require('tabby.component')
 local filename = require('tabby.filename')
 local option = require('tabby.option')
 local tabline = require('tabby.tabline')
+local tabname = require('tabby.tabname')
 
 local tabby = {}
 
@@ -34,6 +35,13 @@ function tabby.update()
     return tabline.render(option.defaults)
   end
 end
+
+function tabby.tab_rename(name)
+  local tabid = vim.api.nvim_get_current_tabpage()
+  tabname.names[tabid] = name
+  vim.o.tabline = '%!TabbyTabline()'
+end
+vim.cmd([[command! -nargs=1 TabRename lua require('tabby').tab_rename(<f-args>)]])
 
 function tabby.handle_buf_click()
   -- do nothing at now, only recording the sign for function

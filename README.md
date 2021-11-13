@@ -23,6 +23,12 @@ the complexy, you can start from presets and example. As tabby.nvim have
 complete type annotations (powered by EmmyLua), so you can write config with the
 help of lua-language-server.
 
+### Rename tab
+
+Use command `TabRename <tabname>` to rename tab. At all preset configs, it will work automatically.
+In your customize config, you can use `require('tabby.tabname).get(tabid)` to get tabname.
+If no name is specified, it will display the focus window's Unique name.
+
 ## Quick start
 
 Use your plugin manager to installing:
@@ -306,7 +312,7 @@ For example, we can use low-level api to define the presets
 
 ## TODO
 
-- [ ] Rename tab
+- [x] Rename tab
 - [x] Unique short name for window label
 - [ ] Button for close tab and add tab
 - [ ] Custom click handler
