@@ -306,7 +306,7 @@ For example, we can use low-level api to define the presets
 
 ## TODO
 
-- [ ] Rename tab
+- [x] Rename tab
 - [x] Unique short name for window label
 - [ ] Button for close tab and add tab
 - [ ] Custom click handler

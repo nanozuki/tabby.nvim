@@ -1,4 +1,5 @@
 local filename = require('tabby.filename')
+local tabname = require('tabby.tabname')
 local util = require('tabby.util')
 
 local hl_tabline = util.extract_nvim_hl('TabLine')
@@ -18,7 +19,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -28,7 +29,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
         }
       end,
@@ -70,7 +71,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -80,7 +81,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -118,7 +119,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -128,7 +129,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -166,7 +167,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -176,7 +177,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -213,20 +214,8 @@ local presets = {
     },
     active_tab = {
       label = function(tabid)
-        local tabnum = vim.api.nvim_tabpage_get_number(tabid)
-        local focus = vim.api.nvim_tabpage_get_win(tabid)
-        local focus_name = filename.unique(focus)
-        if vim.api.nvim_win_get_config(focus).relative ~= '' then
-          focus_name = '[Floating]'
-        end
-        local append = ''
-        local length = #(util.tabpage_list_wins(tabid))
-        length = length - 1
-        if length > 0 then
-          append = ' [' .. length .. '+]'
-        end
         return {
-          ' ' .. tabnum .. ' / ' .. focus_name .. append .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -235,20 +224,8 @@ local presets = {
     },
     inactive_tab = {
       label = function(tabid)
-        local tabnum = vim.api.nvim_tabpage_get_number(tabid)
-        local focus = vim.api.nvim_tabpage_get_win(tabid)
-        local focus_name = filename.unique(focus)
-        if vim.api.nvim_win_get_config(focus).relative ~= '' then
-          focus_name = '[Floating]'
-        end
-        local append = ''
-        local length = #(util.tabpage_list_wins(tabid))
-        length = length - 1
-        if length > 0 then
-          append = ' [' .. length .. '+]'
-        end
         return {
-          ' ' .. tabnum .. ' / ' .. focus_name .. append .. ' ',
+          '  ' .. tabname.get(tabid) .. ' ',
           hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
         }
       end,

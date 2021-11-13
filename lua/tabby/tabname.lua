@@ -11,7 +11,6 @@ end
 
 function tabname.get(tabid)
   local number = vim.api.nvim_tabpage_get_number(tabid)
-  print(string.format('get tab %d name = %s', tabid, tabname.names[tabid]))
   if tabname.names[tabid] and tabname.names[tabid] ~= '' then
     return number .. ': ' .. tabname.names[tabid]
   end
@@ -19,7 +18,7 @@ function tabname.get(tabid)
   local focus_win = vim.api.nvim_tabpage_get_win(tabid)
   local name = ''
   if vim.api.nvim_win_get_config(focus_win).relative ~= '' then
-    name = '[floating]'
+    name = '[Floating]'
   else
     name = filename.unique(focus_win)
   end
