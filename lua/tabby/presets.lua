@@ -7,20 +7,14 @@ local hl_tabline_sel = util.extract_nvim_hl('TabLineSel')
 local hl_tabline_fill = util.extract_nvim_hl('TabLineFill')
 
 local function tab_label(tabid, active)
-  local icon = ''
-  if active then
-    icon = ''
-  end
+  local icon = active and '' or ''
   local number = vim.api.nvim_tabpage_get_number(tabid)
   local name = util.get_tab_name(tabid)
   return string.format(' %s %d: %s ', icon, number, name)
 end
 
 local function tab_label_no_fallback(tabid, active)
-  local icon = ''
-  if active then
-    icon = ''
-  end
+  local icon = active and '' or ''
   local fallback = function()
     return ''
   end
@@ -33,10 +27,7 @@ local function tab_label_no_fallback(tabid, active)
 end
 
 local function win_label(winid, top)
-  local icon = ''
-  if top then
-    icon = ''
-  end
+  local icon = top and '' or ''
   return string.format(' %s %s ', icon, filename.unique(winid))
 end
 
