@@ -1,11 +1,44 @@
 local filename = require('tabby.filename')
-local tabname = require('tabby.tabname')
 local util = require('tabby.util')
 
 local hl_tabline = util.extract_nvim_hl('TabLine')
 local hl_normal = util.extract_nvim_hl('Normal')
 local hl_tabline_sel = util.extract_nvim_hl('TabLineSel')
 local hl_tabline_fill = util.extract_nvim_hl('TabLineFill')
+
+local function tab_label(tabid, active)
+  local icon = ''
+  if active then
+    icon = ''
+  end
+  local number = vim.api.nvim_tabpage_get_number(tabid)
+  local name = util.get_tab_name(tabid)
+  return string.format(' %s %d: %s ', icon, number, name)
+end
+
+local function tab_label_no_fallback(tabid, active)
+  local icon = ''
+  if active then
+    icon = ''
+  end
+  local fallback = function()
+    return ''
+  end
+  local number = vim.api.nvim_tabpage_get_number(tabid)
+  local name = util.get_tab_name(tabid, fallback)
+  if name == '' then
+    return string.format(' %s %d ', icon, number)
+  end
+  return string.format(' %s %d: %s ', icon, number, name)
+end
+
+local function win_label(winid, top)
+  local icon = ''
+  if top then
+    icon = ''
+  end
+  return string.format(' %s %s ', icon, filename.unique(winid))
+end
 
 ---@type table<TabbyTablineLayout, TabbyTablineOpt>
 local presets = {
@@ -19,7 +52,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid, true),
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -29,7 +62,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid),
           hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
         }
       end,
@@ -39,7 +72,7 @@ local presets = {
     top_win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid, true),
           hl = 'TabLine',
         }
       end,
@@ -49,7 +82,7 @@ local presets = {
     win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid),
           hl = 'TabLine',
         }
       end,
@@ -71,7 +104,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid, true),
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -81,7 +114,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid),
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -91,7 +124,7 @@ local presets = {
     top_win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid, true),
           hl = 'TabLine',
         }
       end,
@@ -101,7 +134,7 @@ local presets = {
     win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid),
           hl = 'TabLine',
         }
       end,
@@ -119,7 +152,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid, true),
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -129,7 +162,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid),
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -139,7 +172,7 @@ local presets = {
     top_win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid, true),
           hl = 'TabLine',
         }
       end,
@@ -149,7 +182,7 @@ local presets = {
     win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid),
           hl = 'TabLine',
         }
       end,
@@ -167,7 +200,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label_no_fallback(tabid, true),
           hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
         }
       end,
@@ -177,7 +210,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label_no_fallback(tabid),
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -187,7 +220,7 @@ local presets = {
     active_win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid, true),
           hl = 'TabLine',
         }
       end,
@@ -197,7 +230,7 @@ local presets = {
     win = {
       label = function(winid)
         return {
-          '  ' .. filename.unique(winid) .. ' ',
+          win_label(winid),
           hl = 'TabLine',
         }
       end,
@@ -215,7 +248,7 @@ local presets = {
     active_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid, true),
           hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
         }
       end,
@@ -225,7 +258,7 @@ local presets = {
     inactive_tab = {
       label = function(tabid)
         return {
-          '  ' .. tabname.get(tabid) .. ' ',
+          tab_label(tabid, false),
           hl = { fg = hl_tabline.fg, bg = hl_tabline.bg, style = 'bold' },
         }
       end,

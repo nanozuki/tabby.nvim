@@ -2,7 +2,7 @@ local component = require('tabby.component')
 local filename = require('tabby.filename')
 local option = require('tabby.option')
 local tabline = require('tabby.tabline')
-local tabname = require('tabby.tabname')
+local util = require('tabby.util')
 
 local tabby = {}
 
@@ -38,7 +38,7 @@ end
 
 function tabby.tab_rename(name)
   local tabid = vim.api.nvim_get_current_tabpage()
-  tabname.names[tabid] = name
+  util.set_tab_name(tabid, name)
   vim.o.tabline = '%!TabbyTabline()'
 end
 vim.cmd([[command! -nargs=1 TabRename lua require('tabby').tab_rename(<f-args>)]])
