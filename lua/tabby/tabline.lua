@@ -16,9 +16,13 @@ local tabline = {}
 ---@field tail? TabbyText[] display at end of tabline
 
 ---@class TabbyTabLabelOpt
----@field label string|TabbyText|fun(tabid:number):TabbyText
+---@field label TabbyTabProvider|TabbyTabProvider[]
+---@field join string join tab providers
 ---@field left_sep string|TabbyText
 ---@field right_sep string|TabbyText
+
+---@alias TabbyTabProviderFn fun(tabid:number):string|number|TabbyText
+---@alias TabbyTabProvider string|TabbyText|TabbyTabProviderFn
 
 ---@alias TabbyTablineLayout
 ---| "active_wins_at_tail" # windows in active tab will be display at end of tabline
