@@ -44,26 +44,45 @@ function win.fileicon(winid)
   return devicons.get_icon(name, ext)
 end
 
-function win.modified(icon)
-  return function(winid)
-    local bufid = vim.api.nvim_win_get_buf(winid)
-    local modified = vim.api.nvim_buf_get_option(bufid, 'modified')
-    if modified then
-      return icon
-    end
-    return ''
+local default_modified_icon = ''
+local default_read_only_icon = ''
+
+local function modified_icon(winid, icon)
+  local bufid = vim.api.nvim_win_get_buf(winid)
+  local modified = vim.api.nvim_buf_get_option(bufid, 'modified')
+  if modified then
+    return icon or default_modified_icon
   end
+  return ''
 end
 
-function win.read_only(icon)
-  return function(winid)
+win.modified = setmetatable({
+  icon = function(icon)
+    return function(winid)
+      return modified_icon(winid, icon)
+    end
+  end,
+}, {
+  __call = function(winid)
+    return modified_icon(winid)
+  end,
+})
+
+win.read_only = setmetatable({
+  icon = function(icon)
+    return function(winid)
+      return win.read_only(winid, icon)
+    end
+  end,
+}, {
+  __call = function(winid, icon)
     local bufid = vim.api.nvim_win_get_buf(winid)
     local modifiable = vim.api.nvim_buf_get_option(bufid, 'modifiable')
     if modifiable then
-      return icon
+      return icon or default_read_only_icon
     end
     return ''
-  end
-end
+  end,
+})
 
 return win
