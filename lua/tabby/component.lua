@@ -9,6 +9,7 @@ local component = {}
 ---@field label string|TabbyText
 ---@field left_sep? TabbyText
 ---@field right_sep? TabbyText
+---@field close_btn? string -- TODO: implemented this
 
 ---@class TabbyComWin
 ---@field type "win"
@@ -64,9 +65,8 @@ local function render_text(text)
   })
 end
 
----@param spring TabbyComSpring
 ---@return string statusline-format string
-local function render_spring(spring)
+local function render_spring()
   return element.render_spring()
 end
 
@@ -80,7 +80,7 @@ function component.render(com)
   elseif com.type == 'text' then
     return render_text(com)
   elseif com.type == 'spring' then
-    return render_spring(com)
+    return render_spring()
   else
     error('invalid component type')
   end
