@@ -29,13 +29,14 @@ local provider_opt = {
     name = {
       fallback = function(tabid)
         local api = require('tabby.api')
+        local filename = require('tabby.filename')
         local focus_win = api.tab.get_focus_win(tabid)
         local wins = api.tab.list_wins(tabid)
         local name = ''
         if api.win.is_relative(focus_win) then
           name = '[Floating]'
         else
-          name = require('tabby.win').filename(focus_win)
+          name = filename.unique(focus_win)
         end
         if #wins > 1 then
           name = string.format('%s[%d+]', name, #wins - 1)

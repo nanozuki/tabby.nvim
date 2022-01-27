@@ -24,9 +24,9 @@ tab.focus_win = {
 
 ---return tab's number
 ---@param tabid number
----@return number
+---@return string
 function tab.number(tabid)
-  return vim.api.nvim_tabpage_get_number(tabid)
+  return tostring(api.tab.get_number(tabid))
 end
 
 ---@class TabbyTabNameOpt
@@ -53,7 +53,7 @@ end
 ---@param tabid number
 ---@return string
 function tab.close_btn(tabid)
-  local n = tab.number(tabid)
+  local n = api.tab.get_number(tabid)
   return string.format('%%%dXclose%%X', n)
 end
 

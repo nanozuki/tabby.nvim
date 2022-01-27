@@ -38,7 +38,18 @@ end
 ---@param tabid number
 ---@return string
 function api.tab.get_name(tabid)
-  return vim.api.nvim_tabpage_get_var(tabid, tabname_key)
+  local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tabname_key)
+  if not ok then
+    return nil
+  end
+  return result
+end
+
+---get tab number
+---@param tabid number
+---@return number
+function api.tab.get_number(tabid)
+  return vim.api.nvim_tabpage_get_number(tabid)
 end
 
 return api

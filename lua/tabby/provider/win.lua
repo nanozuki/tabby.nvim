@@ -1,5 +1,5 @@
 local filename = require('tabby.filename')
-local opts = require('tabby.provider_opt')
+local opts = require('tabby.provider.opts')
 
 local win = {
   opt = {

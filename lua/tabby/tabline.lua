@@ -21,8 +21,41 @@ local tabline = {}
 ---@field left_sep string|TabbyText
 ---@field right_sep string|TabbyText
 
----@alias TabbyTabProviderFn fun(tabid:number):string|number|TabbyText
+---@alias TabbyTabProviderFn fun(tabid:number):string|TabbyText
 ---@alias TabbyTabProvider string|TabbyText|TabbyTabProviderFn
+
+---@param tabid number tab id
+---@param opt TabbyTabLabelOpt
+---@return TabbyComTab
+function tabline.render_tab_label(tabid, opt)
+  local label
+  if type(opt.label) == 'string' then
+    label = opt.label
+  elseif type(opt.label) == 'table' then
+    if vim.tbl_islist(opt.label) then
+      local labels = {}
+      for _, p in ipairs(opt.label) do
+        if type(p) == 'function' then
+          labels[#labels + 1] = p(tabid)
+        else
+          labels[#labels + 1] = p
+        end
+      end
+      label = table.concat(labels)
+    else
+      label = opt.label
+    end
+  elseif type(opt.label) == 'function' then
+    label = opt.label(tabid)
+  end
+  return {
+    type = 'tab',
+    tabid = tabid,
+    label = label,
+    left_sep = opt.left_sep,
+    right_sep = opt.right_sep,
+  }
+end
 
 ---@alias TabbyTablineLayout
 ---| "active_wins_at_tail" # windows in active tab will be display at end of tabline
@@ -36,23 +69,6 @@ local tabline = {}
 ---@field left_sep string|TabbyText
 ---@field inner_sep string|TabbyText won't works in "tab_with_top_win" layout
 ---@field right_sep string|TabbyText
-
----@param tabid number tab id
----@param opt TabbyTabLabelOpt
----@return TabbyComTab
-function tabline.render_tab_label(tabid, opt)
-  local label = opt.label
-  if type(opt.label) == 'function' then
-    label = opt.label(tabid)
-  end
-  return {
-    type = 'tab',
-    tabid = tabid,
-    label = label,
-    left_sep = opt.left_sep,
-    right_sep = opt.right_sep,
-  }
-end
 
 ---@param winid number window id
 ---@param is_first boolean
