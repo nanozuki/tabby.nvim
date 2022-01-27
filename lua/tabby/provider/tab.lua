@@ -51,14 +51,10 @@ end
 
 ---display a button for close btn
 ---@param tabid number
----@return TabbyComTab
+---@return string
 function tab.close_btn(tabid)
-  local opt = opts.tab.close_btn
-  return {
-    type = 'tab',
-    tabid = tabid,
-    close_btn = opt.icon,
-  }
+  local n = tab.number(tabid)
+  return string.format('%%%dXclose%%X', n)
 end
 
 return tab
