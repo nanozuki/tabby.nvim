@@ -42,11 +42,6 @@ function element.render_highlight(hl)
   return string.format('%%#%s#', hl.name)
 end
 
----@class TabbyLayout
----@field max_width number
----@field min_width number
----@field justify   "left"|"right" default is left
-
 local layout_defaults = {
   max_width = 0,
   min_width = 0,
