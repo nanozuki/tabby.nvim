@@ -1,6 +1,6 @@
 # tabby.nvim
 
-A minimal, configurable, neovim style tabline. Use your nvim tabs as workspace
+A minimal, configurable, neovim style tabline. Use your nvim tabs as a workspace
 multiplexer!
 
 ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/banner.png)
@@ -11,15 +11,15 @@ multiplexer!
 
 Tabby.nvim focuses on a vim-style tab instead of buffers list, so tabby only
 displays the buffers in tabpage(although you can use low-level API to write a
-bufferline). On the other hand, If you use some plugin such as "fzf" or
+bufferline). On the other hand, if you use some plugin such as "fzf" or
 "telescope," you will find the bufferline unnecessary. In that case, you may
-want to use the tab as its original feature: be a windows layout multiplexer.
+want to use the tab as its original feature: a windows layout multiplexer.
 That might be the reason why you choose tabby.nvim.
 
-### highly configurable and easy to start
+### Highly configurable and easy to start
 
-With tabby.nvim, you can config your own tabline from scratch. And won't worry
-the complexy, you can start from presets and example. As tabby.nvim have
+With tabby.nvim, you can config your own tabline from scratch. And don't worry
+about the complexity, you can start from presets and examples. tabby.nvim has
 complete type annotations (powered by EmmyLua), so you can write config with the
 help of lua-language-server.
 
@@ -104,13 +104,13 @@ No windows label, only tab. and use focus window to name tab
 
 ### Examples and Gallary
 
-There is some awesome exmaples shared by tabby.nvim users! Also welcome to share your owns! 
+These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own! 
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
 ### Key mapping
 
-Tabby use native nvim tab, so you can directly use nvim tab operation. Maybe you want mapping some operation. For example:
+Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe you want to map some operation. For example:
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
@@ -124,7 +124,7 @@ vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 ```
 
-And In fact, vim has some built-in keymapping, it's better to read `:help tabline`. Here are some useful mapping:
+And in fact, vim has some built-in keymapping, it's better to read `:help tabline`. Here are some useful mappings:
 
 ```
 gt					*i_CTRL-<PageDown>* *i_<C-PageDown>*
@@ -140,7 +140,7 @@ The `{count}` is the number displyed in presets.
 
 ## Customize
 
-Customize tabby with `tabby.setup(opt)`, the opt definiation is:
+Customize tabby with `tabby.setup(opt)`, the opt definition is:
 
 ```lua
 ---@class TabbyOption
@@ -152,7 +152,7 @@ Customize tabby with `tabby.setup(opt)`, the opt definiation is:
 
 The basic config unit in tabby is `TabbyText`. It's a set of text content,
 highlight group and layout setting. You may use it in many places. The type
-definiation is:
+definition is:
 
 ```lua
 ---@class TabbyText
@@ -255,7 +255,7 @@ define the tabline from scratch by setting `TabbyOption.components`.
 }
 ```
 
-This are all TabbyComponents:
+These are all TabbyComponents:
 
 - TabbyComTab
 
