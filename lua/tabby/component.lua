@@ -9,7 +9,6 @@ local component = {}
 ---@field label string|TabbyText
 ---@field left_sep? TabbyText
 ---@field right_sep? TabbyText
----@field close_btn? string -- TODO: implemented this
 
 ---@class TabbyComWin
 ---@field type "win"
