@@ -104,7 +104,7 @@ No windows label, only tab. and use focus window to name tab
 
 ### Examples and Gallary
 
-These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own! 
+These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own!
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
@@ -144,9 +144,18 @@ Customize tabby with `tabby.setup(opt)`, the opt definition is:
 
 ```lua
 ---@class TabbyOption
----@field tabline? TabbyTablineOpt           high-level api
----@field components? fun():TabbyComponent[] low-level api
+---@field tabline?    TabbyTablineOpt           high-level api
+---@field components? fun():TabbyComponent[]    low-level api
+---@field show_mode?  "disable"|"always"|"auto"
 ```
+
+### show mode
+
+Use option `show_mode` to specify when the tabline will be displayed:
+
+- (default)`always`: always show tabline
+- `never`: never show tabline
+- `auto`: show tabline only if there are at least two tab pages
 
 ### Base object for text
 
