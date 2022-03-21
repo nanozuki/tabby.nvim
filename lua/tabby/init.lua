@@ -19,8 +19,16 @@ function tabby.setup(opt)
   end
 end
 
-function tabby.init()
-  vim.o.showtabline = 2
+---@param opt TabbyOption
+function tabby.init(opt)
+  local mode = opt.show_mode or 'always'
+  if mode == 'always' then
+    vim.o.showtabline = 2
+  elseif mode == 'auto' then
+    vim.o.showtabline = 1
+  else
+    vim.o.showtabline = 0
+  end
   vim.o.tabline = '%!TabbyTabline()'
 end
 
