@@ -40,3 +40,11 @@ luac.out
 *.hex
 
 .DS_Store
+
+# test environment
+testenv/cache/nvim/*
+!testenv/cache/nvim/.gitkeep
+testenv/config/nvim/*
+!testenv/config/nvim/init.lua
+testenv/share/nvim/*
+!testenv/share/nvim/.gitkeep
