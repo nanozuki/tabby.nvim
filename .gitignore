@@ -39,7 +39,10 @@ luac.out
 *.x86_64
 *.hex
 
+# misc
 .DS_Store
+.idea/
+.code/
 
 # test environment
 testenv/cache/nvim/*

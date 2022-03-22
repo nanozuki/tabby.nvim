@@ -140,22 +140,25 @@ The `{count}` is the number displyed in presets.
 
 ## Customize
 
-Customize tabby with `tabby.setup(opt)`, the opt definition is:
+Customize tabby with `tabby.setup(config)`, the opt definition is:
+
+```lua
+---@class TabbyConfig
+---@field tabline?    TabbyTablineOpt           high-level api
+---@field components? fun():TabbyComponent[]    low-level api
+---@field opt?        TabbyOption               option for tabby
+```
+
+### options
 
 ```lua
 ---@class TabbyOption
----@field tabline?    TabbyTablineOpt           high-level api
----@field components? fun():TabbyComponent[]    low-level api
----@field show_mode?  "disable"|"always"|"auto"
+---@field show_at_least number show tabline when there are at least n tabs.
 ```
 
-### show mode
+- show_at_least
 
-Use option `show_mode` to specify when the tabline will be displayed:
-
-- (default)`always`: always show tabline
-- `never`: never show tabline
-- `auto`: show tabline only if there are at least two tab pages
+Only show tabline when there are at least n tabs.
 
 ### Base object for text
 
