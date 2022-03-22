@@ -1,17 +1,25 @@
 local component = require('tabby.component')
 local filename = require('tabby.filename')
-local option = require('tabby.option')
+local config = require('tabby.config')
 local tabline = require('tabby.tabline')
 local util = require('tabby.util')
 
 local tabby = {}
 
----@type nil|TabbyOption
+---@type nil|TabbyConfig
 local tabby_opt = nil
 
----@param opt? TabbyOption
-function tabby.setup(opt)
-  tabby_opt = opt or option.defaults
+---@param cfg? TabbyConfig
+function tabby.setup(cfg)
+  tabby_opt = vim.tbl_extend('force', config.defaults, cfg)
+
+  vim.cmd([[
+  augroup tabby_show_control
+    autocmd!
+    autocmd TabNew,TabClosed * lua require("tabby").show_tabline()
+  augroup end
+  ]])
+
   if vim.api.nvim_get_vvar('vim_did_enter') then
     tabby.init()
   else
@@ -20,8 +28,17 @@ function tabby.setup(opt)
 end
 
 function tabby.init()
-  vim.o.showtabline = 2
+  tabby.show_tabline()
   vim.o.tabline = '%!TabbyTabline()'
+end
+
+function tabby.show_tabline()
+  local tabs = vim.api.nvim_list_tabpages()
+  if #tabs >= tabby_opt.opt.show_at_least then
+    vim.o.showtabline = 2
+  else
+    vim.o.showtabline = 0
+  end
 end
 
 function tabby.update()
@@ -32,7 +49,7 @@ function tabby.update()
   elseif tabby_opt.tabline ~= nil then
     return tabline.render(tabby_opt.tabline)
   else
-    return tabline.render(option.defaults)
+    return tabline.render(config.defaults)
   end
 end
 

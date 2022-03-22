@@ -104,7 +104,7 @@ No windows label, only tab. and use focus window to name tab
 
 ### Examples and Gallary
 
-These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own! 
+These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own!
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
@@ -140,13 +140,25 @@ The `{count}` is the number displyed in presets.
 
 ## Customize
 
-Customize tabby with `tabby.setup(opt)`, the opt definition is:
+Customize tabby with `tabby.setup(config)`, the opt definition is:
+
+```lua
+---@class TabbyConfig
+---@field tabline?    TabbyTablineOpt           high-level api
+---@field components? fun():TabbyComponent[]    low-level api
+---@field opt?        TabbyOption               option for tabby
+```
+
+### options
 
 ```lua
 ---@class TabbyOption
----@field tabline? TabbyTablineOpt           high-level api
----@field components? fun():TabbyComponent[] low-level api
+---@field show_at_least number show tabline when there are at least n tabs.
 ```
+
+- show_at_least
+
+Only show tabline when there are at least n tabs.
 
 ### Base object for text
 
