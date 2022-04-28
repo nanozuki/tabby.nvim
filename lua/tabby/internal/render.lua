@@ -1,23 +1,28 @@
 local log = require('tabby.internal.log')
+local highlight = require('tabby.internal.highlight')
 
-local M = {}
+local render = {}
 
 ---A element is a "hyper text" object
 ---@class Element
----@field node  Node         children node
----@field hl    Highlight
----@field lo    Layout
+---@field [1] Node children node
+---@field hl Highlight
+---@field lo Layout
 ---@field click ClickHandler
 
----@alias Highlight string
--- fg   string foreground color
--- bg   string background color
--- attr string gui attributes
+---@alias Highlight HighlightGroup|HighlightOpt
+
+---@alias HighlightGroup string
+
+---@class HighlightOpt
+---@field fg?    string hex color for foreground
+---@field bg?    string hex color for background
+---@field style? string gui style attributes
 
 ---@class Layout
----@field right? boolean Is left justify @default false
----@field maxwid? number maximum width
----@field minwid? number minimum width
+---@field justify? 'left'|'right' justify @default 'left'
+---@field max_width? number maximum width
+---@field min_width? number minimum width
 
 ---@alias ClickHandler ClickTab|CloseTab|CustomHander
 
@@ -44,7 +49,7 @@ local M = {}
 ---@param node Node
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
-function M.render_node(node, ctx)
+function render.node(node, ctx)
   if ctx ~= nil then
     vim.validate({
       ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
@@ -54,11 +59,11 @@ function M.render_node(node, ctx)
   if vim.tbl_islist(node) then
     local strs = {}
     for i, frag in ipairs(node) do
-      strs[i], ctx = M.render_frag(frag, ctx)
+      strs[i], ctx = render.frag(frag, ctx)
     end
     return table.concat(strs, ''), ctx
   else
-    return M.render_frag(node, ctx)
+    return render.frag(node, ctx)
   end
 end
 
@@ -66,7 +71,7 @@ end
 ---@param frag Frag
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
-function M.render_frag(frag, ctx)
+function render.frag(frag, ctx)
   if ctx ~= nil then
     vim.validate({
       ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
@@ -74,7 +79,7 @@ function M.render_frag(frag, ctx)
     })
   end
   if type(frag) == 'table' then
-    return M.render_element(frag, ctx)
+    return render.element(frag, ctx)
   elseif type(frag) == 'string' then
     return frag, ctx
   else
@@ -87,7 +92,7 @@ end
 ---@param el Element
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
-function M.render_element(el, ctx)
+function render.element(el, ctx)
   ctx = ctx or {}
   vim.validate({
     el = { el, 'table' },
@@ -95,16 +100,16 @@ function M.render_element(el, ctx)
     ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
   })
   local hl = el.hl or ctx.parent_hl
-  local text = M.render_node(el.node, { current_hl = hl, parent_hl = hl })
+  local text = render.node(el[1], { current_hl = hl, parent_hl = hl })
   if hl ~= nil and hl ~= ctx.current_hl then
-    text = M.render_highlight(hl, text)
+    text = render.highlight(hl, text)
     ctx.current_hl = hl
   end
   if el.lo ~= nil then
-    text = M.render_lo(el.lo, text)
+    text = render.layout(el.lo, text)
   end
   if el.click ~= nil then
-    text = M.render_click_handler(el.click, text)
+    text = render.click_handler(el.click, text)
   end
   return text, ctx
 end
@@ -113,40 +118,47 @@ end
 ---@param hl Highlight
 ---@param text string
 ---@return string
-function M.render_highlight(hl, text)
+function render.highlight(hl, text)
   vim.validate({
-    hl = { hl, 'string' },
+    hl = { hl, { 'string', 'table' } },
     text = { text, 'string' },
   })
-  return string.format('%%#%s#', hl) .. text
+  ---@type string
+  local group
+  if type(hl) == 'string' then
+    group = hl
+  elseif type(hl) == 'table' then
+    group = highlight.register(hl)
+  end
+  return string.format('%%#%s#', group) .. text
 end
 
 ---render Layout
 ---@param lo Layout
 ---@param text string
 ---@return string
-function M.render_lo(lo, text)
+function render.layout(lo, text)
   vim.validate({
     lo = { lo, 'table' },
     text = { text, 'string' },
-    ['lo.right'] = { lo.right, 'boolean', true },
-    ['lo.minwid'] = { lo.minwid, 'number', true },
-    ['lo.maxwind'] = { lo.maxwid, 'number', true },
+    ['lo.justify'] = { lo.justify, 'boolean', true },
+    ['lo.min_width'] = { lo.min_width, 'number', true },
+    ['lo.max_width'] = { lo.max_width, 'number', true },
   })
-  if (lo.maxwid or 0 == 0) and (lo.minwid or 0 == 0) then
+  if (lo.max_width or 0 == 0) and (lo.min_width or 0 == 0) then
     return text
   end
 
-  -- text is: %-{minwid}.{maxwid}(<string>%)
+  -- text is: %-{min_width}.{maxwid}(<string>%)
   local head = '%-'
   local width = ''
-  if lo.right then
+  if (lo.justify or 'left') == 'right' then
     head = '%'
   end
-  if (lo.maxwid or 0) > 0 then
-    width = string.format('%d.%d', lo.minwid or 0, lo.maxwid or 0)
-  elseif (lo.minwid or 0) > 0 then
-    width = lo.minwid
+  if (lo.max_width or 0) > 0 then
+    width = string.format('%d.%d', lo.min_width or 0, lo.max_width or 0)
+  elseif (lo.min_width or 0) > 0 then
+    width = lo.min_width
   end
   return table.concat({ head, width, '(', text, '%)' })
 end
@@ -155,7 +167,7 @@ end
 ---@param click ClickHandler
 ---@param text string
 ---@return string
-function M.render_click_handler(click, text)
+function render.click_handler(click, text)
   vim.validate({
     click = { click, 'table' },
     ['click[1]'] = { click[1], 'string' },
@@ -175,3 +187,5 @@ function M.render_click_handler(click, text)
   end
   return string.format('%%%d%s%s%%X', label, begin, text)
 end
+
+return render

@@ -6,7 +6,7 @@ local component = {}
 ---@class TabbyComTab
 ---@field type "tab"
 ---@field tabid number
----@field label string|TabbyText
+---@field label Node
 ---@field left_sep? TabbyText
 ---@field right_sep? TabbyText
 
