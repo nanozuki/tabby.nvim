@@ -1,4 +1,4 @@
-local log = require('tabby.core.log')
+local log = require('tabby.internal.log')
 
 local M = {}
 
@@ -19,7 +19,7 @@ local M = {}
 ---@field maxwid? number maximum width
 ---@field minwid? number minimum width
 
----@alias ClickHandler ClickTab|CloseTab|CustomerHander
+---@alias ClickHandler ClickTab|CloseTab|CustomHander
 
 ---@class ClickTab
 ---@field [1] "to_tab"
@@ -29,10 +29,9 @@ local M = {}
 ---@field [1] "x_tab"
 ---@field [2] number tabid
 
----@class CustomerHander
----@field [1] "customer"
+---@class CustomHander
+---@field [1] "custom"
 ---@field [2] number handle id
----@field [3] function(number,string,string) handler
 
 ---@alias Frag Element|string
 ---@alias Node Frag|Frag[]
@@ -46,10 +45,12 @@ local M = {}
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function M.render_node(node, ctx)
-  vim.validate({
-    ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
-    ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
-  })
+  if ctx ~= nil then
+    vim.validate({
+      ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
+      ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
+    })
+  end
   if vim.tbl_islist(node) then
     local strs = {}
     for i, frag in ipairs(node) do
@@ -66,10 +67,12 @@ end
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function M.render_frag(frag, ctx)
-  vim.validate({
-    ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
-    ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
-  })
+  if ctx ~= nil then
+    vim.validate({
+      ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
+      ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
+    })
+  end
   if type(frag) == 'table' then
     return M.render_element(frag, ctx)
   elseif type(frag) == 'string' then
@@ -85,9 +88,9 @@ end
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function M.render_element(el, ctx)
+  ctx = ctx or {}
   vim.validate({
     el = { el, 'table' },
-    ctx = { ctx, 'table' },
     ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
     ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
   })
@@ -99,6 +102,9 @@ function M.render_element(el, ctx)
   end
   if el.lo ~= nil then
     text = M.render_lo(el.lo, text)
+  end
+  if el.click ~= nil then
+    text = M.render_click_handler(el.click, text)
   end
   return text, ctx
 end
@@ -145,4 +151,27 @@ function M.render_lo(lo, text)
   return table.concat({ head, width, '(', text, '%)' })
 end
 
-return M
+---render click handler to string
+---@param click ClickHandler
+---@param text string
+---@return string
+function M.render_click_handler(click, text)
+  vim.validate({
+    click = { click, 'table' },
+    ['click[1]'] = { click[1], 'string' },
+    ['click[2]'] = { click[2], 'number' },
+    text = { text, 'string' },
+  })
+  local begin, label
+  if click[1] == 'to_tab' then
+    label = vim.api.nvim_tabpage_get_number(click[2])
+    begin = 'T'
+  elseif click[1] == 'x_tab' then
+    label = vim.api.nvim_tabpage_get_number(click[2])
+    begin = 'X'
+  elseif click[1] == 'customer' then
+    label = click[2]
+    begin = '@TabbyCustomClickHandler@'
+  end
+  return string.format('%%%d%s%s%%X', label, begin, text)
+end
