@@ -33,7 +33,7 @@ local component = {}
 local function render_tab(tab)
   return {
     node.from_label_and_seps(tab.label, tab.left_sep, tab.right_sep),
-    { 'to_tab', tab.tabid },
+    click = { 'to_tab', tab.tabid },
   }
 end
 

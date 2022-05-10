@@ -28,6 +28,7 @@ function highlight.register(hl)
   end
   vim.cmd(table.concat(cmd, ' '))
   registered_highlight[group] = true
+  return group
 end
 
 return highlight

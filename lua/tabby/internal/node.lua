@@ -62,13 +62,13 @@ function node.from_label_and_seps(label, left_sep, right_sep)
   if left_sep ~= nil then
     elements[#elements + 1] = node.from_tabby_text(left_sep)
   end
-  if right_sep ~= nil then
-    elements[#elements + 1] = node.from_tabby_text(right_sep)
-  end
   if type(label) == 'string' then
     elements[#elements + 1] = label
   else
     elements[#elements + 1] = node.from_tabby_text(label)
+  end
+  if right_sep ~= nil then
+    elements[#elements + 1] = node.from_tabby_text(right_sep)
   end
   return elements
 end
