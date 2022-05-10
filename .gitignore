@@ -45,3 +45,4 @@ luac.out
 .code/
 
 # test environment
+testenv/
