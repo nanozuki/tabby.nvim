@@ -42,7 +42,7 @@ local node = {}
 ---@param ttext TabbyText
 ---@return table Element
 function node.from_tabby_text(ttext)
-  if type(ttext[1]) == '' then
+  if type(ttext[1]) == 'string' then
     return ttext
   else
     return {
@@ -60,15 +60,15 @@ end
 function node.from_label_and_seps(label, left_sep, right_sep)
   local elements = {}
   if left_sep ~= nil then
-    table.concat(elements, node.from_tabby_text(left_sep))
+    elements[#elements + 1] = node.from_tabby_text(left_sep)
   end
   if right_sep ~= nil then
-    table.concat(elements, node.from_tabby_text(right_sep))
+    elements[#elements + 1] = node.from_tabby_text(right_sep)
   end
   if type(label) == 'string' then
-    table.concat(elements, label)
+    elements[#elements + 1] = label
   else
-    table.concat(elements, node.from_tabby_text(label))
+    elements[#elements + 1] = node.from_tabby_text(label)
   end
   return elements
 end

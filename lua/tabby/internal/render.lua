@@ -14,8 +14,8 @@ local render = {}
 function render.node(node, ctx)
   if ctx ~= nil then
     vim.validate({
-      ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
-      ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
+      ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
+      ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
     })
   end
   if vim.tbl_islist(node) then
@@ -36,8 +36,8 @@ end
 function render.frag(frag, ctx)
   if ctx ~= nil then
     vim.validate({
-      ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
-      ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
+      ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
+      ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
     })
   end
   if type(frag) == 'table' then
@@ -58,8 +58,8 @@ function render.element(el, ctx)
   ctx = ctx or {}
   vim.validate({
     el = { el, 'table' },
-    ['ctx.current_hl'] = { ctx.current_hl, 'string', true },
-    ['ctx.parent_hl'] = { ctx.parent_hl, 'string', true },
+    ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
+    ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
   })
   local hl = el.hl or ctx.parent_hl
   local text = render.node(el[1], { current_hl = hl, parent_hl = hl })
