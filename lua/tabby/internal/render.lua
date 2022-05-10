@@ -136,18 +136,20 @@ function render.click_handler(click, text)
     ['click[2]'] = { click[2], 'number' },
     text = { text, 'string' },
   })
-  local begin, label
+  local prefix, suffix
   if click[1] == 'to_tab' then
-    label = vim.api.nvim_tabpage_get_number(click[2])
-    begin = 'T'
+    local number = vim.api.nvim_tabpage_get_number(click[2])
+    prefix = '%' .. tostring(number) .. 'T'
+    suffix = '%T'
   elseif click[1] == 'x_tab' then
-    label = vim.api.nvim_tabpage_get_number(click[2])
-    begin = 'X'
+    local number = vim.api.nvim_tabpage_get_number(click[2])
+    prefix = '%' .. tostring(number) .. 'X'
+    suffix = '%X'
   elseif click[1] == 'customer' then
-    label = click[2]
-    begin = '@TabbyCustomClickHandler@'
+    prefix = '%' .. click[2] .. '@TabbyCustomClickHandler@'
+    suffix = '%X'
   end
-  return string.format('%%%d%s%s%%X', label, begin, text)
+  return string.format('%s%s%s', prefix, text, suffix)
 end
 
 return render
