@@ -1,5 +1,5 @@
-local log = require('tabby.internal.log')
-local highlight = require('tabby.internal.highlight')
+local log = require('tabby.module.log')
+local highlight = require('tabby.module.highlight')
 
 local render = {}
 

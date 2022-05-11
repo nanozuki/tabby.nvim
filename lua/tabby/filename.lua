@@ -133,6 +133,13 @@ function unique_names:get_name(bufid)
   return self.names[bufid]
 end
 
+vim.cmd([[
+  augroup highlight_cache
+    autocmd!
+    autocmd WinNew,WinClosed,BufWinEnter,BufWinLeave * lua require("tabby.filename").flush_unique_name_cache()
+  augroup end
+]])
+
 function filename.flush_unique_name_cache()
   unique_names:init()
 end

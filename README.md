@@ -138,6 +138,101 @@ gT		Go to the previous tab page.  Wraps around from the first one
 
 The `{count}` is the number displyed in presets.
 
+## Setting for Tabby
+
+### use presets
+
+```lua
+tabby.set_tabline(tabby.tabline.presets({
+  preset = tabby.tabline.presets.active_wins_at_tail,
+  options = {
+    display_mode = 'auto',
+    color_mode = 'TabLine' | 'Lualine',
+    label_style = 'bubble' | 'triangle' | 'powerline' | 'bufferline',
+  }
+}))
+```
+
+### config by yourself
+
+example 1: active_wins_at_tail
+
+```lua
+tabby.set_tabline(function()
+  return {
+    { '  ', hl = 'TabLine' },
+    tabby.text.seprator('', 'TabLine', 'TabLineFill'),
+    tabby.tab.foreach(function(tabid)
+      local hl = tabby.tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
+      return {
+        tabby.text.seprator('', hl, 'TabLineFill'),
+        tabby.tab.is_active(tabid) and '' or '',
+        tabby.tab.get_number(tabid),
+        tabby.tab.get_name(tabid),
+        tabby.tab.close_btn(tabid, 'x', { fg = 'red' }),
+        tabby.text.seprator('', hl, 'TabLineFill'),
+        margin = ' ',
+        hl = hl,
+      }
+    end),
+    tabby.text.spring(),
+    tabby.win.foreach({ tabby.win.in_active_tab, tabby.win.open_a_file }, function(winid)
+      return {
+        tabby.text.seprator('', 'TabLine', 'TabLineFill'),
+        tabby.win.is_top(winid) and '' or '',
+        tabby.win.get_filename.unique(winid),
+        tabby.text.seprator('', 'TabLine', 'TabLineFill'),
+        margin = ' ',
+        hl = 'TabLine',
+      }
+    end),
+    tabby.text.seprator('', 'TabLine', 'TabLineFill'),
+    { '  ', hl = 'TabLine' },
+    hl = 'TabLineFill',
+  }
+end)
+```
+
+example 2: active_tab_with_wins
+
+```lua
+tabby.set_tabline(function()
+  return {
+    { '  ', hl = 'TabLine' },
+    tabby.text.seprator(''),
+    tabby.tab.foreach(function(tabid)
+      local hl = tabby.tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
+      local node = {
+        tabby.text.seprator('', hl, 'TabLineFill'),
+        tabby.tab.is_active(tabid) and '' or '',
+        tabby.tab.get_number(tabid),
+        tabby.tab.get_name(tabid),
+        tabby.tab.close_btn(tabid, 'x', { fg = 'red' }),
+        tabby.text.seprator('', hl, 'TabLineFill'),
+        hl = hl,
+        margin = ' ',
+      }
+      if ~tabby.tab.is_active then
+        return node
+      end
+      local nodes = { node}
+      tabby.win.foreach({ tabby.win.in_active_tab }, function(winid)
+        nodes[#nodes+1] = {
+          tabby.text.seprator(''),
+          tabby.win.is_top(winid) and '' or '',
+          tabby.win.get_filename.unique(winid),
+          tabby.text.seprator(''),
+          hl = 'TabLine',
+          margin = ' ',
+        }
+      end),
+      return nodes
+    end),
+    hl = 'TabLineFill',
+  }
+end)
+```
+
 ## Customize
 
 Customize tabby with `tabby.setup(config)`, the opt definition is:
