@@ -17,13 +17,13 @@ function highlight.register(hl)
     return group
   end
   local cmd = { 'hi', group }
-  if hl.fg ~= nil then
+  if hl.fg ~= nil and hl.fg ~= '' then
     table.insert(cmd, 'guifg=' .. hl.fg)
   end
-  if hl.bg ~= nil then
+  if hl.bg ~= nil and hl.bg ~= '' then
     table.insert(cmd, 'guibg=' .. hl.bg)
   end
-  if hl.style ~= nil then
+  if hl.style ~= nil and hl.style ~= '' then
     table.insert(cmd, 'gui=' .. hl.style)
   end
   vim.cmd(table.concat(cmd, ' '))
