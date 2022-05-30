@@ -11,7 +11,7 @@ local tabby_opt = nil
 
 ---@param cfg? TabbyConfig
 function tabby.setup(cfg)
-  tabby_opt = vim.tbl_extend('force', config.defaults, cfg)
+  tabby_opt = vim.tbl_extend('force', config.defaults, cfg or {})
 
   vim.cmd([[
   augroup tabby_show_control
