@@ -8,6 +8,7 @@ test-nvim:
 	-rm ./testenv/config/nvim/plugin/tabby.vim
 	cp ./plugin/tabby.vim  ./testenv/config/nvim/plugin/
 	-cp -n ./testdata/mini-config.lua ./testenv/config/nvim/init.lua
+	XDG_DATA_HOME=./testenv/data/ XDG_CONFIG_HOME=./testenv/config/ XDG_CACHE_HOME=./testenv/cache/ nvim --headless -c 'lua Bootstrap()'
 	XDG_DATA_HOME=./testenv/data/ XDG_CONFIG_HOME=./testenv/config/ XDG_CACHE_HOME=./testenv/cache/ nvim
 
 clear-test-nvim:

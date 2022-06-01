@@ -13,6 +13,9 @@ function highlight.register(hl)
     style = { hl.style, 'string', true },
   })
   local group = string.gsub(string.format('TabbyHl_%s_%s_%s', hl.fg or '', hl.bg or '', hl.style or ''), '#', '')
+  if group == 'TabbyHl___' then -- all param is empty, return Normal
+    return 'Normal'
+  end
   if registered_highlight[group] == true then
     return group
   end
@@ -29,6 +32,18 @@ function highlight.register(hl)
   vim.cmd(table.concat(cmd, ' '))
   registered_highlight[group] = true
   return group
+end
+
+---@param group_name string
+---@return HighlightOpt
+function highlight.extract(group_name)
+  local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
+  local hl = {
+    fg = hl_str:match('guifg=([^%s]+)') or '',
+    bg = hl_str:match('guibg=([^%s]+)') or '',
+    style = hl_str:match('gui=([^%s]+)') or '',
+  }
+  return hl
 end
 
 return highlight

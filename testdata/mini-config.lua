@@ -1,34 +1,30 @@
--- packer
-local fn = vim.fn
-local packer_bootstrap
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({
-    'git',
-    'clone',
-    '--depth',
-    '1',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path,
-  })
-  vim.cmd([[packadd packer.nvim]])
+local plugins = {
+  'savq/paq-nvim',
+  { 'rose-pine/neovim', as = 'rose-pine' },
+}
+
+function Bootstrap()
+  local paqs_path = vim.fn.stdpath('data') .. '/site/pack/paqs/start/paq-nvim'
+  if vim.fn.empty(vim.fn.glob(paqs_path)) > 0 then
+    vim.fn.system({
+      'git',
+      'clone',
+      '--depth',
+      '1',
+      'https://github.com/savq/paq-nvim.git',
+      paqs_path,
+    })
+    vim.cmd([[packadd paq-nvim]])
+  end
+
+  vim.cmd('packadd paq-nvim')
+  local paq = require('paq')
+  vim.cmd('autocmd User PaqDoneInstall quit')
+  paq(plugins)
+  paq.install()
 end
 
-require('packer').startup(function(use)
-  use('wbthomason/packer.nvim')
-  use({
-    'rose-pine/neovim',
-    as = 'rose-pine',
-    config = function()
-      vim.o.background = 'light'
-      vim.cmd('colorscheme rose-pine')
-      require('tabby').setup({
-        -- put your test config to here:
-        tabline = require('tabby.presets').active_wins_at_tail,
-      })
-    end,
-  })
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+require('tabby').setup({
+  -- put your test config to here:
+  tabline = require('tabby.presets').active_wins_at_tail,
+})
