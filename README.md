@@ -66,7 +66,7 @@ require("tabby").setup({
 })
 ```
 
-There are three
+There are five
 [presets](https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua)
 for now:
 
