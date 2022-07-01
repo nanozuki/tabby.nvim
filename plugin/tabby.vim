@@ -9,7 +9,3 @@ endfunction
 function! TabbyTabline() abort
     return luaeval("require'tabby'.update()")
 endfunction
-
-function! TabbyRenderTabline() abort
-    return luaeval("require'tabby.tabline'.render()")
-endfunction
