@@ -28,6 +28,7 @@ function tabby.setup(cfg)
 end
 
 function tabby.init()
+  tabby.show_tabline()
   vim.o.tabline = '%!TabbyTabline()'
 end
 

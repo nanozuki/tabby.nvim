@@ -29,7 +29,7 @@ function highlight.register(hl)
   for _, k in ipairs(tabby_keys) do
     groups[#groups + 1] = hl[k] or ''
   end
-  local group = table.concat(groups)
+  local group = string.gsub(table.concat(groups, '_'), '#', '')
   if group == 'TabbyHl______' then -- all param is empty, return Normal
     return 'Normal'
   end
