@@ -1,13 +1,13 @@
-local component = require('tabby.component')
+local component = require('tabby.legacy.component')
+local config = require('tabby.legacy.config')
+local tabline = require('tabby.legacy.tabline')
 local filename = require('tabby.filename')
-local config = require('tabby.config')
-local tabline = require('tabby.tabline')
 local util = require('tabby.util')
 
 local tabby = {}
 
----@type nil|TabbyConfig
-local tabby_opt = nil
+---@type TabbyConfig
+local tabby_opt = config.defaults
 
 ---@param cfg? TabbyConfig
 function tabby.setup(cfg)

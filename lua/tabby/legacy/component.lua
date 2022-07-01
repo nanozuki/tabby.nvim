@@ -1,7 +1,7 @@
 --- lowest level specs, can be render to statusline-format text directly
 
-local node = require('tabby.internal.node')
-local render = require('tabby.internal.render')
+local node = require('tabby.module.node')
+local render = require('tabby.module.render')
 
 local component = {}
 

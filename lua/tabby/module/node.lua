@@ -10,9 +10,12 @@
 ---@alias HighlightGroup string
 
 ---@class HighlightOpt
----@field fg?    string hex color for foreground
----@field bg?    string hex color for background
----@field style? string gui style attributes
+---@field fg? string highlight argument guifg
+---@field bg? string highlight argument guibg
+---@field style? string highlight argument gui
+---@field ctermfg? string highlight argument ctermfg
+---@field ctermbg? string highlight argument ctermbg
+---@field cterm? string highlight argument cterm
 
 ---@class Layout
 ---@field justify? 'left'|'right' justify @default 'left'
