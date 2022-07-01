@@ -1,7 +1,7 @@
-local component = require('tabby.component')
+local component = require('tabby.legacy.component')
+local config = require('tabby.legacy.config')
+local tabline = require('tabby.legacy.tabline')
 local filename = require('tabby.filename')
-local config = require('tabby.config')
-local tabline = require('tabby.tabline')
 local util = require('tabby.util')
 
 local tabby = {}
@@ -46,9 +46,9 @@ function tabby.update()
     local components = tabby_opt.components()
     return table.concat(vim.tbl_map(component.render, components), '')
   elseif tabby_opt.tabline ~= nil then
-    return tabline.legacy_render(tabby_opt.tabline)
+    return tabline.render(tabby_opt.tabline)
   else
-    return tabline.legacy_render(config.defaults)
+    return tabline.render(config.defaults)
   end
 end
 
