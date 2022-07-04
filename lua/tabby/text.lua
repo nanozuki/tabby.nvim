@@ -6,7 +6,7 @@ local highlight = require('tabby.module.highlight')
 ---@param sep string
 ---@param current TabbyHighlight
 ---@param parent TabbyHighlight
----@return Node
+---@return TabbyNode
 function text.separator(sep, current, parent)
   if type(current) == 'string' then
     current = highlight.extract(current)

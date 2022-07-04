@@ -1,7 +1,7 @@
 local tab = {}
 local util = require('tabby.util')
 
----@alias TabNodeFn fun(tabid:number):Node
+---@alias TabNodeFn fun(tabid:number):TabbyNode
 
 ---@class TabList:number[]
 ---@field foreach fun(fn:TabNodeFn) give a node function for tab
@@ -71,7 +71,7 @@ end
 ---@param tabid number
 ---@param symbol string
 ---@param hl TabbyHighlight
----@return Node
+---@return TabbyNode
 function tab.close_btn(tabid, symbol, hl)
   return {
     symbol,
