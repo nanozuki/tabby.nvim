@@ -8,20 +8,20 @@ local component = {}
 ---@class TabbyComTab
 ---@field type "tab"
 ---@field tabid number
----@field label string|TabbyText
----@field left_sep? TabbyText
----@field right_sep? TabbyText
+---@field label string|LegacyText
+---@field left_sep? LegacyText
+---@field right_sep? LegacyText
 
 ---@class TabbyComWin
 ---@field type "win"
 ---@field winid number
----@field label string|TabbyText
----@field left_sep? TabbyText
----@field right_sep? TabbyText
+---@field label string|LegacyText
+---@field left_sep? LegacyText
+---@field right_sep? LegacyText
 
 ---@class TabbyComText
 ---@field type "text"
----@field text TabbyText
+---@field text LegacyText
 
 ---@class TabbyComSpring
 ---@field type "spring"

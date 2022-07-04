@@ -4,11 +4,11 @@ local highlight = require('tabby.module.highlight')
 local render = {}
 
 ---@class Context
----@field parent_hl Highlight
----@field current_hl Highlight
+---@field parent_hl TabbyHighlight
+---@field current_hl TabbyHighlight
 
 ---render node to tabline string
----@param node Node
+---@param node TabbyNode
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function render.node(node, ctx)
@@ -30,7 +30,7 @@ function render.node(node, ctx)
 end
 
 ---render frag to string
----@param frag Frag
+---@param frag TabbyFrag
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function render.frag(frag, ctx)
@@ -51,7 +51,7 @@ function render.frag(frag, ctx)
 end
 
 ---render Element to string
----@param el Element
+---@param el TabbyElement
 ---@param ctx Context? highlight group in context
 ---@return string, Context? rendered string and context
 function render.element(el, ctx)
@@ -77,7 +77,7 @@ function render.element(el, ctx)
 end
 
 ---render highlight
----@param hl Highlight
+---@param hl TabbyHighlight
 ---@param text string
 ---@return string
 function render.highlight(hl, text)
@@ -96,7 +96,7 @@ function render.highlight(hl, text)
 end
 
 ---render Layout
----@param lo Layout
+---@param lo TabbyLayout
 ---@param text string
 ---@return string
 function render.layout(lo, text)
@@ -120,13 +120,13 @@ function render.layout(lo, text)
   if (lo.max_width or 0) > 0 then
     width = string.format('%d.%d', lo.min_width or 0, lo.max_width or 0)
   elseif (lo.min_width or 0) > 0 then
-    width = lo.min_width
+    width = tostring(lo.min_width)
   end
   return table.concat({ head, width, '(', text, '%)' })
 end
 
 ---render click handler to string
----@param click ClickHandler
+---@param click TabbyClickHandler
 ---@param text string
 ---@return string
 function render.click_handler(click, text)

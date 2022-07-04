@@ -1,5 +1,17 @@
 local highlight = {}
 
+---@alias TabbyHighlight TabbyHighlightGroup|TabbyHighlightObject
+
+---@alias TabbyHighlightGroup string
+
+---@class TabbyHighlightObject
+---@field fg? string highlight argument guifg
+---@field bg? string highlight argument guibg
+---@field style? string highlight argument gui
+---@field ctermfg? string highlight argument ctermfg
+---@field ctermbg? string highlight argument ctermbg
+---@field cterm? string highlight argument cterm
+
 vim.cmd([[
   augroup highlight_cache
     autocmd!
@@ -11,7 +23,7 @@ vim.cmd([[
 local registered_highlight = {}
 
 ---register highlight object to nvim
----@param hl HighlightOpt
+---@param hl TabbyHighlightObject
 ---@return string highlight group name
 function highlight.register(hl)
   vim.validate({
@@ -48,11 +60,11 @@ function highlight.register(hl)
   return group
 end
 
----@type table<string, HighlightOpt>
+---@type table<string, TabbyHighlightObject>
 local extract_cache = {}
 
 ---@param group_name string
----@return HighlightOpt
+---@return TabbyHighlightObject
 function highlight.extract(group_name)
   local ho = extract_cache[group_name]
   if ho ~= nil then

@@ -31,7 +31,6 @@ local function win_label(winid, top)
   return string.format(' %s %s ', icon, filename.unique(winid))
 end
 
----@type table<TabbyTablineLayout, TabbyTablineOpt>
 local presets = {
   active_wins_at_tail = {
     hl = 'TabLineFill',

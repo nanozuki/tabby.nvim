@@ -70,7 +70,7 @@ end
 ---return tab's close button
 ---@param tabid number
 ---@param symbol string
----@param hl Highlight
+---@param hl TabbyHighlight
 ---@return Node
 function tab.close_btn(tabid, symbol, hl)
   return {
