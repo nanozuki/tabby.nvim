@@ -65,7 +65,7 @@ function highlight.extract(group_name)
     return ho
   end
   local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
-  local hl = { fg = 'fg', bg = 'bg' }
+  local hl = {}
   for k, v in string.gmatch(hl_str, '([^%s=]+)=([^%s=]+)') do
     if k == 'guifg' then
       hl.fg = v
@@ -75,19 +75,7 @@ function highlight.extract(group_name)
       hl.style = v
     end
   end
-  -- handle reverse
-  if hl.style ~= nil then
-    local style = table.concat(
-      vim.tbl_filter(function(word)
-        return word ~= 'reverse' and word ~= 'inverse'
-      end, vim.split(hl.style, ',')),
-      ','
-    )
-    if hl ~= style then -- reverse or inverse in styles
-      hl.style = style
-      hl.bg, hl.fg = hl.fg, hl.bg
-    end
-  end
+  extract_cache[group_name] = hl
   return hl
 end
 
