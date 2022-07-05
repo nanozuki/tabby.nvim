@@ -1,5 +1,6 @@
 local plugins = {
   'savq/paq-nvim',
+  { 'shaunsingh/nord.nvim' },
   { 'rose-pine/neovim', as = 'rose-pine' },
 }
 
@@ -24,7 +25,9 @@ function Bootstrap()
   paq.install()
 end
 
-require('tabby').setup({
-  -- put your test config to here:
-  tabline = require('tabby.presets').active_wins_at_tail,
-})
+local use_theme = require('use_theme')
+local setup = require('setup')
+
+-- put your test config to here or use boilerplate code
+use_theme.rose_pine_dawn()
+setup.preset_active_wins_at_tail()
