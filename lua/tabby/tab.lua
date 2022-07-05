@@ -2,11 +2,11 @@ local tab = {}
 local win = require('tabby.win')
 
 ---@class TabbyTabOption
----@field default_name fun(tabid:number):string
+---@field name_fallback fun(tabid:number):string
 
 ---@type TabbyTabOption
 local option = {
-  default_name = function(tabid)
+  name_fallback = function(tabid)
     local wins = win.all_in_tab(tabid)
     local focus_win = tab.get_current_win(tabid)
     local name = ''
@@ -117,7 +117,7 @@ function tab.get_name(tabid)
   if ok then
     return result
   end
-  return option.default_name(tabid)
+  return option.name_fallback(tabid)
 end
 
 ---get tab's raw name
