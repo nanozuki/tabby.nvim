@@ -1,26 +1,24 @@
-local filename = require('tabby.filename')
+local filename = require('tabby.module.filename')
+local highlight = require('tabby.module.highlight')
 local text = require('tabby.text')
-local util = require('tabby.util')
+local tab = require('tabby.tab')
 
-local hl_tabline = util.extract_nvim_hl('TabLine')
-local hl_normal = util.extract_nvim_hl('Normal')
-local hl_tabline_sel = util.extract_nvim_hl('TabLineSel')
-local hl_tabline_fill = util.extract_nvim_hl('TabLineFill')
+local hl_tabline = highlight.extract('TabLine')
+local hl_normal = highlight.extract('Normal')
+local hl_tabline_sel = highlight.extract('TabLineSel')
+local hl_tabline_fill = highlight.extract('TabLineFill')
 
 local function tab_label(tabid, active)
   local icon = active and '' or ''
   local number = vim.api.nvim_tabpage_get_number(tabid)
-  local name = util.get_tab_name(tabid)
+  local name = tab.get_name(tabid)
   return string.format(' %s %d: %s ', icon, number, name)
 end
 
 local function tab_label_no_fallback(tabid, active)
   local icon = active and '' or ''
-  local fallback = function()
-    return ''
-  end
+  local name = tab.get_raw_name(tabid)
   local number = vim.api.nvim_tabpage_get_number(tabid)
-  local name = util.get_tab_name(tabid, fallback)
   if name == '' then
     return string.format(' %s %d ', icon, number)
   end

@@ -1,6 +1,11 @@
-local util = require('tabby.util')
-
 local filename = {}
+
+vim.cmd([[
+  augroup highlight_cache
+    autocmd!
+    autocmd WinNew,WinClosed,BufWinEnter,BufWinLeave * lua require("tabby.module.filename").flush_unique_name_cache()
+  augroup end
+]])
 
 local noname_placeholder = '[No Name]'
 
@@ -102,7 +107,9 @@ function unique_names:build()
   self.indexes = {}
   self.names = {}
 
-  local wins = util.list_wins()
+  local wins = vim.tbl_filter(function(winid)
+    return vim.api.nvim_win_get_config(winid).relative == ''
+  end, vim.api.nvim_list_wins())
   local buffer_ids = {}
   for _, winid in ipairs(wins) do
     local bufid = vim.api.nvim_win_get_buf(winid)
@@ -132,13 +139,6 @@ function unique_names:get_name(bufid)
   end
   return self.names[bufid]
 end
-
-vim.cmd([[
-  augroup highlight_cache
-    autocmd!
-    autocmd WinNew,WinClosed,BufWinEnter,BufWinLeave * lua require("tabby.filename").flush_unique_name_cache()
-  augroup end
-]])
 
 function filename.flush_unique_name_cache()
   unique_names:init()
