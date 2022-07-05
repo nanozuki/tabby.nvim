@@ -1,8 +1,8 @@
-local filename = require('tabby.filename')
-local util = require('tabby.util')
+local filename = require('tabby.module.filename')
+local highlight = require('tabby.module.highlight')
 
-local hl_tabline = util.extract_nvim_hl('TabLine')
-local hl_tabline_sel = util.extract_nvim_hl('TabLineSel')
+local hl_tabline = highlight.extract('TabLine')
+local hl_tabline_sel = highlight.extract('TabLineSel')
 
 ---@type TabbyTablineOpt
 local tabline = {
