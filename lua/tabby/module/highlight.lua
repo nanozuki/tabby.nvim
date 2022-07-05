@@ -1,5 +1,14 @@
 local highlight = {}
 
+---@alias TabbyHighlight TabbyHighlightGroup|TabbyHighlightObject
+
+---@alias TabbyHighlightGroup string
+
+---@class TabbyHighlightObject
+---@field fg? string highlight argument guifg
+---@field bg? string highlight argument guibg
+---@field style? string highlight argument gui
+
 vim.cmd([[
   augroup highlight_cache
     autocmd!
@@ -11,28 +20,22 @@ vim.cmd([[
 local registered_highlight = {}
 
 ---register highlight object to nvim
----@param hl HighlightOpt
+---@param hl TabbyHighlightObject
 ---@return string highlight group name
 function highlight.register(hl)
   vim.validate({
     fg = { hl.fg, 'string', true },
     bg = { hl.bg, 'string', true },
     style = { hl.style, 'string', true },
-    cterm = { hl.cterm, 'string', true },
-    ctermfg = { hl.ctermfg, 'string', true },
-    ctermbg = { hl.ctermbg, 'string', true },
   })
-  local tabby_keys = { 'fg', 'bg', 'style', 'cterm', 'ctermfg', 'ctermbg' }
-  local nvim_keys = { 'guifg', 'guibg', 'gui', 'cterm', 'ctermfg', 'ctermbg' }
+  local tabby_keys = { 'fg', 'bg', 'style' }
+  local nvim_keys = { 'guifg', 'guibg', 'gui' }
 
   local groups = { 'TabbyHL' }
   for _, k in ipairs(tabby_keys) do
-    groups[#groups + 1] = hl[k] or ''
+    groups[#groups + 1] = hl[k] or 'NONE'
   end
   local group = string.gsub(table.concat(groups, '_'), '#', '')
-  if group == 'TabbyHl______' then -- all param is empty, return Normal
-    return 'Normal'
-  end
   if registered_highlight[group] == true then
     return group
   end
@@ -43,16 +46,19 @@ function highlight.register(hl)
       cmds[#cmds + 1] = string.format('%s=%s', nvim_keys[i], hl[k])
     end
   end
+  if #cmds == 2 then
+    cmds[#cmds + 1] = 'cleared'
+  end
   vim.cmd(table.concat(cmds, ' '))
   registered_highlight[group] = true
   return group
 end
 
----@type table<string, HighlightOpt>
+---@type table<string, TabbyHighlightObject>
 local extract_cache = {}
 
 ---@param group_name string
----@return HighlightOpt
+---@return TabbyHighlightObject
 function highlight.extract(group_name)
   local ho = extract_cache[group_name]
   if ho ~= nil then
@@ -60,12 +66,16 @@ function highlight.extract(group_name)
   end
   local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
   local hl = {}
-  local map = { guifg = 'fg', guibg = 'bg', gui = 'style', cterm = 'cterm', ctermfg = 'ctermfg', ctermbg = 'ctermbg' }
   for k, v in string.gmatch(hl_str, '([^%s=]+)=([^%s=]+)') do
-    if map[k] ~= nil then
-      hl[map[k]] = v
+    if k == 'guifg' then
+      hl.fg = v
+    elseif k == 'guibg' then
+      hl.bg = v
+    elseif k == 'gui' then
+      hl.style = v
     end
   end
+  extract_cache[group_name] = hl
   return hl
 end
 

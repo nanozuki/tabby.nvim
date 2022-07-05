@@ -6,18 +6,18 @@ local component = require('tabby.legacy.component')
 ---@class TabbyTablineOpt
 ---@field layout TabbyTablineLayout
 ---@field hl TabbyHighlight background highlight
----@field head? TabbyText[] display at start of tabline
+---@field head? LegacyText[] display at start of tabline
 ---@field active_tab TabbyTabLabelOpt
 ---@field inactive_tab TabbyTabLabelOpt
 ---@field win TabbyWinLabelOpt
 ---@field active_win? TabbyWinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
 ---@field top_win? TabbyWinLabelOpt need by "active_tab_with_wins" and "active_wins_at_end", fallback to win if this is nil
----@field tail? TabbyText[] display at end of tabline
+---@field tail? LegacyText[] display at end of tabline
 
 ---@class TabbyTabLabelOpt
----@field label string|TabbyText|fun(tabid:number):TabbyText
----@field left_sep string|TabbyText
----@field right_sep string|TabbyText
+---@field label string|LegacyText|fun(tabid:number):LegacyText
+---@field left_sep string|LegacyText
+---@field right_sep string|LegacyText
 
 ---@alias TabbyTablineLayout
 ---| "active_wins_at_tail" # windows in active tab will be display at end of tabline
@@ -27,10 +27,10 @@ local component = require('tabby.legacy.component')
 ---| "tab_only" # no windows label, only tab
 
 ---@class TabbyWinLabelOpt
----@field label string|TabbyText|fun(winid:number):TabbyText
----@field left_sep string|TabbyText
----@field inner_sep string|TabbyText won't works in "tab_with_top_win" layout
----@field right_sep string|TabbyText
+---@field label string|LegacyText|fun(winid:number):LegacyText
+---@field left_sep string|LegacyText
+---@field inner_sep string|LegacyText won't works in "tab_with_top_win" layout
+---@field right_sep string|LegacyText
 
 ---@param tabid number tab id
 ---@param opt TabbyTabLabelOpt
@@ -99,7 +99,7 @@ function tabline.render(opt)
         for i, winid in ipairs(wins) do
           local win_opt = opt.win
           if winid == top_win and opt.top_win ~= nil then
-            win_opt = opt.top_win
+            win_opt = opt.top_win or {}
           end
           table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
         end
@@ -110,7 +110,7 @@ function tabline.render(opt)
     if opt.layout == 'tab_with_top_win' then
       local win_opt = opt.win
       if tabid == current_tab and opt.active_win then
-        win_opt = opt.active_win
+        win_opt = opt.active_win or {}
       end
       local winid = vim.api.nvim_tabpage_get_win(tabid)
       table.insert(coms, tabline.render_win_label(winid, true, true, win_opt))
@@ -125,7 +125,7 @@ function tabline.render(opt)
     for i, winid in ipairs(wins) do
       local win_opt = opt.win
       if winid == top_win and opt.top_win ~= nil then
-        win_opt = opt.top_win
+        win_opt = opt.top_win or {}
       end
       table.insert(coms, tabline.render_win_label(winid, i == 1, i == #wins, win_opt))
     end

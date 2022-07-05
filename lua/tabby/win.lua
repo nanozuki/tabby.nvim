@@ -24,7 +24,7 @@ function win.get_filename(winid)
   return filename.unique(winid)
 end
 
----@alias WinNodeFn fun(winid:number):Node
+---@alias WinNodeFn fun(winid:number):TabbyNode
 
 ---@class WinList:number[]
 ---@field foreach fun(fn:WinNodeFn) give a node function for win

@@ -8,20 +8,20 @@ local component = {}
 ---@class TabbyComTab
 ---@field type "tab"
 ---@field tabid number
----@field label string|TabbyText
----@field left_sep? TabbyText
----@field right_sep? TabbyText
+---@field label string|LegacyText
+---@field left_sep? LegacyText
+---@field right_sep? LegacyText
 
 ---@class TabbyComWin
 ---@field type "win"
 ---@field winid number
----@field label string|TabbyText
----@field left_sep? TabbyText
----@field right_sep? TabbyText
+---@field label string|LegacyText
+---@field left_sep? LegacyText
+---@field right_sep? LegacyText
 
 ---@class TabbyComText
 ---@field type "text"
----@field text TabbyText
+---@field text LegacyText
 
 ---@class TabbyComSpring
 ---@field type "spring"
@@ -29,7 +29,7 @@ local component = {}
 ---@alias TabbyComponent TabbyComTab|TabbyComWin|TabbyComText|TabbyComSpring
 
 ---@param tab TabbyComTab
----@return Node
+---@return TabbyNode
 local function render_tab(tab)
   return {
     node.from_label_and_seps(tab.label, tab.left_sep, tab.right_sep),
@@ -38,13 +38,13 @@ local function render_tab(tab)
 end
 
 ---@param win TabbyComWin
----@return Node
+---@return TabbyNode
 local function render_win(win)
   return node.from_label_and_seps(win.label, win.left_sep, win.right_sep)
 end
 
 ---@param text TabbyComText
----@return Node
+---@return TabbyNode
 local function render_text(text)
   return node.from_tabby_text(text.text)
 end
@@ -57,7 +57,7 @@ end
 ---@param com TabbyComponent
 ---@return string statusline-format string
 function component.render(com)
-  ---@type Node
+  ---@type TabbyNode
   local n
   if com.type == 'tab' then
     n = render_tab(com)

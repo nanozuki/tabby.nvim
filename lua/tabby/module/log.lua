@@ -7,13 +7,13 @@ local log = {
 --  vim.log.levels.WARN   -- 3
 --  vim.log.levels.ERROR  -- 4
 
----@class Logger
+---@class TabbyLogger
 ---@field message function(message:string) send string notify
 ---@field format function(format:string, ...:[]any) send string notify
 
 ---new logger
 ---@param level number
----@return Logger
+---@return TabbyLogger
 local function logger(level)
   local lg = {}
   lg.message = function(message)

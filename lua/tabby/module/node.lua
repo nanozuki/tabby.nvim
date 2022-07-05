@@ -1,49 +1,37 @@
 ---A element is a "hyper text" object
----@class Element
----@field [1] Node children node
----@field hl Highlight
----@field lo Layout
----@field click ClickHandler
+---@class TabbyElement
+---@field [1] TabbyNode children node
+---@field hl TabbyHighlight
+---@field lo TabbyLayout
+---@field click TabbyClickHandler
 
----@alias Highlight HighlightGroup|HighlightOpt
-
----@alias HighlightGroup string
-
----@class HighlightOpt
----@field fg? string highlight argument guifg
----@field bg? string highlight argument guibg
----@field style? string highlight argument gui
----@field ctermfg? string highlight argument ctermfg
----@field ctermbg? string highlight argument ctermbg
----@field cterm? string highlight argument cterm
-
----@class Layout
+---@class TabbyLayout
 ---@field justify? 'left'|'right' justify @default 'left'
 ---@field max_width? number maximum width
 ---@field min_width? number minimum width
 
----@alias ClickHandler ClickTab|CloseTab|CustomHander
+---@alias TabbyClickHandler TabbyClickTab|TabbyCloseTab|TabbyCustomHander
 
----@class ClickTab
+---@class TabbyClickTab
 ---@field [1] "to_tab"
 ---@field [2] number tabid
 
----@class CloseTab
+---@class TabbyCloseTab
 ---@field [1] "x_tab"
 ---@field [2] number tabid
 
----@class CustomHander
+---@class TabbyCustomHander
 ---@field [1] "custom"
 ---@field [2] number handle id
 
----@alias Frag Element|string
----@alias Node Frag|Frag[]
+---@alias TabbyFrag TabbyElement|string
+---@alias TabbyNode TabbyFrag|TabbyFrag[]
 
 local node = {}
 
 ---convert legacy TabbyText to Element/Node
----@param ttext TabbyText
----@return table Element
+---@param ttext LegacyText
+---@return table TabbyElement
 function node.from_tabby_text(ttext)
   if type(ttext[1]) == 'string' then
     return ttext
@@ -57,9 +45,9 @@ function node.from_tabby_text(ttext)
 end
 
 ---convert (left_sep, label, right_sep) to Node
----@param label string|TabbyText
----@param left_sep TabbyText?
----@param right_sep TabbyText?
+---@param label string|LegacyText
+---@param left_sep LegacyText?
+---@param right_sep LegacyText?
 function node.from_label_and_seps(label, left_sep, right_sep)
   local elements = {}
   if left_sep ~= nil then

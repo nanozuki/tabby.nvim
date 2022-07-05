@@ -49,7 +49,7 @@ function tabby.update()
   elseif tabby_opt.tabline ~= nil then
     return tabline.render(tabby_opt.tabline)
   else
-    return tabline.render(config.defaults)
+    return tabline.render(config.defaults.tabline)
   end
 end
 
