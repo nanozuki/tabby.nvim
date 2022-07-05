@@ -8,9 +8,6 @@ local highlight = {}
 ---@field fg? string highlight argument guifg
 ---@field bg? string highlight argument guibg
 ---@field style? string highlight argument gui
----@field ctermfg? string highlight argument ctermfg
----@field ctermbg? string highlight argument ctermbg
----@field cterm? string highlight argument cterm
 
 vim.cmd([[
   augroup highlight_cache
@@ -30,21 +27,15 @@ function highlight.register(hl)
     fg = { hl.fg, 'string', true },
     bg = { hl.bg, 'string', true },
     style = { hl.style, 'string', true },
-    cterm = { hl.cterm, 'string', true },
-    ctermfg = { hl.ctermfg, 'string', true },
-    ctermbg = { hl.ctermbg, 'string', true },
   })
-  local tabby_keys = { 'fg', 'bg', 'style', 'cterm', 'ctermfg', 'ctermbg' }
-  local nvim_keys = { 'guifg', 'guibg', 'gui', 'cterm', 'ctermfg', 'ctermbg' }
+  local tabby_keys = { 'fg', 'bg', 'style' }
+  local nvim_keys = { 'guifg', 'guibg', 'gui' }
 
   local groups = { 'TabbyHL' }
   for _, k in ipairs(tabby_keys) do
-    groups[#groups + 1] = hl[k] or ''
+    groups[#groups + 1] = hl[k] or 'NONE'
   end
   local group = string.gsub(table.concat(groups, '_'), '#', '')
-  if group == 'TabbyHl______' then -- all param is empty, return Normal
-    return 'Normal'
-  end
   if registered_highlight[group] == true then
     return group
   end
@@ -54,6 +45,9 @@ function highlight.register(hl)
     if hl[k] ~= nil then
       cmds[#cmds + 1] = string.format('%s=%s', nvim_keys[i], hl[k])
     end
+  end
+  if #cmds == 2 then
+    cmds[#cmds + 1] = 'cleared'
   end
   vim.cmd(table.concat(cmds, ' '))
   registered_highlight[group] = true
@@ -71,11 +65,27 @@ function highlight.extract(group_name)
     return ho
   end
   local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
-  local hl = {}
-  local map = { guifg = 'fg', guibg = 'bg', gui = 'style', cterm = 'cterm', ctermfg = 'ctermfg', ctermbg = 'ctermbg' }
+  local hl = { fg = 'fg', bg = 'bg' }
   for k, v in string.gmatch(hl_str, '([^%s=]+)=([^%s=]+)') do
-    if map[k] ~= nil then
-      hl[map[k]] = v
+    if k == 'guifg' then
+      hl.fg = v
+    elseif k == 'guibg' then
+      hl.bg = v
+    elseif k == 'gui' then
+      hl.style = v
+    end
+  end
+  -- handle reverse
+  if hl.style ~= nil then
+    local style = table.concat(
+      vim.tbl_filter(function(word)
+        return word ~= 'reverse' and word ~= 'inverse'
+      end, vim.split(hl.style, ',')),
+      ','
+    )
+    if hl ~= style then -- reverse or inverse in styles
+      hl.style = style
+      hl.bg, hl.fg = hl.fg, hl.bg
     end
   end
   return hl
