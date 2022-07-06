@@ -1,27 +1,17 @@
-local highlight = require('tabby.module.highlight')
+local colors = require('tabby.module.colors')
 local tab = require('tabby.tab')
+local text = require('tabby.text')
 
-local hl_tabline = highlight.extract('TabLine')
-local hl_normal = highlight.extract('Normal')
-local hl_tabline_sel = highlight.extract('TabLineSel')
-local hl_tabline_fill = highlight.extract('TabLineFill')
+local hl_head = { fg = colors.black, bg = colors.red, style = 'italic' }
+local hl_tabline = 'TabLineSel'
+local hl_normal = { fg = colors.black, bg = colors.white }
+local hl_tabline_sel = { fg = colors.black, bg = colors.magenta, style = 'bold' }
+local hl_tabline_fill = 'TabLineFill'
 
 local components = function()
   local coms = {
-    {
-      type = 'text',
-      text = {
-        '  ',
-        hl = { fg = hl_tabline.fg, bg = hl_tabline.bg },
-      },
-    },
-    {
-      type = 'text',
-      text = {
-        '',
-        hl = { fg = hl_tabline.bg, bg = hl_tabline_fill.bg },
-      },
-    },
+    { type = 'text', text = { '  ', hl = hl_head } },
+    { type = 'text', text = text.separator('', hl_head, hl_tabline_fill) },
   }
   local tabs = vim.api.nvim_list_tabpages()
   local current_tab = vim.api.nvim_get_current_tabpage()
@@ -31,27 +21,30 @@ local components = function()
         type = 'tab',
         tabid = tabid,
         label = {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
-          hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = 'bold' },
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          hl = hl_tabline_sel,
         },
-        left_sep = { '', hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
-        right_sep = { '', hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
+        left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+        right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
       })
       local wins = tab.all_wins(current_tab)
       local top_win = vim.api.nvim_tabpage_get_win(current_tab)
       for _, winid in ipairs(wins) do
-        local icon = '  '
+        local icon = '  '
         if winid == top_win then
-          icon = '  '
+          icon = '  '
         end
         local bufid = vim.api.nvim_win_get_buf(winid)
         local buf_name = vim.api.nvim_buf_get_name(bufid)
         table.insert(coms, {
           type = 'win',
           winid = winid,
-          label = icon .. vim.fn.fnamemodify(buf_name, ':~:.') .. ' ',
-          left_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
-          right_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+          label = {
+            table.concat({ '', icon, vim.fn.fnamemodify(buf_name, ':~:.'), '' }, ' '),
+            hl = hl_normal,
+          },
+          left_sep = text.separator('', hl_normal, hl_tabline_fill),
+          right_sep = text.separator('', hl_normal, hl_tabline_fill),
         })
       end
     else
@@ -59,11 +52,11 @@ local components = function()
         type = 'tab',
         tabid = tabid,
         label = {
-          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
-          hl = { fg = hl_tabline_sel.fg, bg = hl_tabline_sel.bg, style = 'bold' },
+          '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+          hl = hl_tabline,
         },
-        left_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
-        right_sep = { '', hl = { fg = hl_tabline_sel.bg, bg = hl_tabline_fill.bg } },
+        left_sep = text.separator('', hl_tabline, hl_tabline_fill),
+        right_sep = text.separator('', hl_tabline, hl_tabline_fill),
       })
     end
   end
