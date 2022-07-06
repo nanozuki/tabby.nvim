@@ -1,9 +1,11 @@
 ---get terminal color
 ---@param index number color index
 ---@param fallback string neovim native color value
----@return string
+---@return fun():string
 local function get_color(index, fallback)
-  return vim.g['terminal_color_' .. index] or fallback
+  return function()
+    return vim.g['terminal_color_' .. index] or fallback
+  end
 end
 
 local colors = {

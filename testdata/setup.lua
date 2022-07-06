@@ -13,10 +13,10 @@ function setup.low_level()
   local tab = require('tabby.tab')
   local text = require('tabby.text')
 
-  local hl_head = { fg = colors.black, bg = colors.red, style = 'italic' }
+  local hl_head = { fg = colors.black(), bg = colors.red(), style = 'italic' }
   local hl_tabline = 'TabLineSel'
-  local hl_normal = { fg = colors.black, bg = colors.white }
-  local hl_tabline_sel = { fg = colors.black, bg = colors.magenta, style = 'bold' }
+  local hl_normal = { fg = colors.black(), bg = colors.white() }
+  local hl_tabline_sel = { fg = colors.black(), bg = colors.magenta(), style = 'bold' }
   local hl_tabline_fill = 'TabLineFill'
 
   local components = function()
@@ -87,9 +87,9 @@ function setup.no_nerd()
   local colors = require('tabby.module.colors')
   local tab = require('tabby.tab')
 
-  local hl_head = { fg = colors.black, bg = colors.red, style = 'italic' }
+  local hl_head = { fg = colors.black(), bg = colors.red(), style = 'italic' }
   local hl_tabline = 'TabLineSel'
-  local hl_tabline_sel = { fg = colors.black, bg = colors.magenta, style = 'bold' }
+  local hl_tabline_sel = { fg = colors.black(), bg = colors.magenta(), style = 'bold' }
   local hl_tabline_fill = 'TabLineFill'
 
   local function cwd()
