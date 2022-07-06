@@ -10,11 +10,14 @@ function setup.preset_active_wins_at_tail()
 end
 
 function setup.low_level()
-  local util = require('tabby.util')
-  local hl_tabline = util.extract_nvim_hl('TabLine')
-  local hl_normal = util.extract_nvim_hl('Normal')
-  local hl_tabline_sel = util.extract_nvim_hl('TabLineSel')
-  local hl_tabline_fill = util.extract_nvim_hl('TabLineFill')
+  local highlight = require('tabby.module.highlight')
+  local tab = require('tabby.tab')
+
+  local hl_tabline = highlight.extract('TabLine')
+  local hl_normal = highlight.extract('Normal')
+  local hl_tabline_sel = highlight.extract('TabLineSel')
+  local hl_tabline_fill = highlight.extract('TabLineFill')
+
   local components = function()
     local coms = {
       {
@@ -46,7 +49,7 @@ function setup.low_level()
           left_sep = { '', hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
           right_sep = { '', hl = { fg = hl_normal.bg, bg = hl_tabline_fill.bg } },
         })
-        local wins = util.tabpage_list_wins(current_tab)
+        local wins = tab.all_wins(current_tab)
         local top_win = vim.api.nvim_tabpage_get_win(current_tab)
         for _, winid in ipairs(wins) do
           local icon = '  '
@@ -81,6 +84,7 @@ function setup.low_level()
 
     return coms
   end
+
   require('tabby').setup({
     components = components,
   })

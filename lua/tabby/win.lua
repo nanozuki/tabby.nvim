@@ -1,5 +1,19 @@
 local win = {}
-local filename = require('tabby.filename')
+local filename = require('tabby.module.filename')
+
+---@class TabbyWinOption
+---@field bufname_mode 'unique'|'relative'|'tail'|'shorten' @defult unique
+
+---@type TabbyWinOption
+local option = {
+  bufname_mode = 'unique',
+}
+
+---set win option
+---@param opt TabbyWinOption
+function win.set_option(opt)
+  option = vim.tbl_deep_extend('force', option, opt)
+end
 
 ---return if the window in current tab
 ---@param winid number
@@ -15,13 +29,11 @@ function win.is_current(winid)
   return winid == vim.api.nvim_tabpage_get_win(vim.api.nvim_get_current_tabpage())
 end
 
----get win's filename
+---get win's buffer name
 ---@param winid number
----@return string
-function win.get_filename(winid)
-  -- TODO remove from uitl
-  -- TODO configure filename pattern
-  return filename.unique(winid)
+---@return string bufname
+function win.get_bufname(winid)
+  return filename[option.bufname_mode](winid)
 end
 
 ---@alias WinNodeFn fun(winid:number):TabbyNode
@@ -51,7 +63,7 @@ end
 
 ---list all win id
 ---@return WinList
-function win.list()
+function win.all()
   local wins = vim.api.nvim_list_wins()
   wins = vim.tbl_filter(function(winid)
     return vim.api.nvim_win_get_config(winid).relative == ''

@@ -1,8 +1,9 @@
 local component = require('tabby.legacy.component')
 local config = require('tabby.legacy.config')
 local tabline = require('tabby.legacy.tabline')
-local filename = require('tabby.filename')
-local util = require('tabby.util')
+local filename = require('tabby.module.filename')
+
+local tab = require('tabby.tab')
 
 local tabby = {}
 
@@ -54,8 +55,7 @@ function tabby.update()
 end
 
 function tabby.tab_rename(name)
-  local tabid = vim.api.nvim_get_current_tabpage()
-  util.set_tab_name(tabid, name)
+  tab.set_current_name(name)
   vim.o.tabline = '%!TabbyTabline()'
 end
 vim.cmd([[command! -nargs=1 TabRename lua require('tabby').tab_rename(<f-args>)]])

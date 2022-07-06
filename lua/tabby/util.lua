@@ -1,5 +1,6 @@
 local util = {}
 
+---@deprecated use require('tabby.module.highlight').extract
 ---@param name string
 ---@return TabbyHighlightObject
 function util.extract_nvim_hl(name)
@@ -7,59 +8,40 @@ function util.extract_nvim_hl(name)
 end
 
 ---list all fixed wins
+---@deprecated use require('tabby.win').all
 ---@return number[] array of window ids
 function util.list_wins()
-  local winids = vim.api.nvim_list_wins()
-  return vim.tbl_filter(function(winid)
-    return vim.api.nvim_win_get_config(winid).relative == ''
-  end, winids)
+  return require('tabby.win').all()
 end
 
 ---list all fixed wins of tab
+---@deprecated use require('tabby.win').all_in_tab
 ---@return number[] array of window ids
 function util.tabpage_list_wins(tabid)
-  local winids = vim.api.nvim_tabpage_list_wins(tabid)
-  return vim.tbl_filter(function(winid)
-    return vim.api.nvim_win_get_config(winid).relative == ''
-  end, winids)
+  return require('tabby.win').all_in_tab(tabid)
 end
 
-local tab_names = {}
-
+---@deprecated use require('tabby.tab').set_name
 ---@param tabid number
 ---@param name string
 function util.set_tab_name(tabid, name)
-  tab_names[tabid] = name
-end
-
-local function tab_name_default_fallback(tabid)
-  local filename = require('tabby.filename')
-  local wins = util.tabpage_list_wins(tabid)
-  local focus_win = vim.api.nvim_tabpage_get_win(tabid)
-  local name = ''
-  if vim.api.nvim_win_get_config(focus_win).relative ~= '' then
-    name = '[Floating]'
-  else
-    name = filename.unique(focus_win)
-  end
-  if #wins > 1 then
-    name = string.format('%s[%d+]', name, #wins - 1)
-  end
-  return name
+  require('tabby.tab').set_name(tabid, name)
 end
 
 ---get tab's name, if not set, will return the name made by fallback.
+---@deprecated use require('tabby.tab').get_name
 ---@param tabid number
 ---@param fallback? fun(tabid:number):string Default fallback is like "init.lua[2+]", the filename is came from the focus window.
 function util.get_tab_name(tabid, fallback)
-  if tab_names[tabid] and tab_names[tabid] ~= '' then
-    return tab_names[tabid]
+  local tab = require('tabby.tab')
+  if fallback ~= nil then
+    tab.set_option({ default_name = fallback })
   end
-  fallback = fallback or tab_name_default_fallback
-  return fallback(tabid)
+  return tab.get_name(tabid)
 end
 
 --- conbine texts
+---@deprecated use TabbyNode.margin
 ---@param texts string[] texts to be combine
 ---@param sep? string the seprator, default is ' '
 ---@param left? string the left padding, default is sep

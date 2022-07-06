@@ -47,7 +47,7 @@ function tabline.init()
 end
 
 function tabline.render()
-  require('tabby.filename').flush_unique_name_cache()
+  require('tabby.module.filename').flush_unique_name_cache()
   return require('tabby.module.render').node(tabline.renderer)
 end
 
@@ -82,7 +82,7 @@ function preset.active_wins_at_tail(opt)
         }
       end),
       text.spring(),
-      win.all_in_tab(tab.get_current()).foreach(function(winid)
+      win.all_in_tab(tab.get_current_tab()).foreach(function(winid)
         return {
           text.separator('', 'TabLine', 'TabLineFill'),
           win.is_top(winid) and '' or '',
@@ -118,7 +118,7 @@ function preset.active_wins_at_end(opt)
           hl = hl,
         }
       end),
-      win.all_in_tab(tab.get_current()).foreach(function(winid)
+      win.all_in_tab(tab.get_current_tab()).foreach(function(winid)
         return {
           text.separator('', 'TabLine', 'TabLineFill'),
           win.is_top(winid) and '' or '',
