@@ -47,7 +47,7 @@ function highlight.register(hl)
     end
   end
   if #cmds == 2 then
-    cmds[#cmds + 1] = 'cleared'
+    cmds[#cmds + 1] = 'gui=NONE'
   end
   vim.cmd(table.concat(cmds, ' '))
   registered_highlight[group] = true
