@@ -30,4 +30,4 @@ local setup = require('setup')
 
 -- put your test config to here or use boilerplate code
 use_theme.rose_pine_dawn()
-setup.preset_active_wins_at_tail()
+setup.use_preset(require('tabby.presets').active_wins_at_tail)
