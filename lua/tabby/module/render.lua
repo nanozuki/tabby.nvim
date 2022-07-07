@@ -3,77 +3,104 @@ local highlight = require('tabby.module.highlight')
 
 local render = {}
 
----@class Context
----@field parent_hl TabbyHighlight
----@field current_hl TabbyHighlight
+---@class TabbyRendererContext
+---@field parent_hl TabbyHighlight highlight for callback
+---@field current_hl TabbyHighlight highlight for render
+
+--[[markdown
+# Renderer note
+
+recursive rendering
+
+## Termination Condition
+* nil -> skip.
+* element with raw content: { <string,number>, hl=<hl>, lo=<lo> } -> vim status line context
+
+## nested structure
+* list fragment: { 'string', 10, <Element> } }
+  -> render every item, and table.concat
+* element with element content: { <element>, hl=<hl>, lo=<lo> }
+  -> render every item, with context { parent_hl = <hl> }
+* element with list content: { {<any>, <any>, <any>}, hl=<hl>, lo=<lo> }
+  -> render every item, with context { parent_hl = <hl> }
+--]]
 
 ---render node to tabline string
 ---@param node TabbyNode
----@param ctx Context? highlight group in context
----@return string, Context? rendered string and context
+---@param ctx TabbyRendererContext? highlight group in context
+---@return string, TabbyRendererContext rendered string and context
 function render.node(node, ctx)
   if ctx ~= nil then
     vim.validate({
+      node = { node, { 'string', 'number', 'table' }, true },
       ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
       ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
     })
   end
-  if vim.tbl_islist(node) then
-    local strs = {}
-    for i, frag in ipairs(node) do
-      strs[i], ctx = render.frag(frag, ctx)
-    end
-    return table.concat(strs, ''), ctx
-  else
-    return render.frag(node, ctx)
-  end
-end
-
----render frag to string
----@param frag TabbyFrag
----@param ctx Context? highlight group in context
----@return string, Context? rendered string and context
-function render.frag(frag, ctx)
-  if ctx ~= nil then
-    vim.validate({
-      ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
-      ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
-    })
-  end
-  if type(frag) == 'table' then
-    return render.element(frag, ctx)
-  elseif type(frag) == 'string' then
-    return frag, ctx
-  else
-    log.error.format('invalid frag for tabby: %s', vim.inspect(frag))
+  ctx = ctx or {}
+  if type(node) == 'nil' then
     return '', ctx
+  elseif type(node) == 'string' or type(node) == 'number' then
+    return render.raw_element({ node, hl = ctx.parent_hl }, ctx)
+  else -- type(node) == 'table'
+    if vim.tbl_islist(node) then
+      local strs = {}
+      for i, sub in ipairs(node) do
+        log.debug.format('render sub-node[%d]: %s', i, log.inspect(sub))
+        strs[i], ctx = render.node(sub, ctx)
+      end
+      return table.concat(strs, ''), ctx
+    else
+      log.debug.format('render non-listed-node: %s', log.inspect(node))
+      return render.hyper_element(node, ctx)
+    end
   end
 end
 
----render Element to string
+---render element with raw content
 ---@param el TabbyElement
----@param ctx Context? highlight group in context
----@return string, Context? rendered string and context
-function render.element(el, ctx)
+---@param ctx TabbyRendererContext
+---@return string, TabbyRendererContext nvim statusline-styled string
+function render.raw_element(el, ctx)
   ctx = ctx or {}
   vim.validate({
     el = { el, 'table' },
+    content = { el[1], { 'string', 'number' } },
     ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
     ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
   })
-  local hl = el.hl or ctx.parent_hl
-  local text = render.node(el[1], { current_hl = hl, parent_hl = hl })
-  if hl ~= nil and hl ~= ctx.current_hl then
-    text = render.highlight(hl, text)
-    ctx.current_hl = hl
+  local text = tostring(el[1])
+  if el.click ~= nil then
+    text = render.click_handler(el.click, text)
   end
   if el.lo ~= nil then
     text = render.layout(el.lo, text)
   end
-  if el.click ~= nil then
-    text = render.click_handler(el.click, text)
+  local hl = el.hl or ctx.parent_hl
+  if hl ~= nil and hl ~= ctx.current_hl then
+    text = render.highlight(hl, text)
+    ctx.current_hl = hl
   end
+  log.debug.format('render.raw_element( %s ) = %s', log.inspect(el), text)
   return text, ctx
+end
+
+---@param el TabbyElement
+---@param ctx TabbyRendererContext
+---@return string, TabbyRendererContext
+function render.hyper_element(el, ctx)
+  if #el == 1 and type(el[1]) ~= 'table' then
+    return render.raw_element(el, ctx)
+  end
+  local strs = {}
+  local inner_ctx = { current_hl = ctx.current_hl, parent_hl = el.hl or ctx.parent_hl }
+  for i, sub in ipairs(el) do
+    strs[#strs + 1], inner_ctx = render.node(sub, inner_ctx)
+    if (el.margin or '') ~= '' and i ~= #el then
+      strs[#strs + 1], inner_ctx = render.raw_element({ el.margin, hl = el.hl }, inner_ctx)
+    end
+  end
+  return table.concat(strs, ''), { current_hl = inner_ctx.current_hl, parent_hl = ctx.parent_hl }
 end
 
 ---render highlight

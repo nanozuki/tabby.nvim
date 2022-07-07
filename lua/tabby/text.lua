@@ -23,4 +23,8 @@ function text.separator(sep, current, parent)
   }
 end
 
+function text.spring()
+  return '%='
+end
+
 return text

@@ -1,9 +1,10 @@
 ---A element is a "hyper text" object
 ---@class TabbyElement
 ---@field [1] TabbyNode children node
----@field hl TabbyHighlight
----@field lo TabbyLayout
----@field click TabbyClickHandler
+---@field hl? TabbyHighlight
+---@field lo? TabbyLayout
+---@field click? TabbyClickHandler
+---@field margin? string
 
 ---@class TabbyLayout
 ---@field justify? 'left'|'right' justify @default 'left'
@@ -24,7 +25,7 @@
 ---@field [1] "custom"
 ---@field [2] number handle id
 
----@alias TabbyFrag TabbyElement|string
+---@alias TabbyFrag TabbyElement|string|number
 ---@alias TabbyNode TabbyFrag|TabbyFrag[]
 
 local node = {}

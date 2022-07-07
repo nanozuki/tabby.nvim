@@ -1,4 +1,5 @@
 local tab = {}
+local highlight = require('tabby.module.highlight')
 local win = require('tabby.win')
 
 ---@class TabbyTabOption
@@ -31,7 +32,7 @@ end
 ---@alias TabNodeFn fun(tabid:number):TabbyNode
 
 ---@class TabList:number[]
----@field foreach fun(fn:TabNodeFn) give a node function for tab
+---@field foreach fun(fn:TabNodeFn):TabbyNode give a node function for tab
 
 ---wrap methods to raw winlist
 ---@param tabs number[]
@@ -134,12 +135,19 @@ end
 ---return tab's close button
 ---@param tabid number
 ---@param symbol string
----@param hl TabbyHighlight
+---@param current TabbyHighlight
+---@param parent TabbyHighlight
 ---@return TabbyNode
-function tab.close_btn(tabid, symbol, hl)
+function tab.close_btn(tabid, symbol, current, parent)
+  if type(current) == 'string' then
+    current = highlight.extract(current)
+  end
+  if type(parent) == 'string' then
+    parent = highlight.extract(parent)
+  end
   return {
     symbol,
-    hl = hl,
+    hl = { fg = current.fg, bg = parent.bg },
     click = { 'x_tab', tabid },
   }
 end

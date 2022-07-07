@@ -4,6 +4,7 @@
 ---@field preset TablinePreset
 
 ---@class TablinePreset
+---@field active_wins_at_tail fun(opt?:TablineOpt)
 
 ---@type TablineModule
 local tabline = {
@@ -16,13 +17,14 @@ local tabline = {
 local text = require('tabby.text')
 local tab = require('tabby.tab')
 local win = require('tabby.win')
+--local log = require('tabby.module.log')
 
 ---@class TablineOpt
 ---@field show_at_least number show tabline when there are at least n tabs.
 
 ---set tabline render function
 ---@param fn fun():TabbyNode
----@param opt TablineOpt
+---@param opt? TablineOpt
 function tabline.set(fn, opt)
   tabline.renderer = fn
   if opt ~= nil then
@@ -31,7 +33,7 @@ function tabline.set(fn, opt)
   vim.cmd([[
     augroup tabby_show_control
       autocmd!
-      autocmd TabNew,TabClosed * lua require("tabby.tabline").show_contorl()
+      autocmd TabNew,TabClosed * lua require("tabby.tabline").show_control()
     augroup end
   ]])
   if vim.api.nvim_get_vvar('vim_did_enter') then
@@ -43,12 +45,12 @@ end
 
 function tabline.init()
   tabline.show_control()
-  vim.o.tabline = '%!TabbyRenderTabline()'
+  vim.o.tabline = '%!Tabby#RenderTabline()'
 end
 
 function tabline.render()
   require('tabby.module.filename').flush_unique_name_cache()
-  return require('tabby.module.render').node(tabline.renderer)
+  return require('tabby.module.render').node(tabline.renderer())
 end
 
 function tabline.show_control()
@@ -65,17 +67,17 @@ local preset = {}
 
 function preset.active_wins_at_tail(opt)
   local renderer = function()
-    return {
+    local node = {
       { '  ', hl = 'TabLine' },
       text.separator('', 'TabLine', 'TabLineFill'),
       tab.all().foreach(function(tabid)
-        local hl = tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
+        local hl = tab.is_current(tabid) and 'TabLineSel' or 'TabLine'
         return {
           text.separator('', hl, 'TabLineFill'),
-          tab.is_active(tabid) and '' or '',
+          tab.is_current(tabid) and '' or '',
           tab.get_number(tabid),
           tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }),
+          tab.close_btn(tabid, '', 'Error', hl),
           text.separator('', hl, 'TabLineFill'),
           margin = ' ',
           hl = hl,
@@ -85,8 +87,8 @@ function preset.active_wins_at_tail(opt)
       win.all_in_tab(tab.get_current_tab()).foreach(function(winid)
         return {
           text.separator('', 'TabLine', 'TabLineFill'),
-          win.is_top(winid) and '' or '',
-          win.get_filename.unique(winid),
+          win.is_current(winid) and '' or '',
+          win.get_bufname(winid),
           text.separator('', 'TabLine', 'TabLineFill'),
           margin = ' ',
           hl = 'TabLine',
@@ -96,6 +98,7 @@ function preset.active_wins_at_tail(opt)
       { '  ', hl = 'TabLine' },
       hl = 'TabLineFill',
     }
+    return node
   end
   tabline.set(renderer, opt)
 end
@@ -112,7 +115,7 @@ function preset.active_wins_at_end(opt)
           tab.is_active(tabid) and '' or '',
           tab.get_number(tabid),
           tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }),
+          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
           text.separator('', hl, 'TabLineFill'),
           margin = ' ',
           hl = hl,
@@ -147,7 +150,7 @@ function preset.active_tab_with_wins(opt)
           tab.is_active(tabid) and '' or '',
           tab.get_number(tabid),
           tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }),
+          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
           text.separator('', hl, 'TabLineFill'),
           margin = ' ',
           hl = hl,
@@ -185,7 +188,7 @@ function preset.tab_with_top_win(opt)
           tab.is_active(tabid) and '' or '',
           tab.get_number(tabid),
           tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }),
+          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
           text.separator('', hl, 'TabLineFill'),
           {
             text.separator('', 'TabLine', 'TabLineFill'),
@@ -217,7 +220,7 @@ function preset.tab_only(opt)
           tab.is_active(tabid) and '' or '',
           tab.get_number(tabid),
           tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }),
+          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
           text.separator('', hl, 'TabLineFill'),
           margin = ' ',
           hl = hl,
