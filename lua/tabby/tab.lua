@@ -1,4 +1,5 @@
 local tab = {}
+local highlight = require('tabby.module.highlight')
 local win = require('tabby.win')
 
 ---@class TabbyTabOption
@@ -31,7 +32,7 @@ end
 ---@alias TabNodeFn fun(tabid:number):TabbyNode
 
 ---@class TabList:number[]
----@field foreach fun(fn:TabNodeFn) give a node function for tab
+---@field foreach fun(fn:TabNodeFn):TabbyNode give a node function for tab
 
 ---wrap methods to raw winlist
 ---@param tabs number[]
@@ -43,6 +44,7 @@ local function wrap_tab_list(tabs)
       for _, tabid in ipairs(tabs) do
         local node = fn(tabid)
         if node ~= nil then
+          node.click = { 'to_tab', tabid }
           nodes[#nodes + 1] = node
         end
       end
@@ -96,17 +98,18 @@ end
 
 local tab_name_var = 'tabby_tab_name'
 
----set current tab name
----@param name string
-function tab.set_current_name(name)
-  vim.api.nvim_tabpage_set_var(0, tab_name_var, name)
-end
-
 ---set tab name
 ---@param tabid number
 ---@param name string
 function tab.set_name(tabid, name)
   vim.api.nvim_tabpage_set_var(tabid, tab_name_var, name)
+  vim.cmd('redrawtabline')
+end
+
+---set current tab name
+---@param name string
+function tab.set_current_name(name)
+  tab.set_name(0, name)
 end
 
 ---get tab's name
@@ -134,12 +137,23 @@ end
 ---return tab's close button
 ---@param tabid number
 ---@param symbol string
----@param hl TabbyHighlight
+---@param current TabbyHighlight
+---@param parent TabbyHighlight
 ---@return TabbyNode
-function tab.close_btn(tabid, symbol, hl)
+function tab.close_btn(tabid, symbol, current, parent)
+  local tabs = vim.api.nvim_list_tabpages()
+  if #tabs == 1 then
+    return ''
+  end
+  if type(current) == 'string' then
+    current = highlight.extract(current)
+  end
+  if type(parent) == 'string' then
+    parent = highlight.extract(parent)
+  end
   return {
     symbol,
-    hl = hl,
+    hl = { fg = current.fg, bg = parent.bg },
     click = { 'x_tab', tabid },
   }
 end

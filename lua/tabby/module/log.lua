@@ -35,4 +35,14 @@ log.info = logger(vim.log.levels.INFO)
 log.warn = logger(vim.log.levels.WARN)
 log.error = logger(vim.log.levels.ERROR)
 
+---print any value
+---@param v any
+function log.inspect(v)
+  if type(v) == 'table' then
+    return vim.inspect(v, { newline = '', indent = '' })
+  else
+    return tostring(v)
+  end
+end
+
 return log
