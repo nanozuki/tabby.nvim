@@ -46,6 +46,7 @@ end
 function tabline.init()
   tabline.show_control()
   vim.o.tabline = '%!Tabby#RenderTabline()'
+  vim.cmd([[command! -nargs=1 TabRename lua require('tabby.tab').set_current_name(<f-args>)]])
 end
 
 function tabline.render()

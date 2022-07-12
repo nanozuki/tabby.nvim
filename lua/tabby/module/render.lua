@@ -14,7 +14,11 @@ recursive rendering
 
 ## Termination Condition
 * nil -> skip.
-* element with raw content: { <string,number>, hl=<hl>, lo=<lo> } -> vim status line context
+* RawElement: { <string,number>, hl=<hl>, lo=<lo> } -> vim status line context
+
+## Raw Content
+convert to raw element
+* <string,number> -> { <string,number>, hl=ctx.parent_hl }
 
 ## nested structure
 * list fragment: { 'string', 10, <Element> } }
@@ -47,7 +51,10 @@ function render.node(node, ctx)
       local strs = {}
       for i, sub in ipairs(node) do
         log.debug.format('render sub-node[%d]: %s', i, log.inspect(sub))
-        strs[i], ctx = render.node(sub, ctx)
+        local s, c = render.node(sub, ctx)
+        if s ~= '' then
+          strs[#strs + 1], ctx = s, c
+        end
       end
       return table.concat(strs, ''), ctx
     else
@@ -95,12 +102,17 @@ function render.hyper_element(el, ctx)
   local strs = {}
   local inner_ctx = { current_hl = ctx.current_hl, parent_hl = el.hl or ctx.parent_hl }
   for i, sub in ipairs(el) do
-    strs[#strs + 1], inner_ctx = render.node(sub, inner_ctx)
-    if (el.margin or '') ~= '' and i ~= #el then
-      strs[#strs + 1], inner_ctx = render.raw_element({ el.margin, hl = el.hl }, inner_ctx)
+    local s, c = render.node(sub, inner_ctx)
+    if s ~= '' then
+      strs[#strs + 1], inner_ctx = s, c
+      if (el.margin or '') ~= '' and i ~= #el then
+        strs[#strs + 1], inner_ctx = render.raw_element({ el.margin, hl = el.hl }, inner_ctx)
+      end
     end
   end
-  return table.concat(strs, ''), { current_hl = inner_ctx.current_hl, parent_hl = ctx.parent_hl }
+  local inner_text = table.concat(strs, '')
+  ctx.current_hl = inner_ctx.current_hl
+  return render.raw_element({ inner_text, hl = el.hl, lo = el.lo, click = el.click, margin = el.margin }, ctx)
 end
 
 ---render highlight

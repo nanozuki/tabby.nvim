@@ -31,6 +31,7 @@ end
 function tabby.init()
   tabby.show_tabline()
   vim.o.tabline = '%!TabbyTabline()'
+  vim.cmd([[command! -nargs=1 TabRename lua require('tabby.tab').set_current_name(<f-args>)]])
 end
 
 function tabby.show_tabline()
@@ -56,9 +57,7 @@ end
 
 function tabby.tab_rename(name)
   tab.set_current_name(name)
-  vim.o.tabline = '%!TabbyTabline()'
 end
-vim.cmd([[command! -nargs=1 TabRename lua require('tabby').tab_rename(<f-args>)]])
 
 function tabby.handle_buf_click()
   -- do nothing at now, only recording the sign for function
