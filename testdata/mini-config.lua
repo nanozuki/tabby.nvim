@@ -25,9 +25,7 @@ function Bootstrap()
   paq.install()
 end
 
-local use_theme = require('use_theme')
-local setup = require('setup')
-
+vim.opt.mouse = 'ar'
 -- put your test config to here or use boilerplate code
-use_theme.rose_pine_dawn()
-setup.use_preset(require('tabby.presets').active_wins_at_tail)
+require('use_theme').rose_pine_dawn()
+require('setup').use_preset(require('tabby.presets').active_wins_at_tail)
