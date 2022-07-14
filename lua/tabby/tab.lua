@@ -1,5 +1,4 @@
 local tab = {}
-local highlight = require('tabby.module.highlight')
 local win = require('tabby.win')
 
 ---@class TabbyTabOption
@@ -136,24 +135,19 @@ end
 
 ---return tab's close button
 ---@param tabid number
----@param symbol string
----@param current TabbyHighlight
----@param parent TabbyHighlight
+---@param content TabbyNode
 ---@return TabbyNode
-function tab.close_btn(tabid, symbol, current, parent)
+function tab.close_btn(tabid, content)
   local tabs = vim.api.nvim_list_tabpages()
   if #tabs == 1 then
     return ''
   end
-  if type(current) == 'string' then
-    current = highlight.extract(current)
-  end
-  if type(parent) == 'string' then
-    parent = highlight.extract(parent)
+  if type(content) == 'table' then
+    content.click = { 'x_tab', tabid }
+    return content
   end
   return {
-    symbol,
-    hl = { fg = current.fg, bg = parent.bg },
+    content,
     click = { 'x_tab', tabid },
   }
 end
