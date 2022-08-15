@@ -1,41 +1,17 @@
----@class TablineModule
----@field renderer? fun():TabbyNode
----@field opt TablineOpt
----@field preset TablinePreset
-
----@class TablinePreset
----@field active_wins_at_tail fun(opt?:TablineOpt)
-
----@type TablineModule
 local tabline = {
+  ---@type fun(line:TabbyLine):TabbyNode
   renderer = nil,
-  opt = {
-    show_at_least = 1,
-  },
 }
 
-local text = require('tabby.text')
-local tab = require('tabby.tab')
-local win = require('tabby.win')
+local render = require('tabby.module.render')
 --local log = require('tabby.module.log')
-
----@class TablineOpt
----@field show_at_least number show tabline when there are at least n tabs.
+local lines = require('tabby.feature.lines')
 
 ---set tabline render function
----@param fn fun():TabbyNode
----@param opt? TablineOpt
-function tabline.set(fn, opt)
+---@param fn fun(line:TabbyLine):TabbyNode
+---@param _ table option placeholder
+function tabline.set(fn, _)
   tabline.renderer = fn
-  if opt ~= nil then
-    tabline.opt = vim.tbl_extend('force', tabline.opt, opt)
-  end
-  vim.cmd([[
-    augroup tabby_show_control
-      autocmd!
-      autocmd TabNew,TabClosed * lua require("tabby.tabline").show_control()
-    augroup end
-  ]])
   if vim.api.nvim_get_vvar('vim_did_enter') then
     tabline.init()
   else
@@ -44,192 +20,176 @@ function tabline.set(fn, opt)
 end
 
 function tabline.init()
-  tabline.show_control()
   vim.o.tabline = '%!Tabby#RenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.tab').set_current_name(<f-args>)]])
 end
 
 function tabline.render()
-  require('tabby.module.filename').flush_unique_name_cache()
-  return require('tabby.module.render').node(tabline.renderer())
+  return render.node(tabline.renderer(lines.get_line()))
 end
 
-function tabline.show_control()
-  local tabs = vim.api.nvim_list_tabpages()
-  if #tabs >= tabline.opt.show_at_least then
-    vim.o.showtabline = 2
-  else
-    vim.o.showtabline = 0
-  end
-end
-
----@type TablinePreset
 local preset = {}
 
+---@class TabbyTablinePresetOption
+---@field style 'upward-triangle'|'downward-triangle'|'airline'|'bubble'|'non-nerdfont' @default 'upward-triangle'
+---@field theme TabbyTablinePresetTheme
+
+---@class TabbyTablinePresetTheme
+---@field fill TabbyHighlight
+---@field head TabbyHighlight
+---@field current_tab TabbyHighlight
+---@field tab TabbyHighlight
+---@field win TabbyHighlight
+---@field tail TabbyHighlight
+
+---@type TabbyTablinePresetOption
+local default_preset_option = {
+  style = 'upward-triangle', -- TODO
+  theme = {
+    fill = 'TabLineFill',
+    head = 'TabLine',
+    current_tab = 'TabLineSel',
+    tab = 'TabLine',
+    win = 'TabLine',
+    tail = 'TabLine',
+  },
+}
+
+---@param opt TabbyTablinePresetOption
+---@return TabbyNode
+local function preset_head(line, opt)
+  return {
+    { '  ', hl = opt.theme.head },
+    line.sep('', opt.theme.head, opt.theme.fill),
+  }
+end
+
+---@param opt TabbyTablinePresetOption
+---@return TabbyNode
+local function preset_tail(line, opt)
+  return {
+    line.sep('', opt.theme.tail, opt.theme.fill),
+    { '  ', hl = opt.theme.tail },
+  }
+end
+
+---@param line TabbyLine
+---@param tab TabbyTab
+---@param opt TabbyTablinePresetOption
+---@return TabbyNode
+local function preset_tab(line, tab, opt)
+  local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
+  return {
+    line.sep('', hl, opt.theme.fill),
+    tab.is_current() and '' or '',
+    tab.number(),
+    tab.name(),
+    tab.close_btn(''),
+    line.sep('', hl, opt.theme.fill),
+    hl = hl,
+    margin = ' ',
+  }
+end
+
+---@param line TabbyLine
+---@param win TabbyWin
+---@param opt TabbyTablinePresetOption
+---@return TabbyNode
+local function preset_win(line, win, opt)
+  return {
+    line.sep('', opt.theme.win, opt.theme.fill),
+    win.is_current() and '' or '',
+    win.buf_name(),
+    line.sep('', opt.theme.win, opt.theme.fill),
+    hl = opt.theme.win,
+    margin = ' ',
+  }
+end
+
 function preset.active_wins_at_tail(opt)
-  local renderer = function()
-    local node = {
-      { '  ', hl = 'TabLine' },
-      text.separator('', 'TabLine', 'TabLineFill'),
-      tab.all().foreach(function(tabid)
-        local hl = tab.is_current(tabid) and 'TabLineSel' or 'TabLine'
-        return {
-          text.separator('', hl, 'TabLineFill'),
-          tab.is_current(tabid) and '' or '',
-          tab.get_number(tabid),
-          tab.get_name(tabid),
-          tab.close_btn(tabid, '', 'Error', hl),
-          text.separator('', hl, 'TabLineFill'),
-          margin = ' ',
-          hl = hl,
-        }
+  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  tabline.set(function(line)
+    return {
+      preset_head(line, o),
+      line.tabs().foreach(function(tab)
+        return preset_tab(line, tab, o)
       end),
-      text.spring(),
-      win.all_in_tab(tab.get_current_tab()).foreach(function(winid)
-        return {
-          text.separator('', 'TabLine', 'TabLineFill'),
-          win.is_current(winid) and '' or '',
-          win.get_bufname(winid),
-          text.separator('', 'TabLine', 'TabLineFill'),
-          margin = ' ',
-          hl = 'TabLine',
-        }
+      line.spacer(),
+      line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+        return preset_win(line, win, o)
       end),
-      text.separator('', 'TabLine', 'TabLineFill'),
-      { '  ', hl = 'TabLine' },
-      hl = 'TabLineFill',
+      preset_tail(line, o),
+      hl = o.theme.fill,
     }
-    return node
-  end
-  tabline.set(renderer, opt)
+  end, opt)
 end
 
 function preset.active_wins_at_end(opt)
-  local renderer = function()
+  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  tabline.set(function(line)
     return {
-      { '  ', hl = 'TabLine' },
-      text.separator('', 'TabLine', 'TabLineFill'),
-      tab.all().foreach(function(tabid)
-        local hl = tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
-        return {
-          text.separator('', hl, 'TabLineFill'),
-          tab.is_active(tabid) and '' or '',
-          tab.get_number(tabid),
-          tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
-          text.separator('', hl, 'TabLineFill'),
-          margin = ' ',
-          hl = hl,
-        }
+      preset_head(line, o),
+      line.tabs().foreach(function(tab)
+        return preset_tab(line, tab, o)
       end),
-      win.all_in_tab(tab.get_current_tab()).foreach(function(winid)
-        return {
-          text.separator('', 'TabLine', 'TabLineFill'),
-          win.is_top(winid) and '' or '',
-          win.get_filename.unique(winid),
-          text.separator('', 'TabLine', 'TabLineFill'),
-          margin = ' ',
-          hl = 'TabLine',
-        }
+      line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+        return preset_win(line, win, o)
       end),
-      hl = 'TabLineFill',
+      hl = o.theme.fill,
     }
-  end
-  tabline.set(renderer, opt)
+  end, opt)
 end
 
 function preset.active_tab_with_wins(opt)
-  local renderer = function()
+  require('tabby.feature.tab_name').set_option({
+    name_fallback = function(_)
+      return ''
+    end,
+  })
+  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  tabline.set(function(line)
     return {
-      hl = 'TabLineFill',
-      { '  ', hl = 'TabLine' },
-      text.separator('', 'TabLine', 'TabLineFill'),
-      tab.all().foreach(function(tabid)
-        local hl = tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
-        local nodes = {
-          text.separator('', hl, 'TabLineFill'),
-          tab.is_active(tabid) and '' or '',
-          tab.get_number(tabid),
-          tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
-          text.separator('', hl, 'TabLineFill'),
-          margin = ' ',
-          hl = hl,
-        }
-        if tab.is_active(tabid) then
-          nodes[#nodes + 1] = win.all_in_tab(tabid).foreach(function(winid)
-            return {
-              text.separator('', 'TabLine', 'TabLineFill'),
-              win.is_top(winid) and '' or '',
-              win.get_filename.unique(winid),
-              text.separator('', 'TabLine', 'TabLineFill'),
-              margin = ' ',
-              hl = 'TabLine',
-            }
-          end)
+      preset_head(line, o),
+      line.tabs().foreach(function(tab)
+        local tab_node = preset_tab(line, tab, o)
+        if tab.is_current() == false then
+          return tab_node
         end
-        return nodes
+        local wins_node = line.wins_in_tab(tab.id).foreach(preset_win)
+        return { tab_node, wins_node }
       end),
+      hl = o.theme.fill,
     }
-  end
-  tabline.set(renderer, opt)
+  end, opt)
 end
 
 function preset.tab_with_top_win(opt)
-  local renderer = function()
+  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  tabline.set(function(line)
     return {
-      hl = 'TabLineFill',
-      { '  ', hl = 'TabLine' },
-      text.separator('', 'TabLine', 'TabLineFill'),
-      tab.all().foreach(function(tabid)
-        local hl = tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
-        local winid = tab.get_current_win(tabid)
+      preset_head(line, o),
+      line.tabs().foreach(function(tab)
         return {
-          text.separator('', hl, 'TabLineFill'),
-          tab.is_active(tabid) and '' or '',
-          tab.get_number(tabid),
-          tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
-          text.separator('', hl, 'TabLineFill'),
-          {
-            text.separator('', 'TabLine', 'TabLineFill'),
-            win.is_top(winid) and '' or '',
-            win.get_filename.unique(winid),
-            text.separator('', 'TabLine', 'TabLineFill'),
-            margin = ' ',
-            hl = 'TabLine',
-          },
-          margin = ' ',
-          hl = hl,
+          preset_tab(line, tab, o),
+          preset_win(line, tab.current_win(), o),
         }
       end),
+      hl = o.theme.fill,
     }
-  end
-  tabline.set(renderer, opt)
+  end, opt)
 end
 
 function preset.tab_only(opt)
-  local renderer = function()
+  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  tabline.set(function(line)
     return {
-      hl = 'TabLineFill',
-      { '  ', hl = 'TabLine' },
-      text.separator('', 'TabLine', 'TabLineFill'),
-      tab.all().foreach(function(tabid)
-        local hl = tab.is_active(tabid) and 'TabLineSel' or 'TabLine'
-        return {
-          text.separator('', hl, 'TabLineFill'),
-          tab.is_active(tabid) and '' or '',
-          tab.get_number(tabid),
-          tab.get_name(tabid),
-          tab.close_btn(tabid, 'x', { hl = 'Error' }, hl),
-          text.separator('', hl, 'TabLineFill'),
-          margin = ' ',
-          hl = hl,
-        }
+      preset_head(line, o),
+      line.tabs().foreach(function(tab)
+        return preset_tab(line, tab, o)
       end),
+      hl = o.theme.fill,
     }
-  end
-  tabline.set(renderer, opt)
+  end, opt)
 end
 
 tabline.preset = preset
