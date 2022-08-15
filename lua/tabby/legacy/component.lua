@@ -28,7 +28,7 @@ local component = {}
 
 ---@alias TabbyComponent TabbyComTab|TabbyComWin|TabbyComText|TabbyComSpring
 
----@param tab TabbyComTab
+---@param tab table
 ---@return TabbyNode
 local function render_tab(tab)
   return {
@@ -37,13 +37,13 @@ local function render_tab(tab)
   }
 end
 
----@param win TabbyComWin
+---@param win table
 ---@return TabbyNode
 local function render_win(win)
   return node.from_label_and_seps(win.label, win.left_sep, win.right_sep)
 end
 
----@param text TabbyComText
+---@param text table
 ---@return TabbyNode
 local function render_text(text)
   return node.from_tabby_text(text.text)
@@ -70,7 +70,8 @@ function component.render(com)
   else
     error('invalid component type')
   end
-  return render.node(n)
+  local line = render.node(n)
+  return line
 end
 
 return component
