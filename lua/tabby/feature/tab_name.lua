@@ -3,12 +3,14 @@ local tab_name = {}
 ---@class TabbyTabNameOption
 ---@field name_fallback fun(tabid:number):string
 
+--TODO change the fallback to "fun(tab:TabbyTab)"
+
 local api = require('tabby.module.api')
-local buf_name = require('tabby.features.buf_name')
+local buf_name = require('tabby.feature.buf_name')
 
 ---@type TabbyTabNameOption
 local option = {
-  fallback = function(tabid)
+  name_fallback = function(tabid)
     local wins = api.get_tab_wins(tabid)
     local cur_win = api.get_tab_current_win(tabid)
     local name = ''
@@ -43,7 +45,7 @@ end
 ---get tab's name
 ---@param tabid number tab id, 0 for current tab
 ---@return string
-function tab_name.get_name(tabid)
+function tab_name.get(tabid)
   local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tab_name_var)
   if ok then
     return result
@@ -54,7 +56,7 @@ end
 ---get tab's raw name
 ---@param tabid number
 ---@return string if no name for tab, return empty string
-function tab_name.get_raw_name(tabid)
+function tab_name.get_raw(tabid)
   local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tab_name_var)
   if not ok then
     return ''

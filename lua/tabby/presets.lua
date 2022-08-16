@@ -1,8 +1,9 @@
 local presets = {}
 
 local filename = require('tabby.module.filename')
-local text = require('tabby.text')
-local tab = require('tabby.tab')
+local api = require('tabby.module.api')
+local tab_name = require('tabby.feature.tab_name')
+local line = require('tabby.feature.lines').get_line()
 
 local hl_head = 'TabLine'
 local hl_tabline = 'TabLine'
@@ -12,16 +13,16 @@ local hl_tabline_fill = 'TabLineFill'
 
 local function tab_label(tabid, active)
   local icon = active and '' or ''
-  local number = vim.api.nvim_tabpage_get_number(tabid)
-  local name = tab.get_name(tabid)
+  local number = api.get_tab_number(tabid)
+  local name = tab_name.get(tabid)
   return string.format(' %s %d: %s ', icon, number, name)
 end
 
 local function clear_tab_label(tabid, active)
   local icon = active and '' or ''
-  local name = tab.get_raw_name(tabid)
+  local name = tab_name.get_raw(tabid)
   local number = vim.api.nvim_tabpage_get_number(tabid)
-  local wins = tab.all_wins(tabid)
+  local wins = api.get_tab_wins(tabid)
   local labels = {}
   if name == '' then
     labels = { '', icon, number, string.format('[%d]', #wins), '' }
@@ -41,7 +42,7 @@ presets.active_wins_at_tail = {
   layout = 'active_wins_at_tail',
   head = {
     { '  ', hl = hl_head },
-    text.separator('', hl_head, hl_tabline_fill),
+    line.sep('', hl_head, hl_tabline_fill),
   },
   active_tab = {
     label = function(tabid)
@@ -50,8 +51,8 @@ presets.active_wins_at_tail = {
         hl = hl_tabline_sel,
       }
     end,
-    left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
   },
   inactive_tab = {
     label = function(tabid)
@@ -60,8 +61,8 @@ presets.active_wins_at_tail = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   top_win = {
     label = function(winid)
@@ -70,8 +71,8 @@ presets.active_wins_at_tail = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   win = {
     label = function(winid)
@@ -80,11 +81,11 @@ presets.active_wins_at_tail = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   tail = {
-    text.separator('', hl_tabline, hl_tabline_fill),
+    line.sep('', hl_tabline, hl_tabline_fill),
     { '  ', hl = hl_tabline },
   },
 }
@@ -93,7 +94,7 @@ presets.active_wins_at_end = {
   layout = 'active_wins_at_end',
   head = {
     { '  ', hl = hl_head },
-    text.separator('', hl_head, hl_tabline_fill),
+    line.sep('', hl_head, hl_tabline_fill),
   },
   active_tab = {
     label = function(tabid)
@@ -102,8 +103,8 @@ presets.active_wins_at_end = {
         hl = hl_tabline_sel,
       }
     end,
-    left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
   },
   inactive_tab = {
     label = function(tabid)
@@ -112,8 +113,8 @@ presets.active_wins_at_end = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   top_win = {
     label = function(winid)
@@ -122,8 +123,8 @@ presets.active_wins_at_end = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
   win = {
     label = function(winid)
@@ -132,8 +133,8 @@ presets.active_wins_at_end = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
 }
 presets.active_tab_with_wins = {
@@ -141,7 +142,7 @@ presets.active_tab_with_wins = {
   layout = 'active_tab_with_wins',
   head = {
     { '  ', hl = hl_head },
-    text.separator('', hl_head, hl_tabline_fill),
+    line.sep('', hl_head, hl_tabline_fill),
   },
   active_tab = {
     label = function(tabid)
@@ -150,8 +151,8 @@ presets.active_tab_with_wins = {
         hl = hl_tabline_sel,
       }
     end,
-    left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
   },
   inactive_tab = {
     label = function(tabid)
@@ -160,8 +161,8 @@ presets.active_tab_with_wins = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   top_win = {
     label = function(winid)
@@ -170,8 +171,8 @@ presets.active_tab_with_wins = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
   win = {
     label = function(winid)
@@ -180,8 +181,8 @@ presets.active_tab_with_wins = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
 }
 presets.tab_with_top_win = {
@@ -189,7 +190,7 @@ presets.tab_with_top_win = {
   layout = 'tab_with_top_win',
   head = {
     { '  ', hl = hl_head },
-    text.separator('', hl_head, hl_tabline_fill),
+    line.sep('', hl_head, hl_tabline_fill),
   },
   active_tab = {
     label = function(tabid)
@@ -198,8 +199,8 @@ presets.tab_with_top_win = {
         hl = hl_tabline_sel,
       }
     end,
-    left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
   },
   inactive_tab = {
     label = function(tabid)
@@ -208,8 +209,8 @@ presets.tab_with_top_win = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
   active_win = {
     label = function(winid)
@@ -218,8 +219,8 @@ presets.tab_with_top_win = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
   win = {
     label = function(winid)
@@ -228,8 +229,8 @@ presets.tab_with_top_win = {
         hl = hl_normal,
       }
     end,
-    left_sep = text.separator('', hl_normal, hl_tabline_fill),
-    right_sep = text.separator('', hl_normal, hl_tabline_fill),
+    left_sep = line.sep('', hl_normal, hl_tabline_fill),
+    right_sep = line.sep('', hl_normal, hl_tabline_fill),
   },
 }
 presets.tab_only = {
@@ -237,7 +238,7 @@ presets.tab_only = {
   layout = 'tab_only',
   head = {
     { '  ', hl = hl_head },
-    text.separator('', hl_head, hl_tabline_fill),
+    line.sep('', hl_head, hl_tabline_fill),
   },
   active_tab = {
     label = function(tabid)
@@ -246,8 +247,8 @@ presets.tab_only = {
         hl = hl_tabline_sel,
       }
     end,
-    left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
   },
   inactive_tab = {
     label = function(tabid)
@@ -256,8 +257,8 @@ presets.tab_only = {
         hl = hl_tabline,
       }
     end,
-    left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-    right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+    left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+    right_sep = line.sep('', hl_tabline, hl_tabline_fill),
   },
 }
 

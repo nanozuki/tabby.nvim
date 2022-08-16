@@ -2,8 +2,7 @@ local component = require('tabby.legacy.component')
 local config = require('tabby.legacy.config')
 local tabline = require('tabby.legacy.tabline')
 local filename = require('tabby.module.filename')
-
-local tab = require('tabby.tab')
+local tab_name = require('tabby.feature.tab_name')
 
 local tabby = {}
 
@@ -31,7 +30,7 @@ end
 function tabby.init()
   tabby.show_tabline()
   vim.o.tabline = '%!TabbyTabline()'
-  vim.cmd([[command! -nargs=1 TabRename lua require('tabby.tab').set_current_name(<f-args>)]])
+  vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0,<f-args>)]])
 end
 
 function tabby.show_tabline()
@@ -56,7 +55,7 @@ function tabby.update()
 end
 
 function tabby.tab_rename(name)
-  tab.set_current_name(name)
+  tab_name.set(0, name)
 end
 
 function tabby.handle_buf_click()

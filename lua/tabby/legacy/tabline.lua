@@ -1,7 +1,7 @@
 local tabline = {}
 
-local tab = require('tabby.tab')
 local component = require('tabby.legacy.component')
+local api = require('tabby.module.api')
 
 ---@class TabbyTablineOpt
 ---@field layout TabbyTablineLayout
@@ -94,7 +94,7 @@ function tabline.render(opt)
     if tabid == current_tab then
       table.insert(coms, tabline.render_tab_label(tabid, opt.active_tab))
       if opt.layout == 'active_tab_with_wins' then
-        local wins = tab.all_wins(current_tab)
+        local wins = api.get_tab_wins(current_tab)
         local top_win = vim.api.nvim_tabpage_get_win(current_tab)
         for i, winid in ipairs(wins) do
           local win_opt = opt.win
@@ -120,7 +120,7 @@ function tabline.render(opt)
     if opt.layout == 'active_wins_at_tail' then
       table.insert(coms, { type = 'text', text = { '%=', hl = opt.hl } })
     end
-    local wins = tab.all_wins(current_tab)
+    local wins = api.get_tab_wins(current_tab)
     local top_win = vim.api.nvim_tabpage_get_win(current_tab)
     for i, winid in ipairs(wins) do
       local win_opt = opt.win

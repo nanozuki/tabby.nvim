@@ -30,7 +30,7 @@ function tabwins.new_tab(tabid)
       return tabid == api.get_current_tab()
     end,
     name = function()
-      return require('tabby.tab').get_name(tabid)
+      return require('tabby.feature.tab_name').get(tabid)
     end,
     close_btn = function(symbol)
       -- When there are only one tabpage, the colsed button is disabled by nvim
@@ -100,7 +100,7 @@ function tabwins.new_win(winid)
       return icon
     end,
     buf_name = function()
-      require('tabby.features.buf_name').get(winid)
+      require('tabby.feature.buf_name').get(winid)
     end,
   }
 end

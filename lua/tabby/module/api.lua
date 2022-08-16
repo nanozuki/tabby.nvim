@@ -19,9 +19,7 @@ end
 
 function api.get_tab_wins(tabid)
   local wins = vim.api.nvim_tabpage_list_wins(tabid)
-  return vim.tbl_filter(function(winid)
-    return !api.is_not_float_win(winid)
-  end, wins)
+  return vim.tbl_filter(api.is_not_float_win, wins)
 end
 
 function api.get_current_tab()
@@ -33,12 +31,12 @@ function api.get_tab_current_win(tabid)
 end
 
 function api.get_tab_number(tabid)
-      return vim.api.nvim_tabpage_get_number(tabid)
+  return vim.api.nvim_tabpage_get_number(tabid)
 end
 
 function api.get_wins()
   local wins = vim.api.nvim_list_wins()
-  return vim.tbl_filter(api.is_float_win, wins)
+  return vim.tbl_filter(api.is_not_float_win, wins)
 end
 
 function api.get_win_tab(winid)
@@ -46,11 +44,11 @@ function api.get_win_tab(winid)
 end
 
 function api.is_float_win(winid)
-  return vim.api.nvim_win_get_config(winid).relative == ''
+  return vim.api.nvim_win_get_config(winid).relative ~= ''
 end
 
 function api.is_not_float_win(winid)
-  return vim.api.nvim_win_get_config(winid).relative ~= ''
+  return vim.api.nvim_win_get_config(winid).relative == ''
 end
 
 ---@type TabbyAPI

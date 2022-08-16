@@ -10,8 +10,8 @@ end
 
 function setup.low_level()
   local colors = require('tabby.module.colors')
-  local tab = require('tabby.tab')
-  local text = require('tabby.text')
+  local line = require('tabby.feature.lines').get_line()
+  local api = require('tabby.module.api')
 
   local hl_head = { fg = colors.black(), bg = colors.red(), style = 'italic' }
   local hl_tabline = 'TabLineSel'
@@ -22,7 +22,7 @@ function setup.low_level()
   local components = function()
     local coms = {
       { type = 'text', text = { '  ', hl = hl_head } },
-      { type = 'text', text = text.separator('', hl_head, hl_tabline_fill) },
+      { type = 'text', text = line.sep('', hl_head, hl_tabline_fill) },
     }
     local tabs = vim.api.nvim_list_tabpages()
     local current_tab = vim.api.nvim_get_current_tabpage()
@@ -35,10 +35,10 @@ function setup.low_level()
             '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
             hl = hl_tabline_sel,
           },
-          left_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
-          right_sep = text.separator('', hl_tabline_sel, hl_tabline_fill),
+          left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
+          right_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
         })
-        local wins = tab.all_wins(current_tab)
+        local wins = api.get_tab_wins(current_tab)
         local top_win = vim.api.nvim_tabpage_get_win(current_tab)
         for _, winid in ipairs(wins) do
           local icon = '  '
@@ -54,8 +54,8 @@ function setup.low_level()
               table.concat({ '', icon, vim.fn.fnamemodify(buf_name, ':~:.'), '' }, ' '),
               hl = hl_normal,
             },
-            left_sep = text.separator('', hl_normal, hl_tabline_fill),
-            right_sep = text.separator('', hl_normal, hl_tabline_fill),
+            left_sep = line.sep('', hl_normal, hl_tabline_fill),
+            right_sep = line.sep('', hl_normal, hl_tabline_fill),
           })
         end
       else
@@ -66,8 +66,8 @@ function setup.low_level()
             '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
             hl = hl_tabline,
           },
-          left_sep = text.separator('', hl_tabline, hl_tabline_fill),
-          right_sep = text.separator('', hl_tabline, hl_tabline_fill),
+          left_sep = line.sep('', hl_tabline, hl_tabline_fill),
+          right_sep = line.sep('', hl_tabline, hl_tabline_fill),
         })
       end
     end
@@ -85,7 +85,7 @@ end
 function setup.no_nerd()
   local filename = require('tabby.module.filename')
   local colors = require('tabby.module.colors')
-  local tab = require('tabby.tab')
+  local tab_name = require('tabby.feature.tab_name')
 
   local hl_head = { fg = colors.black(), bg = colors.red(), style = 'italic' }
   local hl_tabline = 'TabLineSel'
@@ -98,7 +98,7 @@ function setup.no_nerd()
   local function tab_label(tabid, active)
     local icon = active and '+' or '-'
     local number = vim.api.nvim_tabpage_get_number(tabid)
-    local name = tab.get_name(tabid)
+    local name = tab_name.get(tabid)
     return string.format(' %s %d: %s ', icon, number, name)
   end
 

@@ -2,7 +2,7 @@ local lines = {}
 
 local api = require('tabby.module.api')
 local highlight = require('tabby.module.highlight')
-local tabwins = require('tabby.line.tabwins')
+local tabwins = require('tabby.feature.tabwins')
 
 ---TabbyLine gathering all you need in configure nvim lines
 ---@class TabbyLine
@@ -26,7 +26,7 @@ end
 local line = {
   tabs = tabwins.new_tabs,
   wins = function()
-    return tabwins.new_wins()
+    return tabwins.new_wins(api.get_wins())
   end,
   wins_in_tab = function(tabid)
     return tabwins.new_wins(api.get_tab_wins(tabid))
