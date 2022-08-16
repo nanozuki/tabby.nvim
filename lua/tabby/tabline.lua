@@ -20,7 +20,7 @@ function tabline.set(fn, _)
 end
 
 function tabline.init()
-  vim.o.tabline = '%!Tabby#RenderTabline()'
+  vim.o.tabline = '%!TabbyRenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0, <f-args>)]])
 end
 
@@ -141,11 +141,6 @@ function preset.active_wins_at_end(opt)
 end
 
 function preset.active_tab_with_wins(opt)
-  require('tabby.feature.tab_name').set_option({
-    name_fallback = function(_)
-      return ''
-    end,
-  })
   local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
   tabline.set(function(line)
     return {
@@ -155,7 +150,9 @@ function preset.active_tab_with_wins(opt)
         if tab.is_current() == false then
           return tab_node
         end
-        local wins_node = line.wins_in_tab(tab.id).foreach(preset_win)
+        local wins_node = line.wins_in_tab(tab.id).foreach(function(win)
+          return preset_win(line, win, o)
+        end)
         return { tab_node, wins_node }
       end),
       hl = o.theme.fill,
@@ -164,6 +161,11 @@ function preset.active_tab_with_wins(opt)
 end
 
 function preset.tab_with_top_win(opt)
+  require('tabby.feature.tab_name').set_option({
+    name_fallback = function(_)
+      return ''
+    end,
+  })
   local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
   tabline.set(function(line)
     return {

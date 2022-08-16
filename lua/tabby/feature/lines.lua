@@ -31,9 +31,6 @@ local line = {
   wins_in_tab = function(tabid)
     return tabwins.new_wins(api.get_tab_wins(tabid))
   end,
-  spacer = function()
-    return '%='
-  end,
   sep = function(symbol, cur_hl, back_hl)
     local cur_hl_obj = ensure_hl_obj(cur_hl)
     local back_hl_obj = ensure_hl_obj(back_hl)
@@ -45,6 +42,10 @@ local line = {
       },
     }
   end,
+  spacer = function()
+    return '%='
+  end,
+  api = api,
 }
 
 ---get line object

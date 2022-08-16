@@ -54,6 +54,17 @@ end
 ---@field tabs TabbyTab[] tabs
 ---@field foreach fun(fn:fun(tab:TabbyTab)):TabbyNode render tabs by given render function
 
+local function wrap_tab_node(node, tabid)
+  if type(node) == 'string' then
+    return { node, click = { 'to_tab', tabid } }
+  elseif type(node) == 'table' then
+    node.click = { 'to_tab', tabid }
+    return node
+  else
+    return ''
+  end
+end
+
 ---new TabbyTabs
 ---@return TabbyTabs
 function tabwins.new_tabs()
@@ -65,7 +76,7 @@ function tabwins.new_tabs()
       for _, tab in ipairs(tabs) do
         local node = fn(tab)
         if node ~= nil and node ~= '' then
-          nodes[#nodes + 1] = node
+          nodes[#nodes + 1] = wrap_tab_node(node, tab.id)
         end
       end
       return nodes
@@ -90,7 +101,7 @@ function tabwins.new_win(winid)
       return tabwins.new_tab(api.get_win_tab(winid))
     end,
     is_current = function()
-      return winid == vim.api.nvim_tabpage_get_win(winid)
+      return api.get_tab_current_win(api.get_win_tab(winid)) == winid
     end,
     file_icon = function()
       -- require 'kyazdani42/nvim-web-devicons'
@@ -100,14 +111,14 @@ function tabwins.new_win(winid)
       return icon
     end,
     buf_name = function()
-      require('tabby.feature.buf_name').get(winid)
+      return require('tabby.feature.buf_name').get(winid)
     end,
   }
 end
 
 ---@class TabbyWins
 ---@field wins TabbyWin[] windows
----@field foreach fun(fn:fun(tab:TabbyWin)):TabbyNode render wins by given render function
+---@field foreach fun(fn:fun(win:TabbyWin)):TabbyNode render wins by given render function
 
 ---new win object
 ---@param win_ids number[] win id list
