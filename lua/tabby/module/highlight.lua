@@ -9,16 +9,6 @@ local highlight = {}
 ---@field bg? string highlight argument guibg
 ---@field style? string highlight argument gui
 
-vim.cmd([[
-  augroup highlight_cache
-    autocmd!
-    autocmd ColorScheme * lua require("tabby.module.highlight").clear_extract_cache()
-  augroup end
-]])
-
----@type table<string,boolean>
-local registered_highlight = {}
-
 ---register highlight object to nvim
 ---@param hl TabbyHighlightObject
 ---@return string highlight group name
@@ -36,9 +26,6 @@ function highlight.register(hl)
     groups[#groups + 1] = hl[k] or 'NONE'
   end
   local group = string.gsub(table.concat(groups, '_'), '#', '')
-  if registered_highlight[group] == true then
-    return group
-  end
 
   local cmds = { 'hi', group }
   for i, k in ipairs(tabby_keys) do
@@ -50,20 +37,12 @@ function highlight.register(hl)
     cmds[#cmds + 1] = 'gui=NONE'
   end
   vim.cmd(table.concat(cmds, ' '))
-  registered_highlight[group] = true
   return group
 end
-
----@type table<string, TabbyHighlightObject>
-local extract_cache = {}
 
 ---@param group_name string
 ---@return TabbyHighlightObject
 function highlight.extract(group_name)
-  local ho = extract_cache[group_name]
-  if ho ~= nil then
-    return ho
-  end
   local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
   local hl = {}
   for k, v in string.gmatch(hl_str, '([^%s=]+)=([^%s=]+)') do
@@ -75,12 +54,7 @@ function highlight.extract(group_name)
       hl.style = v
     end
   end
-  extract_cache[group_name] = hl
   return hl
-end
-
-function highlight.clear_extract_cache()
-  extract_cache = {}
 end
 
 return highlight
