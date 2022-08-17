@@ -21,7 +21,7 @@ function util.tabpage_list_wins(tabid)
   return require('tabby.module.api').get_tab_wins(tabid)
 end
 
----@deprecated use require('tabby.feature.tab_name').set
+---@deprecated use require('tabby.feature.tab_name').set(tabid, name)
 ---@param tabid number
 ---@param name string
 function util.set_tab_name(tabid, name)
@@ -29,15 +29,17 @@ function util.set_tab_name(tabid, name)
 end
 
 ---get tab's name, if not set, will return the name made by fallback.
----@deprecated use require('tabby.feature.tab_name').get
+---@deprecated use require('tabby.feature.tab_name').get(tabid)
 ---@param tabid number
 ---@param fallback? fun(tabid:number):string Default fallback is like "init.lua[2+]", the filename is came from the focus window.
 function util.get_tab_name(tabid, fallback)
   local tab_name = require('tabby.feature.tab_name')
   if fallback ~= nil then
-    tab_name.set_option({ name_fallback = fallback })
+    tab_name.set_option({
+      name_fallback = fallback,
+    })
   end
-  return tab_name.get(tabid)
+  return require('tabby.feature.tab_name').get(tabid)
 end
 
 --- conbine texts
