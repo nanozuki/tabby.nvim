@@ -22,37 +22,42 @@ local function ensure_hl_obj(hl)
   return hl
 end
 
----@type TabbyLine
-local line = {
-  tabs = tabwins.new_tabs,
-  wins = function()
-    return tabwins.new_wins(api.get_wins())
-  end,
-  wins_in_tab = function(tabid)
-    return tabwins.new_wins(api.get_tab_wins(tabid))
-  end,
-  sep = function(symbol, cur_hl, back_hl)
-    local cur_hl_obj = ensure_hl_obj(cur_hl)
-    local back_hl_obj = ensure_hl_obj(back_hl)
-    return {
-      symbol,
-      hl = {
-        fg = cur_hl_obj.bg,
-        bg = back_hl_obj.bg,
-      },
-    }
-  end,
-  spacer = function()
-    return '%='
-  end,
-  api = api,
-}
+---@class TabbyLineOption
+---@field tab_name? TabbyTabNameOption
+---@field buf_name? TabbyBufNameOption
 
 ---get line object
+---@param opt? TabbyLineOption
 ---@return TabbyLine
-function lines.get_line()
-  -- If we need some pre,post hooks, can be add here.
-  -- So I wrap line object in a function
+function lines.get_line(opt)
+  opt = opt or {}
+  ---@type TabbyLine
+  local line = {
+    tabs = function()
+      return tabwins.new_tabs(opt)
+    end,
+    wins = function()
+      return tabwins.new_wins(api.get_wins(), opt)
+    end,
+    wins_in_tab = function(tabid)
+      return tabwins.new_wins(api.get_tab_wins(tabid), opt)
+    end,
+    sep = function(symbol, cur_hl, back_hl)
+      local cur_hl_obj = ensure_hl_obj(cur_hl)
+      local back_hl_obj = ensure_hl_obj(back_hl)
+      return {
+        symbol,
+        hl = {
+          fg = cur_hl_obj.bg,
+          bg = back_hl_obj.bg,
+        },
+      }
+    end,
+    spacer = function()
+      return '%='
+    end,
+    api = api,
+  }
   return line
 end
 

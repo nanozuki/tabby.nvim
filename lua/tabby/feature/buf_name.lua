@@ -6,22 +6,30 @@ local filename = require('tabby.module.filename')
 ---@field mode 'unique'|'relative'|'tail'|'shorten' @defult unique
 
 ---@type TabbyBufNameOption
-local option = {
+local default_option = {
   mode = 'unique',
 }
 
-function buf_name.set_option(opt)
-  option = vim.tbl_deep_extend('force', option, opt)
+function buf_name.set_default_option(opt)
+  default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
-function buf_name.get(winid)
-  if option.mode == 'unique' then
+---get buf name
+---@param winid number
+---@param opt? TabbyBufNameOption
+---@return string
+function buf_name.get(winid, opt)
+  local o = default_option
+  if opt ~= nil then
+    o = vim.tbl_deep_extend('force', default_option, opt)
+  end
+  if o.mode == 'unique' then
     return buf_name.get_unique_name(winid)
-  elseif option.mode == 'relative' then
+  elseif o.mode == 'relative' then
     return buf_name.get_relative_name(winid)
-  elseif option.mode == 'tail' then
+  elseif o.mode == 'tail' then
     return buf_name.get_tail_name(winid)
-  elseif option.mode == 'shorten' then
+  elseif o.mode == 'shorten' then
     return buf_name.get_shorten_name(winid)
   else
     return ''

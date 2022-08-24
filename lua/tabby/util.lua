@@ -35,11 +35,9 @@ end
 function util.get_tab_name(tabid, fallback)
   local tab_name = require('tabby.feature.tab_name')
   if fallback ~= nil then
-    tab_name.set_option({
-      name_fallback = fallback,
-    })
+    return tab_name.get(tabid, { name_fallback = fallback })
   end
-  return require('tabby.feature.tab_name').get(tabid)
+  return tab_name.get(tabid)
 end
 
 --- conbine texts

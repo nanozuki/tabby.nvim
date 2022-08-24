@@ -9,7 +9,7 @@ local api = require('tabby.module.api')
 local buf_name = require('tabby.feature.buf_name')
 
 ---@type TabbyTabNameOption
-local option = {
+local default_option = {
   name_fallback = function(tabid)
     local wins = api.get_tab_wins(tabid)
     local cur_win = api.get_tab_current_win(tabid)
@@ -28,8 +28,8 @@ local option = {
 
 ---set tab option
 ---@param opt TabbyTabNameOption
-function tab_name.set_option(opt)
-  option = vim.tbl_deep_extend('force', option, opt)
+function tab_name.set_default_option(opt)
+  default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
 local tab_name_var = 'tabby_tab_name'
@@ -44,13 +44,18 @@ end
 
 ---get tab's name
 ---@param tabid number tab id, 0 for current tab
+---@param opt? TabbyTabNameOption
 ---@return string
-function tab_name.get(tabid)
+function tab_name.get(tabid, opt)
+  local o = default_option
+  if opt ~= nil then
+    o = vim.tbl_deep_extend('force', default_option, opt)
+  end
   local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tab_name_var)
   if ok then
     return result
   end
-  return option.name_fallback(tabid)
+  return o.name_fallback(tabid)
 end
 
 ---get tab's raw name

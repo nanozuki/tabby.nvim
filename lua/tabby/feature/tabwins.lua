@@ -13,15 +13,16 @@ local api = require('tabby.module.api')
 
 ---new TabbyTab
 ---@param tabid number
+---@param opt TabbyLineOption
 ---@return TabbyTab
-function tabwins.new_tab(tabid)
+function tabwins.new_tab(tabid, opt)
   return {
     id = tabid,
     current_win = function()
-      return tabwins.new_win(api.get_tab_current_win(tabid))
+      return tabwins.new_win(api.get_tab_current_win(tabid), opt)
     end,
     wins = function()
-      return tabwins.new_wins(api.get_tab_wins(tabid))
+      return tabwins.new_wins(api.get_tab_wins(tabid), opt)
     end,
     number = function()
       return api.get_tab_number(tabid)
@@ -30,7 +31,7 @@ function tabwins.new_tab(tabid)
       return tabid == api.get_current_tab()
     end,
     name = function()
-      return require('tabby.feature.tab_name').get(tabid)
+      return require('tabby.feature.tab_name').get(tabid, opt.tab_name)
     end,
     close_btn = function(symbol)
       -- When there are only one tabpage, the colsed button is disabled by nvim
@@ -66,9 +67,12 @@ local function wrap_tab_node(node, tabid)
 end
 
 ---new TabbyTabs
+---@param opt TabbyLineOption
 ---@return TabbyTabs
-function tabwins.new_tabs()
-  local tabs = vim.tbl_map(tabwins.new_tab, api.get_tabs())
+function tabwins.new_tabs(opt)
+  local tabs = vim.tbl_map(function(tabid)
+    return tabwins.new_tab(tabid, opt)
+  end, api.get_tabs())
   return {
     tabs = tabs,
     foreach = function(fn)
@@ -93,12 +97,13 @@ end
 
 ---new TabbyWin
 ---@param winid number
+---@param opt TabbyLineOption
 ---@return TabbyWin
-function tabwins.new_win(winid)
+function tabwins.new_win(winid, opt)
   return {
     id = winid,
     tab = function()
-      return tabwins.new_tab(api.get_win_tab(winid))
+      return tabwins.new_tab(api.get_win_tab(winid), opt)
     end,
     is_current = function()
       return api.get_tab_current_win(api.get_win_tab(winid)) == winid
@@ -111,7 +116,7 @@ function tabwins.new_win(winid)
       return icon
     end,
     buf_name = function()
-      return require('tabby.feature.buf_name').get(winid)
+      return require('tabby.feature.buf_name').get(winid, opt.buf_name)
     end,
   }
 end
@@ -122,9 +127,12 @@ end
 
 ---new win object
 ---@param win_ids number[] win id list
+---@param opt TabbyLineOption
 ---@return TabbyWins
-function tabwins.new_wins(win_ids)
-  local wins = vim.tbl_map(tabwins.new_win, win_ids)
+function tabwins.new_wins(win_ids, opt)
+  local wins = vim.tbl_map(function(winid)
+    return tabwins.new_win(winid, opt)
+  end, win_ids)
   return {
     wins = wins,
     foreach = function(fn)

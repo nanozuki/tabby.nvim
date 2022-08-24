@@ -161,7 +161,7 @@ function preset.active_tab_with_wins(opt)
 end
 
 function preset.tab_with_top_win(opt)
-  require('tabby.feature.tab_name').set_option({
+  require('tabby.feature.tab_name').set_default_option({
     name_fallback = function(_)
       return ''
     end,
