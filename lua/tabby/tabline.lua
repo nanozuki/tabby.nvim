@@ -1,6 +1,10 @@
-local tabline = {
+local tabline = {}
+
+local module = {
   ---@type fun(line:TabbyLine):TabbyNode
-  renderer = nil,
+  fn = nil,
+  ---@type TabbyLineOption?
+  opt = nil,
 }
 
 local render = require('tabby.module.render')
@@ -9,9 +13,12 @@ local lines = require('tabby.feature.lines')
 
 ---set tabline render function
 ---@param fn fun(line:TabbyLine):TabbyNode
----@param _ table option placeholder
-function tabline.set(fn, _)
-  tabline.renderer = fn
+---@param opt? TabbyLineOption
+function tabline.set(fn, opt)
+  module = {
+    fn = fn,
+    opt = opt,
+  }
   if vim.api.nvim_get_vvar('vim_did_enter') then
     tabline.init()
   else
@@ -25,13 +32,14 @@ function tabline.init()
 end
 
 function tabline.render()
-  return render.node(tabline.renderer(lines.get_line()))
+  local line = lines.get_line(module.opt)
+  return render.node(module.fn(line))
 end
 
 local preset = {}
 
----@class TabbyTablinePresetOption
----@field style 'upward-triangle'|'downward-triangle'|'airline'|'bubble'|'non-nerdfont' @default 'upward-triangle'
+---@class TabbyTablinePresetOption: TabbyLineOption
+---@field style 'upward-triangle'|'downward-triangle'|'airline'|'bubble'|'non-nerdfont' @default 'upward-triangle' @todo
 ---@field theme TabbyTablinePresetTheme
 
 ---@class TabbyTablinePresetTheme
@@ -121,7 +129,7 @@ function preset.active_wins_at_tail(opt)
       preset_tail(line, o),
       hl = o.theme.fill,
     }
-  end, opt)
+  end, o)
 end
 
 function preset.active_wins_at_end(opt)
@@ -137,7 +145,7 @@ function preset.active_wins_at_end(opt)
       end),
       hl = o.theme.fill,
     }
-  end, opt)
+  end, o)
 end
 
 function preset.active_tab_with_wins(opt)
@@ -157,16 +165,20 @@ function preset.active_tab_with_wins(opt)
       end),
       hl = o.theme.fill,
     }
-  end, opt)
+  end, o)
 end
 
 function preset.tab_with_top_win(opt)
-  require('tabby.feature.tab_name').set_default_option({
-    name_fallback = function(_)
-      return ''
-    end,
-  })
-  local o = vim.tbl_deep_extend('force', default_preset_option, opt or {})
+  ---@type TabbyLineOption
+  local line_opt = {
+    tab_name = {
+      test = 'a',
+      name_fallback = function(_)
+        return ''
+      end,
+    },
+  }
+  local o = vim.tbl_deep_extend('force', default_preset_option, line_opt, opt or {})
   tabline.set(function(line)
     return {
       preset_head(line, o),
@@ -178,7 +190,7 @@ function preset.tab_with_top_win(opt)
       end),
       hl = o.theme.fill,
     }
-  end, opt)
+  end, o)
 end
 
 function preset.tab_only(opt)
@@ -191,7 +203,7 @@ function preset.tab_only(opt)
       end),
       hl = o.theme.fill,
     }
-  end, opt)
+  end, o)
 end
 
 tabline.preset = preset
