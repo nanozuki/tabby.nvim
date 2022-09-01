@@ -9,7 +9,7 @@ local tabwins = require('tabby.feature.tabwins')
 ---@field tabs fun():TabbyTabs return all tabs
 ---@field wins fun():TabbyWins return all wins
 ---@field wins_in_tab fun(tabid:number):TabbyWins return all wins in that tab
----@field sep fun(symbol:string, cur_hl:TabbyHighlight, back_hl:TabbyHighlight):TabbyNode make a separator
+---@field sep fun(symbol:string,cur_hl:TabbyHighlight,back_hl:TabbyHighlight):TabbyNode make a separator
 ---@field spacer fun():TabbyNode Separation point between alignment sections. Each section will be separated by an equal number of spaces.
 ---@field api TabbyAPI neovim apis wrapper
 
