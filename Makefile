@@ -10,8 +10,10 @@ test-nvim:
 	-cp -n ./testdata/mini-config.lua ./testenv/config/nvim/init.lua
 	-cp -n ./testdata/setup.lua ./testenv/config/nvim/lua/setup.lua
 	-cp -n ./testdata/use_theme.lua ./testenv/config/nvim/lua/use_theme.lua
-	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache nvim --headless -c 'lua Bootstrap()'
-	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache nvim -S ./testdata/Session.vim
+	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache \
+		nvim --headless -u ./testdata/plugin.lua -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache \
+		nvim -S ./testdata/Session.vim
 
 clear-test-nvim:
 	-rm -rf ./testenv
