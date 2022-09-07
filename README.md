@@ -110,19 +110,17 @@ end)
 
 ## Customize
 
-Customize tabby with `require('tabby.tabline').set(fn, opt)`:
+Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
 
-```lua
-require('tabby.tabline').set(fn, opt)
-```
+```vimdoc
+tabline.set({fn}, {opt?})                                          *tabby.tabline.set*
+    Set tabline renderer function
 
-```
-tabline.set({fn}, {opt?})                                          *tabline.set*
-    set tabline render function
-
-    Parameters: ~
-        {fn}    fun(line:TabbyLine):TabbyNode       render function for tabline
-        {opt?}  TabbyLineOption                     option for this line
+    Parameters:
+        {fn}    A renderer function, like "function(line)"
+                * parameter: {line}, |tabby.object.line|, a Line object
+                * return: renderer node. |tabby.object.node|
+        {opt?}  |LineOption|. Option of line rendering
 ```
 
 All you need is to provide a render function, that use the variable `line`([TabbyLine](#TabbyLine))
@@ -131,58 +129,56 @@ And you can use `opt` ([TabbyLineOption](#TabbyLineOption)) to customize some be
 
 ### TabbyLine
 
-The `line` variable gathered all features the tabby provided.
-
-```
-line.tabs().tabs
-    Return all Tab
-
-    Return:
-        Array of tabs
-
-line.tabs().foreach({renderer})
-    Use the renderer to render every Tab.
+```vimdoc
+line.tabs().foreach({callback})     *tabby.line.tabs.foreach*
+    Use callback function to renderer every tabs.
 
     Parameters:
-        {renderer}    a function, receive a Tab and return Node
+        {callback} Function, receive a Tab |tabby.object.tab|, return a Node. Skip render when return is nil.
 
-line.wins().wins
+    Return:
+        Node, rendered result of all tabs.
 
-line.wins().foreach({renderer})
+line.wins().foreach({callback})     *tabby.line.wins.foreach*
+    Use callback function to renderer every wins.
+
+    Parameters:
+        {callback} Function, receive a Win |tabby.object.win|, return a Node. Skip render when return is nil.
+
+    Return:
+        Node, rendered result of all wins.
+
+line.wins_in_tab({tabid}).foreach({callback})     *tabby.line.wins_in_tab.foreach*
+    Use callback function to renderer every wins in specified tab.
+
+    Parameters:
+        {tabid}     Number, tab id
+        {callback}  Function, receive a Win |tabby.object.win|, return a Node. Skip render when return is nil.
+
+    Return:
+        Node, rendered result of all wins in specified tab.
+
+line.spacer()       *tabby.line.spacer*
+    Separation point between alignment sections. Each section will be separated by an equal number of spaces.
+
+    Return:
+        Node, spacer node.
+
+line.sep({symbol}, {highlight}, {back_highlight})
+    Make a separator, and calculate highlight.
+
+    Parameters:
+        [  ██████████████   ]
+           |          |     |
+           symbol     hl    back_hl
+
+        {symbol}    string, separator symbol
+        {hl}        HighlightString or HighlightObject, current highlight
+        {back_hl}   HighlightString or HighlightObject, highlight in back
+
+line.api           *tabby.line.api*
+    Tabby gathered some neovim lua api in this object. Maybe help you to build lines. Details: |tabby.object.api|.
 ```
-
-- line.tabs()
-
-  Return all tabs
-
-  Return:
-  Tab array
-
-Fields:
-
-- tabs `fun():TabbyTabs`
-
-  return all tabs
-
-- wins `fun():TabbyWins`
-
-  return all wins
-
-- wins_in_tab `fun(tabid:number):TabbyWins`
-
-  return all wins in that tab
-
-- sep `fun(symbol:string,cur_hl:TabbyHighlight, back_hl:TabbyHighlight):TabbyNode`
-
-  make a separator
-
-- spacer `fun():TabbyNode`
-
-  Separation point between alignment sections. Each section will be separated by an equal number of spaces.
-
-- api `TabbyAPI`
-
-  neovim apis wrapper
 
 ### TabbyTabs
 
