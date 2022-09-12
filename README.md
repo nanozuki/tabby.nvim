@@ -8,6 +8,12 @@ A declarative, highly configurable, and neovim style tabline plugin. Use your nv
 
 <!-- panvimdoc-ignore-end -->
 
+**To v1.x users**
+
+Tabby thinks it's essential to stay backward compatible! So even if Tabby
+releases a brand new 2.0, it will not break the 1.0 configuration.
+If needed, check out the [Readme V1](./README_v1.md)!
+
 ## Concept
 
 ### A line for the vim tab page, not for buffers
