@@ -8,7 +8,7 @@ Table of Contents                                    *tabby-table-of-contents*
   - Install                                                    |tabby-install|
   - Setup                                                        |tabby-setup|
   - Customize                                                |tabby-customize|
-  - Use Preset                                              |tabby-use-preset|
+  - Use Presets                                            |tabby-use-presets|
   - TODO                                                          |tabby-todo|
 
 ==============================================================================
@@ -140,8 +140,7 @@ Discussions: show and tell
 
 PRESETS ~
 
-If you want to quick start? That’s fine, you can just use
-|tabby-preset-configs|.
+If you want to quick start? That’s fine, you can |tabby-use-preset-configs|.
 
 KEY MAPPING EXAMPLE ~
 
@@ -391,7 +390,7 @@ api.is_float_win({winid})                             *tabby.api.is_float_win()*
 api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
     Return true if this window is not floating.
 
-USE PRESET                                                  *tabby-use-preset*
+USE PRESETS                                                *tabby-use-presets*
 
 You can use presets for a quick start. The preset config uses nerdfont, and you
 should use a nerdfont-patched font to display that correctly.

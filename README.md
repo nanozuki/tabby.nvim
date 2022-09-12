@@ -114,7 +114,7 @@ These are some awesome exmaples shared by tabby.nvim users! Also welcome to shar
 
 ### Presets
 
-If you want to quick start? That's fine, you can just use [Preset Configs](#Use_Preset).
+If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Presets).
 
 ### Key mapping example
 
@@ -367,7 +367,7 @@ api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
     Return true if this window is not floating.
 ```
 
-## Use Preset
+## Use Presets
 
 You can use presets for a quick start. The preset config uses nerdfont,
 and you should use a nerdfont-patched font to display that correctly.
