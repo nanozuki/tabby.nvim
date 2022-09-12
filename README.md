@@ -433,42 +433,6 @@ No windows label, only tab. and use focus window to name tab
 
 <!-- panvimdoc-ignore-end -->
 
-### Examples and Gallary
-
-These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own!
-
-[Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
-
-### Key mapping example
-
-Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe you want to map some operation. For example:
-
-```lua
-vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tn", ":tabn<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>tp", ":tabp<CR>", { noremap = true })
--- move current tab to previous position
-vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
--- move current tab to next position
-vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
-```
-
-And in fact, vim has some built-in keymapping, it's better to read `:help tabline`. Here are some useful mappings:
-
-```
-gt					*i_CTRL-<PageDown>* *i_<C-PageDown>*
-		Go to the next tab page.  Wraps around from the last to the
-		first one.
-{count}gt	Go to tab page {count}.  The first tab page has number one.
-g<Tab>		Go to previous (last accessed) tab page.
-gT		Go to the previous tab page.  Wraps around from the first one
-		to the last one.
-```
-
-The `{count}` is the number displyed in presets.
-
 ## TODO
 
 - Custom click handler
