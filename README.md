@@ -106,9 +106,9 @@ tabline.set(function(line)
 end)
 ```
 
-### Examples and Gallary
+### Examples and Gallery
 
-These are some awesome exmaples shared by tabby.nvim users! Also welcome to share your own!
+These are some awesome examples shared by tabby.nvim users! Also welcome to share your own!
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
@@ -144,7 +144,7 @@ gT		Go to the previous tab page.  Wraps around from the first one
 		to the last one.
 ```
 
-The `{count}` is the number displyed in presets.
+The `{count}` is the number displayed in presets.
 
 ## Customize
 

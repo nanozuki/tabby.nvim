@@ -24,3 +24,5 @@ gendoc:
 		--lua-filter panvimdoc/scripts/skip-blocks.lua --lua-filter panvimdoc/scripts/include-files.lua \
 		-t panvimdoc/scripts/panvimdoc.lua README.md -o doc/tabby.txt
 
+check-typo:
+	@typos lua/**/*.lua README.md

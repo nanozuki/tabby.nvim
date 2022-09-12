@@ -43,7 +43,7 @@ end
 --- conbine texts
 ---@deprecated use TabbyNode.margin
 ---@param texts string[] texts to be combine
----@param sep? string the seprator, default is ' '
+---@param sep? string the separator, default is ' '
 ---@param left? string the left padding, default is sep
 ---@param right? string the left padding, default is left
 ---@return string combined text
