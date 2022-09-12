@@ -46,3 +46,6 @@ luac.out
 
 # test environment
 testenv/
+
+# doc script helper
+panvimdoc/

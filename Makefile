@@ -17,3 +17,7 @@ test-nvim:
 
 clear-test-nvim:
 	-rm -rf ./testenv
+
+gendoc:
+	if [ ! -d "panvimdoc" ]; then git clone https://github.com/kdheepak/panvimdoc.git; fi
+	pandoc --metadata=project:tabby --lua-filter panvimdoc/scripts/skip-blocks.lua --lua-filter panvimdoc/scripts/include-files.lua -t panvimdoc/scripts/panvimdoc.lua README.md -o doc/tabby.txt
