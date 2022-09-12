@@ -206,6 +206,23 @@ function preset.tab_only(opt)
   end, o)
 end
 
-tabline.preset = preset
+---Use tabline preset config
+---@param name 'active_wins_at_tail'|'active_wins_at_end'|'tab_with_top_win'|'active_tab_with_wins'|'tab_only'
+---@param opt? TabbyTablinePresetOption
+function tabline.use_preset(name, opt)
+  if name == 'active_wins_at_tail' then
+    preset.active_wins_at_tail(opt)
+  elseif name == 'active_wins_at_end' then
+    preset.active_wins_at_end(opt)
+  elseif name == 'tab_with_top_win' then
+    preset.tab_with_top_win(opt)
+  elseif name == 'active_tab_with_wins' then
+    preset.active_tab_with_wins(opt)
+  elseif name == 'tab_only' then
+    preset.tab_only(opt)
+  else
+    vim.notify('unknown preset')
+  end
+end
 
 return tabline

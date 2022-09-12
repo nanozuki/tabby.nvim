@@ -40,11 +40,12 @@ especially when editing a large workspace with many opened files.
 
 For example, you are writing a backend service:
 
-
-- Tab1: nvim-tree, controller/user.go, entity/user.go
-- Tab2: nvim-tree, pkg/cache.go, redis/client.go
-- Tab3: Terminal
-- Tab4: Neogit.nvim
+>
+    - Tab1: nvim-tree, controller/user.go, entity/user.go
+    - Tab2: nvim-tree, pkg/cache.go, redis/client.go
+    - Tab3: Terminal
+    - Tab4: Neogit.nvim
+<
 
 
 DECLARATIVE, HIGHLY CONFIGURABLE ~
@@ -254,7 +255,7 @@ LINE OPTION ~
 >
     {
         tab_name = {
-            name_fallback = 'fun(tabid:number):string',
+            name_fallback = 'function({tabid}), return a string',
         },
         buf_name = {
             mode = "'unique'|'relative'|'tail'|'shorten'",
@@ -404,15 +405,33 @@ USE PRESETS                                                *tabby-use-presets*
 You can use presets for a quick start. The preset config uses nerdfont, and you
 should use a nerdfont-patched font to display that correctly.
 
-Built-in presets only use the highlight group `Tabline`, `TablineSel`,
-`TablineFill` and `Normal`, to support most colorschemes. To use presets:
+To use preset, you can use `use_preset({name}, {opt?})`, for example:
 
 >
-    require('tabby.tabline').presets.active_wins_at_tail(opt)
+    require('tabby.tabline').use_preset('active_wins_at_tail', {
+      theme = {
+        fill = 'TabLineFill', -- tabline background
+        head = 'TabLine', -- head element highlight
+        current_tab = 'TabLineSel', -- current tab label highlight
+        tab = 'TabLine', -- other tab label highlight
+        win = 'TabLine', -- window highlight
+        tail = 'TabLine', -- tail element highlight
+      },
+      tab_name = {
+          name_fallback = 'function({tabid}), return a string',
+      },
+      buf_name = {
+          mode = "'unique'|'relative'|'tail'|'shorten'",
+      },
+    })
 <
 
 
-`{opt}` is LineOption |tabby-line-option|. There are five presets for now:
+The `{opt}` is an optional parameter, including all option in
+|tabby-line-option|. And has an extending "theme" option, the example shows the
+default value for "theme".
+
+There are five `{name}` of presets:
 
 
 - active_wins_at_tail
