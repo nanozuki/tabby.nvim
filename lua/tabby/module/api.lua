@@ -10,8 +10,8 @@ local api = {}
 ---@field get_tab_number fun(tabid):number get tab's number
 ---@field get_wins fun():number[] get all windows, except floating window
 ---@field get_win_tab fun(winid):number get tab of this win
----@field is_float_win fun(winid:number):boolean return true if this window is floating return true if this window is floating
----@field is_not_float_win fun(winid:number):boolean return true if this window is not floating return true if this window is not floating
+---@field is_float_win fun(winid:number):boolean return true if this window is floating
+---@field is_not_float_win fun(winid:number):boolean return true if this window is not floating
 
 function api.get_tabs()
   return vim.api.nvim_list_tabpages()

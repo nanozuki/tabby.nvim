@@ -1,4 +1,4 @@
-*tabby.txt*           For NVIM v0.7.2           Last change: 2022 September 12
+*tabby.txt*              For 0.5.0              Last change: 2022 September 12
 
 ==============================================================================
 Table of Contents                                    *tabby-table-of-contents*
@@ -8,20 +8,14 @@ Table of Contents                                    *tabby-table-of-contents*
   - Install                                                    |tabby-install|
   - Setup                                                        |tabby-setup|
   - Customize                                                |tabby-customize|
-  - Lagacy                                                      |tabby-lagacy|
-  - Setup                                                        |tabby-setup|
+  - Use Preset                                              |tabby-use-preset|
   - TODO                                                          |tabby-todo|
 
 ==============================================================================
 1. tabby.nvim                                               *tabby-tabby.nvim*
 
-A declarative, highly configurable, and neovim style tabline. Use your nvim
-tabs as a workspace multiplexer!
-
-<div class="figure">
-<img src="https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/banner.png" title=""/>
-<p class="caption"></p>
-</div>
+A declarative, highly configurable, and neovim style tabline plugin. Use your
+nvim tabs as a workspace multiplexer!
 
 CONCEPT                                                        *tabby-concept*
 
@@ -37,12 +31,11 @@ especially when editing a large workspace with many opened files.
 
 For example, you are writing a backend service:
 
->
-    Tab1: nvim-tree, controller/user.go, entity/user.go
-    Tab2: nvim-tree, pkg/cache.go, redis/client.go
-    Tab3: Terminal
-    Tab4: Neogit.nvim
-<
+
+- Tab1: nvim-tree, controller/user.go, entity/user.go
+- Tab2: nvim-tree, pkg/cache.go, redis/client.go
+- Tab3: Terminal
+- Tab4: Neogit.nvim
 
 
 DECLARATIVE, HIGHLY CONFIGURABLE ~
@@ -84,7 +77,8 @@ If you want always display tabline:
 <
 
 
-And you can setup your own tabline like this:
+And you can setup your own tabline like this (check |tabby-customize| for more
+details):
 
 >
     local theme = {
@@ -136,152 +130,118 @@ And you can setup your own tabline like this:
 <
 
 
-**For configuration details, please check |tabby-customize|.**
+EXAMPLES AND GALLARY ~
 
-**Want to quick start? That’s fine, you can just use |tabby-preset-configs|**
+These are some awesome exmaples shared by tabby.nvim users! Also welcome to
+share your own!
+
+Discussions: show and tell
+<https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell>
+
+PRESETS ~
+
+If you want to quick start? That’s fine, you can just use
+|tabby-preset-configs|.
+
+KEY MAPPING EXAMPLE ~
+
+Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe
+you want to map some operation. For example:
+
+>
+    vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
+    vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
+    vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
+    vim.api.nvim_set_keymap("n", "<leader>tn", ":tabn<CR>", { noremap = true })
+    vim.api.nvim_set_keymap("n", "<leader>tp", ":tabp<CR>", { noremap = true })
+    -- move current tab to previous position
+    vim.api.nvim_set_keymap("n", "<leader>tmp", ":-tabmove<CR>", { noremap = true })
+    -- move current tab to next position
+    vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
+<
+
+
+And in fact, vim has some built-in keymapping, it’s better to read `:help
+tabline`. Here are some useful mappings:
+
+gt                  *i_CTRL-<PageDown>* *i_<C-PageDown>*
+        Go to the next tab page.  Wraps around from the last to the
+        first one.
+{count}gt   Go to tab page {count}.  The first tab page has number one.
+g<Tab>      Go to previous (last accessed) tab page.
+gT      Go to the previous tab page.  Wraps around from the first one
+        to the last one.
+
+The `{count}` is the number displyed in presets.
 
 CUSTOMIZE                                                    *tabby-customize*
 
 Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
 
-tabline.set({fn}, {opt?})                                          *tabby.tabline.set*
+tabline.set({fn}, {opt?})                                  *tabby.tabline.set()*
     Set tabline renderer function
-
-    Parameters:
+    - Parameters:
         {fn}    A renderer function, like "function(line)"
-                * parameter: {line}, |tabby.object.line|, a Line object
-                * return: renderer node. |tabby.object.node|
+                - parameter: {line}, |tabby.object.line|, a Line object
+                - return: renderer node. |tabby.object.node|
         {opt?}  |LineOption|. Option of line rendering
 
-All you need is to provide a render function, that use the variable
-`line`(|tabby-tabbyline|) to complete tabline node (|tabby-tabbynode|). The
-`line` variable gathered all features the tabby provided. And you can use `opt`
-(|tabby-tabbylineoption|) to customize some behaviors.
+All you need is to provide a render function, that use the variable `line`
+(ref: |tabby-line|) to complete tabline node (ref: |tabby-node|). The `line`
+variable gathered all features the tabby provided. And you can use `opt` (ref:
+|tabby-line-option|) to customize some behaviors.
 
-TABBYLINE ~
+LINE ~
 
-line.tabs().foreach({callback})     *tabby.line.tabs.foreach*
+line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
+    - Parameters:
+        {callback}  Function, receive a Tab |tabby-tab|, return a Node |tabby-node|.
+                    Skip render when return is nil.
+    - Return:
+        Node |tabby-node|, rendered result of all tabs.
 
-    Parameters:
-        {callback} Function, receive a Tab |tabby.object.tab|, return a Node. Skip render when return is nil.
-
-    Return:
-        Node, rendered result of all tabs.
-
-line.wins().foreach({callback})     *tabby.line.wins.foreach*
+line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
+    - Parameters:
+        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
+                    Skip render when return is nil.
+    - Return:
+        Node |tabby-node|, rendered result of all wins.
 
-    Parameters:
-        {callback} Function, receive a Win |tabby.object.win|, return a Node. Skip render when return is nil.
-
-    Return:
-        Node, rendered result of all wins.
-
-line.wins_in_tab({tabid}).foreach({callback})     *tabby.line.wins_in_tab.foreach*
+                                            *tabby.line.wins_in_tab().foreach()*
+line.wins_in_tab({tabid}).foreach({callback})
     Use callback function to renderer every wins in specified tab.
-
-    Parameters:
+    - Parameters:
         {tabid}     Number, tab id
-        {callback}  Function, receive a Win |tabby.object.win|, return a Node. Skip render when return is nil.
+        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
+                    Skip render when return is nil.
+    - Return:
+        Node |tabby-node|, rendered result of all wins in specified tab.
 
-    Return:
-        Node, rendered result of all wins in specified tab.
+line.spacer()                                              *tabby.line.spacer()*
+    Separation point between alignment sections. Each section will be separated
+    by an equal number of spaces.
+    - Return:
+        Node |tabby-node|, spacer node.
 
-line.spacer()       *tabby.line.spacer*
-    Separation point between alignment sections. Each section will be separated by an equal number of spaces.
-
-    Return:
-        Node, spacer node.
-
-line.sep({symbol}, {highlight}, {back_highlight})
+line.sep({symbol}, {hl}, {back_hl})            *tabby.line.sep()*
     Make a separator, and calculate highlight.
-
-    Parameters:
+    - Parameters:
         [  ██████████████   ]
            |          |     |
            symbol     hl    back_hl
-
         {symbol}    string, separator symbol
-        {hl}        HighlightString or HighlightObject, current highlight
-        {back_hl}   HighlightString or HighlightObject, highlight in back
+        {hl}        Highlight |tabby-highlight|, current highlight
+        {back_hl}   Highlight |tabby-highlight|, highlight in back
+    - Return:
+        Node |tabby-node|, sep node.
 
-line.api           *tabby.line.api*
-    Tabby gathered some neovim lua api in this object. Maybe help you to build lines. Details: |tabby.object.api|.
+line.api                                                        *tabby.line.api*
+    Tabby gathered some neovim lua api in this object. Maybe help you to build
+    lines. Details: |tabby-api|.
 
-TABBYTABS ~
-
-Fields:
-
-
-- tabs `TabbyTab[]`
-    array of tabs
-- foreach `fun(fn:fun(tab:TabbyTab)):TabbyNode`
-    render tabs by given render function
-
-
-TABBYWINS ~
-
-Fields:
-
-
-- wins `TabbyWin[]`
-    windows
-- foreach `fun(fn:fun(win:TabbyWin)):TabbyNode`
-    render wins by given render function
-
-
-TABBYTAB ~
-
-Fields:
-
-
-- id `number`
-    tabid
-- current_win `fun():TabbyWin`
-    current window in this tab
-- wins `fun():TabbyWins`
-    windows in this tab
-- number `fun():number`
-    return tab number
-- is_current `fun():boolean`
-    return if this tab is current tab
-- name `fun():string`
-    return tab name
-- close_btn `fun(symbol:string):TabbyNode`
-    return close btn
-
-
-TABBYWIN ~
-
-Fields:
-
-
-- id `number`
-    winid
-- tab `fun():TabbyTab`
-    return tab this window belonged
-- is_current `fun():boolean`
-    return if this window is current window
-- file_icon `fun():string?`
-    file icon, require devicons
-- buf_name `fun():string`
-    file name
-
-
-TABBYNODE ~
-
-Fields:
-
-TABBYHIGHLIGHT ~
-
-Fields:
-
-TABBYLAYOUT ~
-
-Fields:
-
-TABBYLINEOPTION ~
+LINE OPTION ~
 
 >
     {
@@ -295,204 +255,143 @@ TABBYLINEOPTION ~
 <
 
 
-LAGACY                                                          *tabby-lagacy*
+TAB ~
 
-OPTIONS ~
+tab.id                                                            *tabby.tab.id*
+    id of tab, tab handle for nvim api.
 
->
-    ---@class TabbyOption
-    ---@field show_at_least number show tabline when there are at least n tabs.
-<
+tab.current_win()                                       *tabby.ab.current_win()*
+    - Return:
+        Win |tabby-win|, current window.
 
+tab.wins()                                                    *tabby.tab.wins()*
+    - Return:
+        An Array of Win |tabby-win|, current window.
 
+tab.wins().foreach({callback})                      *tabby.tab.wins().foreach()*
+    See |tabby.line.wins().foreach()|.
 
-- show_at_least
+tab.number()                                                *tabby.tab.number()*
+    - Return:
+        Number, tab's order, start from 1.
 
+tab.is_current()                                        *tabby.tab.is_current()*
+    - Return:
+        Boolean, if this tab is current tab.
 
-Only show tabline when there are at least n tabs.
+tab.name()                                               *tabby.tabby.tab.name()*
+    - Return:
+        String, tab name. If name is not set, use option ".tab_name.name_fallback()"
+        in LineOption |tabby-line-option|.
 
-BASE OBJECT FOR TEXT ~
+tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
+    Make a close button of this tab.
+    - Parameters:
+        {symbol}  String, a symbol of close button.
+    - Return:
+        Node |tabby-node|, close button node.
 
-The basic config unit in tabby is `TabbyText`. It’s a set of text content,
-highlight group and layout setting. You may use it in many places. The type
-definition is:
+WIN ~
 
->
-    ---@class TabbyText
-    ---@field [1] string|fun():string text content or a function to return context
-    ---@field hl  nil|string|TabbyHighlight
-    ---@field lo  nil|TabbyLayout
-    
-    ---@class TabbyHighlight
-    ---@field fg    string hex color for foreground
-    ---@field bg    string hex color for background
-    ---@field style string Highlight gui style
-    ---@field name  string highlight group name
-    
-    ---@class TabbyLayout
-    ---@field max_width number
-    ---@field min_width number
-    ---@field justify   "left"|"right" default is left
-<
+win.id                                                            *tabby.win.id*
+    id of window, win handle for nvim api.
 
+win.tab()                                                      *tabby.win.tab()*
+    - Return:
+        Tab |tabby-tab|, tab of this window.
 
-For example:
+win.is_current()                                        *tabby.win.is_current()*
+    - Return:
+        Boolean, if this window is current.
 
->
-    local text1 = { "Tab 1" }
-    local text2 = {
-        "Tab 2",
-        hl = "TablineSel",
-    }
-    local text3 = {
-        "Tab 3",
-        hl = { fg = my_hl.fg, bg = my_hl.bg, style = "bold" },
-        lo = { min_width = 20, justify = "right" },
-    }
-    local cwd = {
-        function()
-        return " " .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. " "
-        end
-        hl = "TablineSel",
-    }
-<
+win.file_icon()                                          *tabby.win.file_icon()*
+    Get file icon of filetype. You need to installed plugin
+    'kyazdani42/nvim-web-devicons'.
+    - Return:
+        Node |tabby-node|, file icon.
 
+win.buf_name()                                                *tabby.win.name()*
+    - Return:
+        String, buffer name of this window. You can specify the form by using
+        option ".buf_name.mode" in LineOption |tabby-line-option|.
 
-There is a util for extract values from highlight:
+NODE ~
 
->
-    local hl_normal = util.extract_nvim_hl("Normal")
-    local labal = {
-        "  " .. tabid .. " ",
-        hl = { fg = hl_normal.fg, bg = hl_normal.bg, style = "bold" },
-    }
-<
+Node is the rendered unit for tabby. Node is a recursive structure. It can be:
 
 
-CUSTOMIZE WITH HIGH LEVEL APIS ~
-
-Through setting the `TabbyOption.tabline` to use the high-level api to
-customize tabby. You can edit one of the three built-in layouts. (Corresponding
-to the three preset values)
-
->
-    ---@class TabbyTablineOpt
-    ---@field layout TabbyTablineLayout
-    ---@field hl TabbyHighlight background highlight
-    ---@field head? TabbyText[] display at start of tabline
-    ---@field active_tab TabbyTabLabelOpt
-    ---@field inactive_tab TabbyTabLabelOpt
-    ---@field win TabbyWinLabelOpt
-    ---@field active_win? WinLabelOpt need by "tab_with_top_win", fallback to win if this is nil
-    ---@field top_win? TabbyWinLabelOpt need by "active_tab_with_wins" and "active_wins_at_end", fallback to win if this is nil
-    ---@field tail? TabbyText[] display at end of tabline
-    
-    ---@alias TabbyTablineLayout
-    ---| "active_tab_with_wins" # windows label follow active tab
-    ---| "active_wins_at_end" # windows in active tab will be display at end of all tab labels
-    ---| "tab_with_top_win"  # the top window display after each tab.
-    
-    ---@class TabbyTabLabelOpt
-    ---@field label string|TabbyText|fun(tabid:number):TabbyText
-    ---@field left_sep string|TabbyText
-    ---@field right_sep string|TabbyText
-    
-    ---@class TabbyWinLabelOpt
-    ---@field label string|TabbyText|fun(winid:number):TabbyText
-    ---@field left_sep string|TabbyText
-    ---@field inner_sep string|TabbyText won't works in "tab_with_top_win" layout
-    ---@field right_sep string|TabbyText
-<
+- A string: "nvim"
+- A Number: 12
+- A table containing a Node or an array of Node, with an optional property 'hl'
+    to set highlight. Example:
+    >
+        -- node 1
+        {
+          "tab1", 100
+          hl = "TabLineSel"
+        }
+        -- node 2
+        {
+          "text 1"
+          {
+              "text 2",
+              hl = "Info",
+          },
+          "text3",
+          hl = "Fill",
+        }
+    <
 
 
-You can find three presets <./lua/tabby/presets.lua> config for example.
+HIGHLIGHT ~
 
-CUSTOMIZE WITH LOW LEVEL APIS ~
-
-If built-in layouts do not satisfy you, you can also use the low-level API to
-define the tabline from scratch by setting `TabbyOption.components`.
-
-`TabbyOption.components` is a function which return an array of
-`TabbyComponent`. The `TabbyComponent` is object like:
-
->
-    {
-        "type": "<component type>",
-        -- "... config ..."
-    }
-<
+There are two ways to declare a highlight:
 
 
-These are all TabbyComponents:
+- Use the name of neovim highlight group: "TabLineSel"
+- Define "background", "foreground" and "style" in lua table:
+    `{ fg = "#000000", bg = "#ffffff" style = "bold" }`.
+    The "style" can be:
+    - bold
+    - underline
+    - underlineline, double underline
+    - undercurl, curly underline
+    - underdot, dotted underline
+    - underdash, dashed underline
+    - strikethrough
+    - italic
 
 
-- TabbyComTab
+API ~
 
+api.get_tabs()                                            *tabby.api.get_tabs()*
+    Get all tab ids
 
-TabbyComTab can receive a tabid to render a tab label.
+api.get_tab_wins({tabid})                             *tabby.api.get_tab_wins()*
+    Get an winid array in specified tabid.
 
->
-    ---@class TabbyComTab
-    ---@field type "tab"
-    ---@field tabid number
-    ---@field label string|TabbyText
-    ---@field left_sep TabbyText
-    ---@field right_sep TabbyText
-<
+api.get_current_tab()                              *tabby.api.get_current_tab()*
+    Get current tab's id.
 
+api.get_tab_current_win({tabid})               *tabby.api.get_tab_current_win()*
+    Get tab's current win's id.
 
+api.get_tab_number({tabid})                         *tabby.api.get_tab_number()*
+    Get tab's number.
 
-- TabbyComWin
+api.get_wins()                                            *tabby.api.get_wins()*
+    Get all windows, except floating window.
 
+api.get_win_tab({winid})                               *tabby.api.get_win_tab()*
+    Get tab id of specified window.
 
-TabbyComWin can receive a winid to render a window label.
+api.is_float_win({winid})                             *tabby.api.is_float_win()*
+    Return true if this window is floating.
 
->
-    ---@class TabbyComWin
-    ---@field type "win"
-    ---@field winid number
-    ---@field label TabbyText
-    ---@field left_sep TabbyText
-    ---@field right_sep TabbyText
-<
+api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
+    Return true if this window is not floating.
 
-
-
-- TabbyComText
-
-
-TabbyComText for rendering static text.
-
->
-    ---@class TabbyComText
-    ---@field type "text"
-    ---@field text TabbyText
-<
-
-
-
-- TabbyComSpring
-
-
-TabbyComSpring mark a separation point. Each separation point will be print as
-equal number of spaces.
-
->
-    ---@class TabbyComSpring
-    ---@field type "spring"
-<
-
-
-**Example**
-
-For example, we can use low-level api to define the presets
-`active_wins_at_end`:
-
-active_wins_at_end <./examples/low-level-example.lua>
-
-SETUP                                                            *tabby-setup*
-
-USE PRESETS ~
+USE PRESET                                                  *tabby-use-preset*
 
 You can use presets for a quick start. The preset config uses nerdfont, and you
 should use a nerdfont-patched font to display that correctly.
@@ -501,22 +400,15 @@ Built-in presets only use the highlight group `Tabline`, `TablineSel`,
 `TablineFill` and `Normal`, to support most colorschemes. To use presets:
 
 >
-    require('tabby.tabline').presets.tab_with_top_win(opt)
+    require('tabby.tabline').presets.active_wins_at_tail(opt)
 <
 
 
-There are five presets
-<https://github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/presets.lua> for
-now:
+`{opt}` is LineOption |tabby-line-option|. There are five presets for now:
 
 
-- active_wins_at_tail [default]
+- active_wins_at_tail
 
-
-<div class="figure">
-<img src="https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_wins_at_tail.png" title=""/>
-<p class="caption"></p>
-</div>
 
 Put all windows’ labels in active tabpage at end of whold tabline.
 
@@ -527,22 +419,12 @@ Put all windows’ labels in active tabpage at end of whold tabline.
 Put all windows’ labels in active tabpage after all tags label. In-active
 tabpage’s window won’t display.
 
-<div class="figure">
-<img src="https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tabby-default-1.png" title=""/>
-<p class="caption"></p>
-</div>
-
 
 - tab_with_top_win
 
 
 Each tab lab with a top window label followed. The `top window` is the focus
 window when you enter a tabpage.
-
-<div class="figure">
-<img src="https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tab_with_top_win.png" title=""/>
-<p class="caption"></p>
-</div>
 
 
 - active_tab_with_wins
@@ -551,21 +433,11 @@ window when you enter a tabpage.
 Active tabpage’s windows’ labels is displayed after the active tabpage’s
 label.
 
-<div class="figure">
-<img src="https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_tab_with_wins.png" title=""/>
-<p class="caption"></p>
-</div>
-
 
 - tab_only
 
 
 No windows label, only tab. and use focus window to name tab
-
-<div class="figure">
-<img src="https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png" title=""/>
-<p class="caption"></p>
-</div>
 
 EXAMPLES AND GALLARY ~
 
@@ -612,13 +484,11 @@ The `{count}` is the number displyed in presets.
 TODO                                                              *tabby-todo*
 
 
-- ☒ Rename tab
-- ☒ Unique short name for window label
-- ☐ Button for close tab and add tab
-- ☐ Custom click handler
-- ☐ Telescope support
-- ☐ Nvim doc
-- ☐ Utils library
+- Custom click handler
+- Telescope support
+- Style option for presets
+- Expand tabby to support statusline and winbar
+- Git info and lsp info
 
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
