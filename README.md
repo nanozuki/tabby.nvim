@@ -1,6 +1,7 @@
 # tabby.nvim
 
-A declarative, highly configurable, and neovim style tabline plugin. Use your nvim tabs as a workspace multiplexer!
+A declarative, highly configurable, and neovim style tabline plugin. Use your
+nvim tabs as a workspace multiplexer!
 
 <!-- panvimdoc-ignore-start -->
 
@@ -11,21 +12,23 @@ A declarative, highly configurable, and neovim style tabline plugin. Use your nv
 **To v1.x users**
 
 Tabby thinks it's essential to stay backward compatible! So even if Tabby
-releases a brand new 2.0, it will not break the 1.0 configuration.
-If needed, check out the [Readme V1](./README_v1.md)!
+releases a brand new 2.0, it will not break the 1.0 configuration. If needed,
+check out the [Readme V1](./README_v1.md)!
 
-The reasons for making the 2.0, and the improvements in 2.0,
-can be found at [#82](https://github.com/nanozuki/tabby.nvim/pull/82).
+The reasons for making the 2.0, and the improvements in 2.0, can be found at
+[#82](https://github.com/nanozuki/tabby.nvim/pull/82).
 
 ## Concept
 
 ### A line for the vim tab page, not for buffers
 
-A tab page in vim holds one or more windows(not buffers).
-You can easily switch between tab pages to have several collections of windows to work on different things.
+A tab page in vim holds one or more windows(not buffers). You can easily switch
+between tab pages to have several collections of windows to work on different
+things.
 
-Tabline can help you use multiple tabs. Meanwhile, the bufferline is simply an array of opened files. As a result,
-Bufferline limits the power of vim, especially when editing a large workspace with many opened files.
+Tabline can help you use multiple tabs. Meanwhile, the bufferline is simply an
+array of opened files. As a result, Bufferline limits the power of vim,
+especially when editing a large workspace with many opened files.
 
 For example, you are writing a backend service:
 
@@ -38,9 +41,10 @@ For example, you are writing a backend service:
 
 ### Declarative, highly configurable
 
-Tabby provides a declarative way to configure tabline.
-You can set the tabline to whatever neovim natively supports and complete the config with any lua code.
-At least that's the goal of tabby. And also, the tabby provides some presets to quick start or as your example.
+Tabby provides a declarative way to configure tabline. You can set the tabline
+to whatever neovim natively supports and complete the config with any lua code.
+At least that's the goal of tabby. And also, the tabby provides some presets to
+quick start or as your example.
 
 ## Install
 
@@ -52,21 +56,17 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
   use 'nanozuki/tabby.nvim',
 ```
 
-- vim-plug
-
-```viml
-  Plug 'nanozuki/tabby.nvim'
-```
-
 ## Setup
 
-At default, neovim only display tabline when there are at least two tab pages. If you want always display tabline:
+At default, neovim only display tabline when there are at least two tab pages.
+If you want always display tabline:
 
 ```lua
 vim.o.showtabline = 2
 ```
 
-And you can setup your own tabline like this (check [Customize](#Customize) for more details):
+And you can setup your own tabline like this (check [Customize](#Customize) for
+more details):
 
 ```lua
 local theme = {
@@ -81,8 +81,8 @@ local theme = {
 tabline.set(function(line)
   return {
     {
-      line.sep('', theme.tail, theme.fill),
-      { '  ', hl = theme.tail },
+      { '  ', hl = theme.head },
+      line.sep('', theme.head, opt.theme.fill),
     },
     line.tabs().foreach(function(tab)
       local hl = tab.is_current() and theme.current_tab or theme.tab
@@ -119,7 +119,8 @@ end)
 
 ### Examples and Gallery
 
-These are some awesome examples shared by tabby.nvim users! Also welcome to share your own!
+These are some awesome examples shared by tabby.nvim users! Also welcome to
+share your own!
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
@@ -129,7 +130,8 @@ If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Prese
 
 ### Key mapping example
 
-Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe you want to map some operation. For example:
+Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe
+you want to map some operation. For example:
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
@@ -171,9 +173,28 @@ tabline.set({fn}, {opt?})                                  *tabby.tabline.set()*
         {opt?}  |LineOption|. Option of line rendering
 ```
 
-All you need is to provide a render function, that use the variable `line` (ref: [Line](#Line))
-to complete tabline node (ref: [Node](#Node)). The `line` variable gathered all features the tabby provided.
-And you can use `opt` (ref: [Line Option](#Line Option)) to customize some behaviors.
+All you need is to provide a render function, that use the variable `line`
+(ref: [Line](#Line)) to complete tabline node (ref: [Node](#Node)). The `line`
+variable gathered all features the tabby provided. And you can use `opt` (ref:
+[Line Option](#Line Option)) to customize some behaviors.
+
+The render function will be called every time the nvim redraws tabline. You can
+use any valid neovim lua code to contracture the Node in this function. For
+example, if you want display current directory in tabline, you can do like
+this:
+
+```lua
+require('tabby.tabline').set(function(line)
+    local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
+    return {
+        {
+            { cwd, hl = theme.head },
+            line.sep('', theme.head, theme.line) },
+        },
+        ".....",
+    }
+end, {})
+```
 
 ### Line
 
@@ -181,16 +202,16 @@ And you can use `opt` (ref: [Line Option](#Line Option)) to customize some behav
 line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
     - Parameters:
-        {callback}  Function, receive a Tab |tabby-tab|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Tab |tabby-tab|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all tabs.
 
 line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
     - Parameters:
-        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Win |tabby-win|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all wins.
 
@@ -199,8 +220,8 @@ line.wins_in_tab({tabid}).foreach({callback})
     Use callback function to renderer every wins in specified tab.
     - Parameters:
         {tabid}     Number, tab id
-        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Win |tabby-win|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all wins in specified tab.
 
@@ -232,13 +253,40 @@ line.api                                                        *tabby.line.api*
 ```lua
 {
     tab_name = {
-        name_fallback = 'function({tabid}), return a string',
+        name_fallback = function(tabid)
+            return "fallback name"
+        end
     },
     buf_name = {
         mode = "'unique'|'relative'|'tail'|'shorten'",
     }
 }
 ```
+
+#### tab_name
+
+Use command `TabRename <tabname>` to rename tab. Use `tab.name()` (ref:
+[Tab](#Tab)) to add in your config. If no name provided, `tab.name()` will
+display fallback name. The default fallback name is current window's buffer name.
+
+You can change the fallback by provide a function in
+`opt.tab_name.name_fallback`.
+
+#### buf_name
+
+There are four mode of buffer name. If current directory is "~/project" and
+there are three buffers:
+
+- "~/project/a_repo/api/user.py"
+- "~/project/b_repo/api/user.py"
+- "~/project/b_repo/api/admin.py"
+
+the result of every mode are:
+
+- unique: "a_repo/api/user.py", "b_repo/api/user.py", "admin.py"
+- relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
+- tail: "user.py", "user.py", "admin.py"
+- shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
 
 ### Tab
 
@@ -267,8 +315,8 @@ tab.is_current()                                        *tabby.tab.is_current()*
 
 tab.name()                                               *tabby.tabby.tab.name()*
     - Return:
-        String, tab name. If name is not set, use option ".tab_name.name_fallback()"
-        in LineOption |tabby-line-option|.
+        String, tab name. If name is not set, use option
+        ".tab_name.name_fallback()" in LineOption |tabby-line-option|.
 
 tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
     Make a close button of this tab.
@@ -310,7 +358,8 @@ Node is the rendered unit for tabby. Node is a recursive structure. It can be:
 
 - A string: "nvim"
 - A Number: 12
-- A table containing a Node or an array of Node, with an optional property 'hl' to set highlight. Example:
+- A table containing a Node or an array of Node, with an optional property 'hl'
+  to set highlight. Example:
 
   ```lua
   -- node 1
@@ -404,8 +453,9 @@ require('tabby.tabline').use_preset('active_wins_at_tail', {
 })
 ```
 
-The `{opt}` is an optional parameter, including all option in [Line Option](#Line-Option).
-And has an extending "theme" option, the example shows the default value for "theme".
+The `{opt}` is an optional parameter, including all option in
+[Line Option](#Line-Option). And has an extending "theme" option, the example
+shows the default value for "theme".
 
 There are five `{name}` of presets:
 

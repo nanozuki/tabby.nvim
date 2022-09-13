@@ -1,4 +1,4 @@
-*tabby.txt*              For 0.5.0              Last change: 2022 September 12
+*tabby.txt*              For 0.5.0              Last change: 2022 September 13
 
 ==============================================================================
 Table of Contents                                    *tabby-table-of-contents*
@@ -68,15 +68,6 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
 <
 
 
-
-- vim-plug
-
-
->
-      Plug 'nanozuki/tabby.nvim'
-<
-
-
 SETUP                                                            *tabby-setup*
 
 At default, neovim only display tabline when there are at least two tab pages.
@@ -103,8 +94,8 @@ details):
     tabline.set(function(line)
       return {
         {
-          line.sep('', theme.tail, theme.fill),
-          { '  ', hl = theme.tail },
+          { '  ', hl = theme.head },
+          line.sep('', theme.head, opt.theme.fill),
         },
         line.tabs().foreach(function(tab)
           local hl = tab.is_current() and theme.current_tab or theme.tab
@@ -200,21 +191,40 @@ All you need is to provide a render function, that use the variable `line`
 variable gathered all features the tabby provided. And you can use `opt` (ref:
 |tabby-line-option|) to customize some behaviors.
 
+The render function will be called every time the nvim redraws tabline. You can
+use any valid neovim lua code to contracture the Node in this function. For
+example, if you want display current directory in tabline, you can do like
+this:
+
+>
+    require('tabby.tabline').set(function(line)
+        local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
+        return {
+            {
+                { cwd, hl = theme.head },
+                line.sep('', theme.head, theme.line) },
+            },
+            ".....",
+        }
+    end, {})
+<
+
+
 LINE ~
 
 line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
     - Parameters:
-        {callback}  Function, receive a Tab |tabby-tab|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Tab |tabby-tab|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all tabs.
 
 line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
     - Parameters:
-        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Win |tabby-win|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all wins.
 
@@ -223,8 +233,8 @@ line.wins_in_tab({tabid}).foreach({callback})
     Use callback function to renderer every wins in specified tab.
     - Parameters:
         {tabid}     Number, tab id
-        {callback}  Function, receive a Win |tabby-win|, return a Node |tabby-node|.
-                    Skip render when return is nil.
+        {callback}  Function, receive a Win |tabby-win|, return a
+                    Node |tabby-node|. Skip render when return is nil.
     - Return:
         Node |tabby-node|, rendered result of all wins in specified tab.
 
@@ -255,13 +265,51 @@ LINE OPTION ~
 >
     {
         tab_name = {
-            name_fallback = 'function({tabid}), return a string',
+            name_fallback = function(tabid)
+                return "fallback name"
+            end
         },
         buf_name = {
             mode = "'unique'|'relative'|'tail'|'shorten'",
         }
     }
 <
+
+
+                                                              *tabby-tab_name*
+
+tab_name                               Use command `TabRename <tabname>` to
+                                       rename tab. Use `tab.name()` (ref:
+                                       |tabby-tab|) to add in your config. If
+                                       no name provided, `tab.name()` will
+                                       display fallback name. The default
+                                       fallback name is current window’s
+                                       buffer name.
+
+
+You can change the fallback by provide a function in
+`opt.tab_name.name_fallback`.
+
+                                                              *tabby-buf_name*
+
+buf_name                               There are four mode of buffer name. If
+                                       current directory is "~/project" and
+                                       there are three buffers:
+
+
+
+- "~/project/a_repo/api/user.py"
+- "~/project/b_repo/api/user.py"
+- "~/project/b_repo/api/admin.py"
+
+
+the result of every mode are:
+
+
+- unique: "a_repo/api/user.py", "b_repo/api/user.py", "admin.py"
+- relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
+- tail: "user.py", "user.py", "admin.py"
+- shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
 
 
 TAB ~
@@ -290,8 +338,8 @@ tab.is_current()                                        *tabby.tab.is_current()*
 
 tab.name()                                               *tabby.tabby.tab.name()*
     - Return:
-        String, tab name. If name is not set, use option ".tab_name.name_fallback()"
-        in LineOption |tabby-line-option|.
+        String, tab name. If name is not set, use option
+        ".tab_name.name_fallback()" in LineOption |tabby-line-option|.
 
 tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
     Make a close button of this tab.
