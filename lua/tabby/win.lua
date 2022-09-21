@@ -14,6 +14,7 @@ function win.set_option(opt)
 end
 
 ---return if the window in current tab
+---@deprecated use: require('tabby.module.api').get_win_tab(winid) == require('tabby.module.api').get_current_tab()
 ---@param winid number
 ---@return boolean
 function win.in_current_tab(winid)
@@ -21,6 +22,7 @@ function win.in_current_tab(winid)
 end
 
 ---return if the window is current window
+---@deprecated use: winid == require('tabby.module.api').get_tab_current_win(api.get_current_tab()), or win.is_current()
 ---@param winid number
 ---@return boolean
 function win.is_current(winid)
