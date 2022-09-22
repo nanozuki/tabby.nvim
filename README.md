@@ -78,7 +78,7 @@ local theme = {
   win = 'TabLine',
   tail = 'TabLine',
 }
-tabline.set(function(line)
+require('tabby.tabline').set(function(line)
   return {
     {
       { '  ', hl = theme.head },
