@@ -1,4 +1,4 @@
-*tabby.txt*              For 0.5.0              Last change: 2022 September 22
+*tabby.txt*              For 0.5.0              Last change: 2022 September 28
 
 ==============================================================================
 Table of Contents                                    *tabby-table-of-contents*
@@ -95,7 +95,7 @@ details):
       return {
         {
           { '  ', hl = theme.head },
-          line.sep('', theme.head, opt.theme.fill),
+          line.sep('', theme.head, theme.fill),
         },
         line.tabs().foreach(function(tab)
           local hl = tab.is_current() and theme.current_tab or theme.tab
@@ -216,7 +216,7 @@ line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
     - Parameters:
         {callback}  Function, receive a Tab |tabby-tab|, return a
-                    Node |tabby-node|. Skip render when return is nil.
+                    Node |tabby-node|. Skip render when return is empty string.
     - Return:
         Node |tabby-node|, rendered result of all tabs.
 
@@ -224,7 +224,7 @@ line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
     - Parameters:
         {callback}  Function, receive a Win |tabby-win|, return a
-                    Node |tabby-node|. Skip render when return is nil.
+                    Node |tabby-node|. Skip render when return is empty string.
     - Return:
         Node |tabby-node|, rendered result of all wins.
 
@@ -234,7 +234,7 @@ line.wins_in_tab({tabid}).foreach({callback})
     - Parameters:
         {tabid}     Number, tab id
         {callback}  Function, receive a Win |tabby-win|, return a
-                    Node |tabby-node|. Skip render when return is nil.
+                    Node |tabby-node|. Skip render when return is empty string.
     - Return:
         Node |tabby-node|, rendered result of all wins in specified tab.
 
