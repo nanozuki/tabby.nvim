@@ -51,5 +51,13 @@ function api.is_not_float_win(winid)
   return vim.api.nvim_win_get_config(winid).relative == ''
 end
 
+function api.get_win_buf(winid)
+  return vim.api.nvim_win_get_buf(winid)
+end
+
+function api.get_buf_type(bufid)
+  return vim.api.nvim_buf_get_option(bufid, 'buftype')
+end
+
 ---@type TabbyAPI
 return api

@@ -91,6 +91,7 @@ end
 ---@class TabbyWin
 ---@field id number winid
 ---@field tab fun():TabbyTab return tab this window belonged
+---@field buf fun():TabbyBuf return the buf of this window
 ---@field is_current fun():boolean return if this window is current window
 ---@field file_icon fun():string? file icon, require devicons
 ---@field buf_name fun():string file name
@@ -104,6 +105,9 @@ function tabwins.new_win(winid, opt)
     id = winid,
     tab = function()
       return tabwins.new_tab(api.get_win_tab(winid), opt)
+    end,
+    buf = function()
+      return tabwins.new_buf(api.get_win_buf(winid))
     end,
     is_current = function()
       return api.get_tab_current_win(api.get_win_tab(winid)) == winid
@@ -144,6 +148,22 @@ function tabwins.new_wins(win_ids, opt)
         end
       end
       return nodes
+    end,
+  }
+end
+
+---@class TabbyBuf
+---@field id number buffer id
+---@field type fun():string return buffer type
+
+---new buf object
+---@param bufid any
+---@return table
+function tabwins.new_buf(bufid)
+  return {
+    id = bufid,
+    type = function()
+      return api.get_buf_type(bufid)
     end,
   }
 end
