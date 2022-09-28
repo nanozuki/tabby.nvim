@@ -336,6 +336,10 @@ win.tab()                                                      *tabby.win.tab()*
     - Return:
         Tab |tabby-tab|, tab of this window.
 
+win.buf()                                                      *tabby.win.buf()*
+    - Return:
+        Buf |tabby-buf|, buf of the window.
+
 win.is_current()                                        *tabby.win.is_current()*
     - Return:
         Boolean, if this window is current.
@@ -350,6 +354,21 @@ win.buf_name()                                                *tabby.win.name()*
     - Return:
         String, buffer name of this window. You can specify the form by using
         option ".buf_name.mode" in LineOption |tabby-line-option|.
+```
+
+### Buf
+
+Object for buffer.
+
+```vimdoc
+buf.id                                                            *tabby.buf.id*
+    id of buffer, buffer handle for nvim api.
+
+buf.type()                                                    *tabby.buf.type()*
+    Get buftype option.
+    Return:
+        buftype, normal buffer is an empty string. check |buftype| or
+        <https://neovim.io/doc/user/options.html#'buftype'> for details.
 ```
 
 ### Node
