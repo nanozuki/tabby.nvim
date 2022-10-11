@@ -13,7 +13,7 @@ test-nvim:
 	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache \
 		nvim --headless -u ./testdata/plugin.lua -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 	XDG_DATA_HOME=./testenv/data XDG_CONFIG_HOME=./testenv/config XDG_CACHE_HOME=./testenv/cache \
-		nvim -S ./testdata/Session.vim
+		nvim -R -S ./testdata/Session.vim
 
 clear-test-nvim:
 	-rm -rf ./testenv

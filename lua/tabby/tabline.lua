@@ -39,7 +39,7 @@ end
 local preset = {}
 
 ---@class TabbyTablinePresetOption: TabbyLineOption
----@field style 'upward-triangle'|'downward-triangle'|'airline'|'bubble'|'non-nerdfont' @default 'upward-triangle' @todo
+---@field style 'upward-triangle'|'downward-triangle'|'powerline'|'bubble'|'non-nerdfont' @default 'upward-triangle' @todo
 ---@field theme TabbyTablinePresetTheme
 
 ---@class TabbyTablinePresetTheme
@@ -63,21 +63,69 @@ local default_preset_option = {
   },
 }
 
+---@param line TabbyLine
+---@param opt TabbyTablinePresetOption
+---@param left boolean left or right
+---@param cur_hl TabbyHighlight
+---@param back_hl TabbyHighlight
+---@return TabbyNode symbol
+local function preset_sep_left(line, opt, left, cur_hl, back_hl)
+  if opt.style == 'upward-triangle' then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'downward-triangle' then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'powerline' and left then
+    return line.sep('', back_hl, cur_hl)
+  elseif opt.style == 'powerline' and not left then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'bubble' then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'non-nerdfont' then
+    return line.sep('▐', cur_hl, back_hl)
+  end
+end
+
+local function preset_sep_right(line, opt, left, cur_hl, back_hl)
+  if opt.style == 'upward-triangle' then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'downward-triangle' then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'powerline' and left then
+    return line.sep('', cur_hl, back_hl)
+  elseif opt.style == 'powerline' and not left then
+    return line.sep('', back_hl, cur_hl)
+  elseif opt.style == 'bubble' then
+    return line.sep(' ', cur_hl, back_hl)
+  elseif opt.style == 'non-nerdfont' then
+    return line.sep('▌', cur_hl, back_hl)
+  end
+end
+
+---@param line TabbyLine
 ---@param opt TabbyTablinePresetOption
 ---@return TabbyNode
 local function preset_head(line, opt)
+  local text = '  '
+  if opt.style == 'non-nerdfont' then
+    text = ' Tabs: '
+  end
   return {
-    { '  ', hl = opt.theme.head },
-    line.sep('', opt.theme.head, opt.theme.fill),
+    { text, hl = opt.theme.head },
+    preset_sep_right(line, opt, true, opt.theme.head, opt.theme.fill),
   }
 end
 
+---@param line TabbyLine
 ---@param opt TabbyTablinePresetOption
 ---@return TabbyNode
 local function preset_tail(line, opt)
+  local text = '  '
+  if opt.style == 'non-nerdfont' then
+    text = ' '
+  end
   return {
-    line.sep('', opt.theme.tail, opt.theme.fill),
-    { '  ', hl = opt.theme.tail },
+    preset_sep_left(line, opt, false, opt.theme.tail, opt.theme.fill),
+    { text, hl = opt.theme.tail },
   }
 end
 
@@ -88,12 +136,12 @@ end
 local function preset_tab(line, tab, opt)
   local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
   return {
-    line.sep('', hl, opt.theme.fill),
+    preset_sep_left(line, opt, true, hl, opt.theme.fill),
     tab.is_current() and '' or '',
     tab.number(),
     tab.name(),
     tab.close_btn(''),
-    line.sep('', hl, opt.theme.fill),
+    preset_sep_right(line, opt, true, hl, opt.theme.fill),
     hl = hl,
     margin = ' ',
   }
@@ -102,13 +150,14 @@ end
 ---@param line TabbyLine
 ---@param win TabbyWin
 ---@param opt TabbyTablinePresetOption
+---@param left boolean left or right
 ---@return TabbyNode
-local function preset_win(line, win, opt)
+local function preset_win(line, win, opt, left)
   return {
-    line.sep('', opt.theme.win, opt.theme.fill),
+    preset_sep_left(line, opt, left, opt.theme.win, opt.theme.fill),
     win.is_current() and '' or '',
     win.buf_name(),
-    line.sep('', opt.theme.win, opt.theme.fill),
+    preset_sep_right(line, opt, left, opt.theme.win, opt.theme.fill),
     hl = opt.theme.win,
     margin = ' ',
   }
@@ -124,7 +173,7 @@ function preset.active_wins_at_tail(opt)
       end),
       line.spacer(),
       line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-        return preset_win(line, win, o)
+        return preset_win(line, win, o, false)
       end),
       preset_tail(line, o),
       hl = o.theme.fill,
@@ -141,7 +190,7 @@ function preset.active_wins_at_end(opt)
         return preset_tab(line, tab, o)
       end),
       line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-        return preset_win(line, win, o)
+        return preset_win(line, win, o, true)
       end),
       hl = o.theme.fill,
     }
@@ -159,7 +208,7 @@ function preset.active_tab_with_wins(opt)
           return tab_node
         end
         local wins_node = line.wins_in_tab(tab.id).foreach(function(win)
-          return preset_win(line, win, o)
+          return preset_win(line, win, o, true)
         end)
         return { tab_node, wins_node }
       end),
@@ -185,7 +234,7 @@ function preset.tab_with_top_win(opt)
       line.tabs().foreach(function(tab)
         return {
           preset_tab(line, tab, o),
-          preset_win(line, tab.current_win(), o),
+          preset_win(line, tab.current_win(), o, true),
         }
       end),
       hl = o.theme.fill,
