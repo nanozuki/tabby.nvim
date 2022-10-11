@@ -20,9 +20,10 @@ clear-test-nvim:
 
 gendoc:
 	@if [ ! -d "panvimdoc" ]; then git clone https://github.com/kdheepak/panvimdoc.git; fi
-	@pandoc --metadata=project:tabby --metadata=vimversion:0.5.0 \
+	@gsed -e 's/^##/#/' README.md | pandoc --metadata=project:tabby \
+		--metadata="description:A declarative, highly configurable tabline plugin" \
 		--lua-filter panvimdoc/scripts/skip-blocks.lua --lua-filter panvimdoc/scripts/include-files.lua \
-		-t panvimdoc/scripts/panvimdoc.lua README.md -o doc/tabby.txt
+		-t panvimdoc/scripts/panvimdoc.lua -o doc/tabby.txt
 
 check-typo:
 	@typos lua/**/*.lua README.md

@@ -1,4 +1,4 @@
-*tabby.txt*              For 0.5.0              Last change: 2022 September 29
+*tabby.txt*                  A declarative, highly configurable tabline plugin
 
 ==============================================================================
 Table of Contents                                    *tabby-table-of-contents*
