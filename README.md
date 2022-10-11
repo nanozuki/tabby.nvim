@@ -18,9 +18,9 @@ check out the [Readme V1](./README_v1.md)!
 The reasons for making the 2.0, and the improvements in 2.0, can be found at
 [#82](https://github.com/nanozuki/tabby.nvim/pull/82).
 
-# Concept
+## Concept
 
-## A line for the vim tab page, not for buffers
+### A line for the vim tab page, not for buffers
 
 A tab page in vim holds one or more windows(not buffers). You can easily switch
 between tab pages to have several collections of windows to work on different
@@ -39,14 +39,14 @@ For example, you are writing a backend service:
 - Tab4: Neogit.nvim
 ```
 
-## Declarative, highly configurable
+### Declarative, highly configurable
 
 Tabby provides a declarative way to configure tabline. You can set the tabline
 to whatever neovim natively supports and complete the config with any lua code.
 At least that's the goal of tabby. And also, the tabby provides some presets to
 quick start or as your example.
 
-# Install
+## Install
 
 Use your plugin manager to installing 'nanozuki/tabby.com':
 
@@ -56,7 +56,7 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
   use 'nanozuki/tabby.nvim',
 ```
 
-# Setup
+## Setup
 
 At default, neovim only display tabline when there are at least two tab pages.
 If you want always display tabline:
@@ -117,18 +117,18 @@ require('tabby.tabline').set(function(line)
 end)
 ```
 
-## Examples and Gallery
+### Examples and Gallery
 
 These are some awesome examples shared by tabby.nvim users! Also welcome to
 share your own!
 
 [Discussions: show and tell](https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell)
 
-## Presets
+### Presets
 
 If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Presets).
 
-## Key mapping example
+### Key mapping example
 
 Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe
 you want to map some operation. For example:
@@ -159,7 +159,7 @@ gT		Go to the previous tab page.  Wraps around from the first one
 
 The `{count}` is the number displayed in presets.
 
-# Customize
+## Customize
 
 Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
 
@@ -196,7 +196,7 @@ require('tabby.tabline').set(function(line)
 end, {})
 ```
 
-## Line
+### Line
 
 ```vimdoc
 line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
@@ -248,7 +248,7 @@ line.api                                                        *tabby.line.api*
     lines. Details: |tabby-api|.
 ```
 
-## Line Option
+### Line Option
 
 ```lua
 {
@@ -263,7 +263,7 @@ line.api                                                        *tabby.line.api*
 }
 ```
 
-### tab_name
+#### tab_name
 
 Use command `TabRename <tabname>` to rename tab. Use `tab.name()` (ref:
 [Tab](#Tab)) to add in your config. If no name provided, `tab.name()` will
@@ -272,7 +272,7 @@ display fallback name. The default fallback name is current window's buffer name
 You can change the fallback by provide a function in
 `opt.tab_name.name_fallback`.
 
-### buf_name
+#### buf_name
 
 There are four mode of buffer name. If current directory is "~/project" and
 there are three buffers:
@@ -288,7 +288,7 @@ the result of every mode are:
 - tail: "user.py", "user.py", "admin.py"
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
 
-## Tab
+### Tab
 
 ```vimdoc
 tab.id                                                            *tabby.tab.id*
@@ -326,7 +326,7 @@ tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
         Node |tabby-node|, close button node.
 ```
 
-## Win
+### Win
 
 ```vimdoc
 win.id                                                            *tabby.win.id*
@@ -356,7 +356,7 @@ win.buf_name()                                                *tabby.win.name()*
         option ".buf_name.mode" in LineOption |tabby-line-option|.
 ```
 
-## Buf
+### Buf
 
 Object for buffer.
 
@@ -371,7 +371,7 @@ buf.type()                                                    *tabby.buf.type()*
         <https://neovim.io/doc/user/options.html#'buftype'> for details.
 ```
 
-## Node
+### Node
 
 Node is the rendered unit for tabby. Node is a recursive structure. It can be:
 
@@ -398,7 +398,7 @@ Node is the rendered unit for tabby. Node is a recursive structure. It can be:
   }
   ```
 
-## Highlight
+### Highlight
 
 There are two ways to declare a highlight:
 
@@ -415,7 +415,7 @@ There are two ways to declare a highlight:
   - strikethrough
   - italic
 
-## API
+### API
 
 ```vimdoc
 api.get_tabs()                                            *tabby.api.get_tabs()*
@@ -446,7 +446,7 @@ api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
     Return true if this window is not floating.
 ```
 
-# Use Presets
+## Use Presets
 
 You can use presets for a quick start. The preset config uses nerdfont,
 and you should use a nerdfont-patched font to display that correctly.
@@ -530,7 +530,7 @@ No windows label, only tab. and use focus window to name tab
 
 <!-- panvimdoc-ignore-end -->
 
-# TODO
+## TODO
 
 - Custom click handler
 - Telescope support
