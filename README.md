@@ -463,6 +463,7 @@ require('tabby.tabline').use_preset('active_wins_at_tail', {
     win = 'TabLine', -- window highlight
     tail = 'TabLine', -- tail element highlight
   },
+  nerdfont = true, -- whether use nerdfont
   tab_name = {
       name_fallback = 'function({tabid}), return a string',
   },
@@ -473,8 +474,10 @@ require('tabby.tabline').use_preset('active_wins_at_tail', {
 ```
 
 The `{opt}` is an optional parameter, including all option in
-[Line Option](#Line-Option). And has an extending "theme" option, the example
-shows the default value for "theme".
+[Line Option](#Line-Option). And has some extending optins:
+
+- {theme}, the example shows the default value.
+- {nerdfont}, whether use nerdfont, default is true.
 
 There are five `{name}` of presets:
 

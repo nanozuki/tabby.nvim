@@ -39,8 +39,8 @@ end
 local preset = {}
 
 ---@class TabbyTablinePresetOption: TabbyLineOption
----@field style 'upward-triangle'|'downward-triangle'|'airline'|'bubble'|'non-nerdfont' @default 'upward-triangle' @todo
 ---@field theme TabbyTablinePresetTheme
+---@field nerdfont boolean whether use nerdfont @default true
 
 ---@class TabbyTablinePresetTheme
 ---@field fill TabbyHighlight
@@ -52,7 +52,6 @@ local preset = {}
 
 ---@type TabbyTablinePresetOption
 local default_preset_option = {
-  style = 'upward-triangle', -- TODO
   theme = {
     fill = 'TabLineFill',
     head = 'TabLine',
@@ -61,14 +60,27 @@ local default_preset_option = {
     win = 'TabLine',
     tail = 'TabLine',
   },
+  nerdfont = true,
 }
+
+---@param opt TabbyTablinePresetOption
+---@return string
+local function left_sep(opt)
+  return opt.nerdfont and '' or '▐'
+end
+
+---@param opt TabbyTablinePresetOption
+---@return string
+local function right_sep(opt)
+  return opt.nerdfont and '' or '▌'
+end
 
 ---@param opt TabbyTablinePresetOption
 ---@return TabbyNode
 local function preset_head(line, opt)
   return {
-    { '  ', hl = opt.theme.head },
-    line.sep('', opt.theme.head, opt.theme.fill),
+    { opt.nerdfont and '  ' or ' tabs: ', hl = opt.theme.head },
+    line.sep(right_sep(opt), opt.theme.head, opt.theme.fill),
   }
 end
 
@@ -76,8 +88,8 @@ end
 ---@return TabbyNode
 local function preset_tail(line, opt)
   return {
-    line.sep('', opt.theme.tail, opt.theme.fill),
-    { '  ', hl = opt.theme.tail },
+    line.sep(left_sep(opt), opt.theme.tail, opt.theme.fill),
+    { opt.nerdfont and '  ' or ' ', hl = opt.theme.tail },
   }
 end
 
@@ -87,13 +99,14 @@ end
 ---@return TabbyNode
 local function preset_tab(line, tab, opt)
   local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
+  local status_icon = opt.nerdfont and { '', '' } or { '+', '' }
   return {
-    line.sep('', hl, opt.theme.fill),
-    tab.is_current() and '' or '',
+    line.sep(left_sep(opt), hl, opt.theme.fill),
+    tab.is_current() and status_icon[1] or status_icon[2],
     tab.number(),
     tab.name(),
-    tab.close_btn(''),
-    line.sep('', hl, opt.theme.fill),
+    tab.close_btn(opt.nerdfont and '' or '(x)'),
+    line.sep(right_sep(opt), hl, opt.theme.fill),
     hl = hl,
     margin = ' ',
   }
@@ -104,11 +117,12 @@ end
 ---@param opt TabbyTablinePresetOption
 ---@return TabbyNode
 local function preset_win(line, win, opt)
+  local status_icon = opt.nerdfont and { '', '' } or { '*', '' }
   return {
-    line.sep('', opt.theme.win, opt.theme.fill),
-    win.is_current() and '' or '',
+    line.sep(left_sep(opt), opt.theme.win, opt.theme.fill),
+    win.is_current() and status_icon[1] or status_icon[2],
     win.buf_name(),
-    line.sep('', opt.theme.win, opt.theme.fill),
+    line.sep(right_sep(opt), opt.theme.win, opt.theme.fill),
     hl = opt.theme.win,
     margin = ' ',
   }
