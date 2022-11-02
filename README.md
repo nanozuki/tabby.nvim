@@ -167,7 +167,7 @@ Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
 tabline.set({fn}, {opt?})                                  *tabby.tabline.set()*
     Set tabline renderer function
 
-    Parameters:
+    Parameters: ~
         {fn}    A renderer function, like "function(line)"
                 - parameter: {line}, |tabby.object.line|, a Line object
                 - return: renderer node. |tabby.object.node|
@@ -203,46 +203,46 @@ end, {})
 line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
 
-    Parameters:
+    Parameters: ~
         {callback}  Function, receive a Tab |tabby-tab|, return a
                     Node |tabby-node|. Skip render when return is empty string.
 
-    Return:
+    Return: ~
         Node |tabby-node|, rendered result of all tabs.
 
 line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
 
-    Parameters:
+    Parameters: ~
         {callback}  Function, receive a Win |tabby-win|, return a
                     Node |tabby-node|. Skip render when return is empty string.
 
-    Return:
+    Return: ~
         Node |tabby-node|, rendered result of all wins.
 
                                             *tabby.line.wins_in_tab().foreach()*
 line.wins_in_tab({tabid}).foreach({callback})
     Use callback function to renderer every wins in specified tab.
 
-    Parameters:
+    Parameters: ~
         {tabid}     Number, tab id
         {callback}  Function, receive a Win |tabby-win|, return a
                     Node |tabby-node|. Skip render when return is empty string.
 
-    Return:
+    Return: ~
         Node |tabby-node|, rendered result of all wins in specified tab.
 
 line.spacer()                                              *tabby.line.spacer()*
     Separation point between alignment sections. Each section will be separated
     by an equal number of spaces.
 
-    Return:
+    Return: ~
         Node |tabby-node|, spacer node.
 
 line.sep({symbol}, {hl}, {back_hl})            *tabby.line.sep()*
     Make a separator, and calculate highlight.
 
-    Parameters:
+    Parameters: ~
         [  ██████████████   ]
            |          |     |
            symbol     hl    back_hl
@@ -250,7 +250,7 @@ line.sep({symbol}, {hl}, {back_hl})            *tabby.line.sep()*
         {hl}        Highlight |tabby-highlight|, current highlight
         {back_hl}   Highlight |tabby-highlight|, highlight in back
 
-    Return:
+    Return: ~
         Node |tabby-node|, sep node.
 
 line.api                                                        *tabby.line.api*
@@ -306,12 +306,12 @@ tab.id                                                            *tabby.tab.id*
 
 tab.current_win()                                       *tabby.ab.current_win()*
 
-    Return:
+    Return: ~
         Win |tabby-win|, current window.
 
 tab.wins()                                                    *tabby.tab.wins()*
 
-    Return:
+    Return: ~
         An Array of Win |tabby-win|, current window.
 
 tab.wins().foreach({callback})                      *tabby.tab.wins().foreach()*
@@ -319,27 +319,27 @@ tab.wins().foreach({callback})                      *tabby.tab.wins().foreach()*
 
 tab.number()                                                *tabby.tab.number()*
 
-    Return:
+    Return: ~
         Number, tab's order, start from 1.
 
 tab.is_current()                                        *tabby.tab.is_current()*
 
-    Return:
+    Return: ~
         Boolean, if this tab is current tab.
 
 tab.name()                                               *tabby.tabby.tab.name()*
 
-    Return:
+    Return: ~
         String, tab name. If name is not set, use option
         ".tab_name.name_fallback()" in LineOption |tabby-line-option|.
 
 tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
     Make a close button of this tab.
 
-    Parameters:
+    Parameters: ~
         {symbol}  String, a symbol of close button.
 
-    Return:
+    Return: ~
         Node |tabby-node|, close button node.
 ```
 
@@ -351,29 +351,29 @@ win.id                                                            *tabby.win.id*
 
 win.tab()                                                      *tabby.win.tab()*
 
-    Return:
+    Return: ~
         Tab |tabby-tab|, tab of this window.
 
 win.buf()                                                      *tabby.win.buf()*
 
-    Return:
+    Return: ~
         Buf |tabby-buf|, buf of the window.
 
 win.is_current()                                        *tabby.win.is_current()*
 
-    Return:
+    Return: ~
         Boolean, if this window is current.
 
 win.file_icon()                                          *tabby.win.file_icon()*
     Get file icon of filetype. You need to installed plugin
     'kyazdani42/nvim-web-devicons'.
 
-    Return:
+    Return: ~
         Node |tabby-node|, file icon.
 
 win.buf_name()                                                *tabby.win.name()*
 
-    Return:
+    Return: ~
         String, buffer name of this window. You can specify the form by using
         option ".buf_name.mode" in LineOption |tabby-line-option|.
 ```
@@ -388,7 +388,8 @@ buf.id                                                            *tabby.buf.id*
 
 buf.type()                                                    *tabby.buf.type()*
     Get buftype option.
-    Return:
+
+    Return: ~
         buftype, normal buffer is an empty string. check |buftype| or
         <https://neovim.io/doc/user/options.html#'buftype'> for details.
 ```
