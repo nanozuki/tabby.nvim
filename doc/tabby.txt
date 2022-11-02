@@ -240,27 +240,47 @@ line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Return: ~
         Node |tabby-node|, rendered result of all tabs.
 
-line.wins().foreach({callback})                    *tabby.line.wins().foreach()*
+line.wins({filter...}).foreach({callback})         *tabby.line.wins().foreach()*
     Use callback function to renderer every wins.
 
     Parameters: ~
-        {callback}  Function, receive a Win |tabby-win|, return a
-                    Node |tabby-node|. Skip render when return is empty string.
+        {filter...}  Filter functions. Each function receive a |tabby-win| and
+                     return a boolean. If filter return false, this window won't
+                     be displayed in tabline.
+        {callback}   Function, receive a Win |tabby-win|, return a
+                     Node |tabby-node|. Skip render when return is empty string.
 
     Return: ~
         Node |tabby-node|, rendered result of all wins.
 
+    Example: ~
+      - Don't display NvimTree: >
+            local funcion no_nvimtree(win)
+              return not string.match(win.buf_name(), 'NvimTree')
+            end
+            ...
+            line.wins(no_nvimtree).foreach(function
+              ...
+            end)
+<
+
                                             *tabby.line.wins_in_tab().foreach()*
-line.wins_in_tab({tabid}).foreach({callback})
+line.wins_in_tab({tabid}, {filter...}).foreach({callback})
     Use callback function to renderer every wins in specified tab.
 
     Parameters: ~
-        {tabid}     Number, tab id
-        {callback}  Function, receive a Win |tabby-win|, return a
-                    Node |tabby-node|. Skip render when return is empty string.
+        {tabid}      Number, tab id
+        {filter...}  Filter functions. Each function receive a |tabby-win| and
+                     return a boolean. If filter return false, this window won't
+                     be displayed in tabline.
+        {callback}   Function, receive a Win |tabby-win|, return a
+                     Node |tabby-node|. Skip render when return is empty string.
 
     Return: ~
         Node |tabby-node|, rendered result of all wins in specified tab.
+
+    Example: ~
+        - Don't display NvimTree: See |tabby.line.wins().foreach()|.
 
 line.spacer()                                              *tabby.line.spacer()*
     Separation point between alignment sections. Each section will be separated
