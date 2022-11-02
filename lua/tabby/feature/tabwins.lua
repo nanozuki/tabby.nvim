@@ -129,14 +129,20 @@ end
 ---@field wins TabbyWin[] windows
 ---@field foreach fun(fn:fun(win:TabbyWin)):TabbyNode render wins by given render function
 
+---@alias WinFilter fun(win:TabbyWin):boolean filter for window
+
 ---new win object
 ---@param win_ids number[] win id list
 ---@param opt TabbyLineOption
+---@param ... WinFilter
 ---@return TabbyWins
-function tabwins.new_wins(win_ids, opt)
+function tabwins.new_wins(win_ids, opt, ...)
   local wins = vim.tbl_map(function(winid)
     return tabwins.new_win(winid, opt)
   end, win_ids)
+  for _, filter in ipairs({ ... }) do
+    wins = vim.tbl_filter(filter, wins)
+  end
   return {
     wins = wins,
     foreach = function(fn)

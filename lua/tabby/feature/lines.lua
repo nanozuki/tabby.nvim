@@ -7,8 +7,8 @@ local tabwins = require('tabby.feature.tabwins')
 ---TabbyLine gathering all you need in configure nvim lines
 ---@class TabbyLine
 ---@field tabs fun():TabbyTabs return all tabs
----@field wins fun():TabbyWins return all wins
----@field wins_in_tab fun(tabid:number):TabbyWins return all wins in that tab
+---@field wins fun(...:WinFilter):TabbyWins return all wins
+---@field wins_in_tab fun(tabid:number,...:WinFilter):TabbyWins return all wins in that tab
 ---@field sep fun(symbol:string,cur_hl:TabbyHighlight,back_hl:TabbyHighlight):TabbyNode make a separator
 ---@field spacer fun():TabbyNode Separation point between alignment sections. Each section will be separated by an equal number of spaces.
 ---@field api TabbyAPI neovim apis wrapper
@@ -36,11 +36,11 @@ function lines.get_line(opt)
     tabs = function()
       return tabwins.new_tabs(opt)
     end,
-    wins = function()
-      return tabwins.new_wins(api.get_wins(), opt)
+    wins = function(...)
+      return tabwins.new_wins(api.get_wins(), opt, ...)
     end,
-    wins_in_tab = function(tabid)
-      return tabwins.new_wins(api.get_tab_wins(tabid), opt)
+    wins_in_tab = function(tabid, ...)
+      return tabwins.new_wins(api.get_tab_wins(tabid), opt, ...)
     end,
     sep = function(symbol, cur_hl, back_hl)
       local cur_hl_obj = ensure_hl_obj(cur_hl)
