@@ -289,6 +289,13 @@ line.spacer()                                              *tabby.line.spacer()*
     Return: ~
         Node |tabby-node|, spacer node.
 
+line.truncate_point()                              *tabby.line.truncate_point()*
+    Separation point between alignment sections. Each section will be separated
+    by an equal number of spaces.
+
+    Return: ~
+        Node |tabby-node|, spacer node.
+
 line.sep({symbol}, {hl}, {back_hl})            *tabby.line.sep()*
     Make a separator, and calculate highlight.
 
