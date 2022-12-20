@@ -49,31 +49,13 @@ function tabwins.new_tab(tabid, opt)
       end
     end,
     is_modified = function()
-        wins = api.get_tab_wins(tabid)
-        for _, win in pairs(wins) do
-            if vim.bo[vim.api.nvim_win_get_buf(win)].modified then
-                return true
-            end
+      wins = api.get_tab_wins(tabid)
+      for _, win in pairs(wins) do
+        if vim.bo[vim.api.nvim_win_get_buf(win)].modified then
+          return true
         end
-        return false
-    end,
-        is_modified = function()
-        wins = api.get_tab_wins(tabid)
-        for i, x in pairs(wins) do
-            if vim.bo[vim.api.nvim_win_get_buf(x)].modified then
-                return true
-            end
-        end
-        return false
-    end,
-    is_modified = function()
-        wins = api.get_tab_wins(tabid)
-        for i, x in pairs(wins) do
-            if vim.bo[vim.api.nvim_win_get_buf(x)].modified then
-                return true
-            end
-        end
-        return false
+      end
+      return false
     end,
   }
 end
@@ -150,7 +132,7 @@ function tabwins.new_win(winid, opt)
       return require('tabby.feature.buf_name').get(winid, opt.buf_name)
     end,
     is_modified = function()
-      return vim.bo[buf.id].modified 
+      return vim.bo[tabwins.new_buf(api.get_win_buf(winid)).id].modified 
     end
   }
 end
