@@ -48,6 +48,33 @@ function tabwins.new_tab(tabid, opt)
         return ''
       end
     end,
+    is_modified = function()
+        wins = api.get_tab_wins(tabid)
+        for _, win in pairs(wins) do
+            if vim.bo[vim.api.nvim_win_get_buf(win)].modified then
+                return true
+            end
+        end
+        return false
+    end,
+        is_modified = function()
+        wins = api.get_tab_wins(tabid)
+        for i, x in pairs(wins) do
+            if vim.bo[vim.api.nvim_win_get_buf(x)].modified then
+                return true
+            end
+        end
+        return false
+    end,
+    is_modified = function()
+        wins = api.get_tab_wins(tabid)
+        for i, x in pairs(wins) do
+            if vim.bo[vim.api.nvim_win_get_buf(x)].modified then
+                return true
+            end
+        end
+        return false
+    end,
   }
 end
 
@@ -116,12 +143,15 @@ function tabwins.new_win(winid, opt)
       -- require 'kyazdani42/nvim-web-devicons'
       local name = require('tabby.module.filename').tail(winid)
       local extension = vim.fn.fnamemodify(name, ':e')
-      local icon = require('nvim-web-devicons').get_icon(name, extension)
+      local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
     end,
     buf_name = function()
       return require('tabby.feature.buf_name').get(winid, opt.buf_name)
     end,
+    is_modified = function()
+      return vim.bo[buf.id].modified 
+    end
   }
 end
 
