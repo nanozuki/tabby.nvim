@@ -116,7 +116,7 @@ function tabwins.new_win(winid, opt)
       -- require 'kyazdani42/nvim-web-devicons'
       local name = require('tabby.module.filename').tail(winid)
       local extension = vim.fn.fnamemodify(name, ':e')
-      local icon = require('nvim-web-devicons').get_icon(name, extension)
+      local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
     end,
     buf_name = function()
