@@ -190,7 +190,7 @@ require('tabby.tabline').set(function(line)
     return {
         {
             { cwd, hl = theme.head },
-            line.sep('', theme.head, theme.line) },
+            line.sep('', theme.head, theme.line),
         },
         ".....",
     }
