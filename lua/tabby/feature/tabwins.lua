@@ -160,6 +160,7 @@ end
 
 ---@class TabbyBuf
 ---@field id number buffer id
+---@field is_changed fun():boolean return if buffer is changed
 ---@field type fun():string return buffer type
 
 ---new buf object
@@ -168,6 +169,9 @@ end
 function tabwins.new_buf(bufid)
   return {
     id = bufid,
+    is_changed = function()
+      return api.get_buf_is_changed(bufid)
+    end,
     type = function()
       return api.get_buf_type(bufid)
     end,

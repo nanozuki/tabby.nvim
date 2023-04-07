@@ -12,6 +12,9 @@ local api = {}
 ---@field get_win_tab fun(winid):number get tab of this win
 ---@field is_float_win fun(winid:number):boolean return true if this window is floating
 ---@field is_not_float_win fun(winid:number):boolean return true if this window is not floating
+---@field get_win_buf fun(winid:number):number get buffer of this window
+---@field get_buf_type fun(bufid:number):string get buffer type
+---@field get_buf_is_changed fun(bufid:number):boolean get buffer is changed
 
 function api.get_tabs()
   return vim.api.nvim_list_tabpages()
@@ -57,6 +60,10 @@ end
 
 function api.get_buf_type(bufid)
   return vim.api.nvim_buf_get_option(bufid, 'buftype')
+end
+
+function api.get_buf_is_changed(bufid)
+  return vim.fn.getbufinfo(bufid)[1].changed == 1
 end
 
 ---@type TabbyAPI
