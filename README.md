@@ -413,6 +413,15 @@ Object for buffer.
 buf.id                                                            *tabby.buf.id*
     id of buffer, buffer handle for nvim api.
 
+
+buf.is_changed()                                        *tabby.buf.is_changed()*
+    Get if buffer is changed.
+
+    Return: ~
+        boolean, true if there are unwritten changes, false if not
+        <https://neovim.io/doc/user/options.html#'buftype'> for details.
+
+
 buf.type()                                                    *tabby.buf.type()*
     Get buftype option.
 
