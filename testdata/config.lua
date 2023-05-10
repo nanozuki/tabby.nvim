@@ -20,9 +20,12 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 -- install theme and other plugins you need
-require('lazy').setup({
+local plugins = {
   { 'rose-pine/neovim', name = 'rose-pine' },
   { 'shaunsingh/nord.nvim' },
+}
+require('lazy').setup(plugins, {
+  root = root .. '/plugins',
 })
 
 -- basic config
