@@ -3,34 +3,27 @@
 ==============================================================================
 Table of Contents                                    *tabby-table-of-contents*
 
-1. tabby.nvim                                               |tabby-tabby.nvim|
+1. To v1.x users                                         |tabby-to-v1.x-users|
 2. Concept                                                     |tabby-concept|
-  - A line for the vim tab page, not for buffers|tabby-a-line-for-the-vim-tab-page,-not-for-buffers|
-  - Declarative, highly configurable  |tabby-declarative,-highly-configurable|
 3. Install                                                     |tabby-install|
 4. Setup                                                         |tabby-setup|
-  - Examples and Gallery                          |tabby-examples-and-gallery|
-  - Presets                                                    |tabby-presets|
-  - Key mapping example                            |tabby-key-mapping-example|
+  - Examples and Gallery                    |tabby-setup-examples-and-gallery|
+  - Presets                                              |tabby-setup-presets|
+  - Key mapping example                      |tabby-setup-key-mapping-example|
 5. Customize                                                 |tabby-customize|
-  - Line                                                          |tabby-line|
-  - Line Option                                            |tabby-line-option|
-  - Tab                                                            |tabby-tab|
-  - Win                                                            |tabby-win|
-  - Buf                                                            |tabby-buf|
-  - Node                                                          |tabby-node|
-  - Highlight                                                |tabby-highlight|
-  - API                                                            |tabby-api|
+  - Line                                                |tabby-customize-line|
+  - Line Option                                  |tabby-customize-line-option|
+  - Tab                                                  |tabby-customize-tab|
+  - Win                                                  |tabby-customize-win|
+  - Buf                                                  |tabby-customize-buf|
+  - Node                                                |tabby-customize-node|
+  - Highlight                                      |tabby-customize-highlight|
+  - API                                                  |tabby-customize-api|
 6. Use Presets                                             |tabby-use-presets|
 7. TODO                                                           |tabby-todo|
 
 ==============================================================================
-1. tabby.nvim                                               *tabby-tabby.nvim*
-
-A declarative, highly configurable, and neovim style tabline plugin. Use your
-nvim tabs as a workspace multiplexer!
-
-**To v1.x users**
+1. To v1.x users                                         *tabby-to-v1.x-users*
 
 Tabby thinks it’s essential to stay backward compatible! So even if Tabby
 releases a brand new 2.0, it will not break the 1.0 configuration. If needed,
@@ -39,10 +32,11 @@ check out the Readme V1 <./README_v1.md>!
 The reasons for making the 2.0, and the improvements in 2.0, can be found at
 #82 <https://github.com/nanozuki/tabby.nvim/pull/82>.
 
+
 ==============================================================================
 2. Concept                                                     *tabby-concept*
 
-A LINE FOR THE VIM TAB PAGE, NOT FOR BUFFERS*tabby-a-line-for-the-vim-tab-page,-not-for-buffers*
+**A line for the vim tab page, not for buffers**
 
 A tab page in vim holds one or more windows(not buffers). You can easily switch
 between tab pages to have several collections of windows to work on different
@@ -61,24 +55,22 @@ For example, you are writing a backend service:
     - Tab4: Neogit.nvim
 <
 
-
-DECLARATIVE, HIGHLY CONFIGURABLE      *tabby-declarative,-highly-configurable*
+**Declarative, highly configurable**
 
 Tabby provides a declarative way to configure tabline. You can set the tabline
 to whatever neovim natively supports and complete the config with any lua code.
 At least that’s the goal of tabby. And also, the tabby provides some presets
 to quick start or as your example.
 
+
 ==============================================================================
 3. Install                                                     *tabby-install*
 
 Use your plugin manager to installing 'nanozuki/tabby.com':
 
-
 - packer.nvim
 
-
->
+>lua
       use 'nanozuki/tabby.nvim',
 <
 
@@ -89,15 +81,14 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
 At default, neovim only display tabline when there are at least two tab pages.
 If you want always display tabline:
 
->
+>lua
     vim.o.showtabline = 2
 <
-
 
 And you can setup your own tabline like this (check |tabby-customize| for more
 details):
 
->
+>lua
     local theme = {
       fill = 'TabLineFill',
       -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
@@ -147,7 +138,7 @@ details):
 <
 
 
-EXAMPLES AND GALLERY                              *tabby-examples-and-gallery*
+EXAMPLES AND GALLERY                        *tabby-setup-examples-and-gallery*
 
 These are some awesome examples shared by tabby.nvim users! Also welcome to
 share your own!
@@ -155,16 +146,18 @@ share your own!
 Discussions: show and tell
 <https://github.com/nanozuki/tabby.nvim/discussions/categories/show-and-tell>
 
-PRESETS                                                        *tabby-presets*
+
+PRESETS                                                  *tabby-setup-presets*
 
 If you want to quick start? That’s fine, you can |tabby-use-preset-configs|.
 
-KEY MAPPING EXAMPLE                                *tabby-key-mapping-example*
+
+KEY MAPPING EXAMPLE                          *tabby-setup-key-mapping-example*
 
 Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe
 you want to map some operation. For example:
 
->
+>lua
     vim.api.nvim_set_keymap("n", "<leader>ta", ":$tabnew<CR>", { noremap = true })
     vim.api.nvim_set_keymap("n", "<leader>tc", ":tabclose<CR>", { noremap = true })
     vim.api.nvim_set_keymap("n", "<leader>to", ":tabonly<CR>", { noremap = true })
@@ -175,7 +168,6 @@ you want to map some operation. For example:
     -- move current tab to next position
     vim.api.nvim_set_keymap("n", "<leader>tmn", ":+tabmove<CR>", { noremap = true })
 <
-
 
 And in fact, vim has some built-in keymapping, it’s better to read `:help
 tabline`. Here are some useful mappings:
@@ -189,6 +181,7 @@ gT      Go to the previous tab page.  Wraps around from the first one
         to the last one.
 
 The `{count}` is the number displayed in presets.
+
 
 ==============================================================================
 5. Customize                                                 *tabby-customize*
@@ -214,13 +207,13 @@ use any valid neovim lua code to contracture the Node in this function. For
 example, if you want display current directory in tabline, you can do like
 this:
 
->
+>lua
     require('tabby.tabline').set(function(line)
         local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
         return {
             {
                 { cwd, hl = theme.head },
-                line.sep('', theme.head, theme.line) },
+                line.sep('', theme.head, theme.line),
             },
             ".....",
         }
@@ -228,7 +221,7 @@ this:
 <
 
 
-LINE                                                              *tabby-line*
+LINE                                                    *tabby-customize-line*
 
 line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
@@ -314,9 +307,10 @@ line.api                                                        *tabby.line.api*
     Tabby gathered some neovim lua api in this object. Maybe help you to build
     lines. Details: |tabby-api|.
 
-LINE OPTION                                                *tabby-line-option*
 
->
+LINE OPTION                                      *tabby-customize-line-option*
+
+>lua
     {
         tab_name = {
             name_fallback = function(tabid)
@@ -340,19 +334,17 @@ name.
 You can change the fallback by provide a function in
 `opt.tab_name.name_fallback`.
 
+
 BUF_NAME ~
 
 There are four mode of buffer name. If current directory is "~/project" and
 there are three buffers:
 
-
 - "~/project/a_repo/api/user.py"
 - "~/project/b_repo/api/user.py"
 - "~/project/b_repo/api/admin.py"
 
-
 the result of every mode are:
-
 
 - unique: "a_repo/api/user.py", "b_repo/api/user.py", "admin.py"
 - relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
@@ -360,7 +352,7 @@ the result of every mode are:
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
 
 
-TAB                                                                *tabby-tab*
+TAB                                                      *tabby-customize-tab*
 
 tab.id                                                            *tabby.tab.id*
     id of tab, tab handle for nvim api.
@@ -403,7 +395,8 @@ tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
     Return: ~
         Node |tabby-node|, close button node.
 
-WIN                                                                *tabby-win*
+
+WIN                                                      *tabby-customize-win*
 
 win.id                                                            *tabby.win.id*
     id of window, win handle for nvim api.
@@ -436,18 +429,22 @@ win.buf_name()                                                *tabby.win.name()*
         String, buffer name of this window. You can specify the form by using
         option ".buf_name.mode" in LineOption |tabby-line-option|.
 
-BUF                                                                *tabby-buf*
+
+BUF                                                      *tabby-customize-buf*
 
 Object for buffer.
 
 buf.id                                                            *tabby.buf.id*
     id of buffer, buffer handle for nvim api.
 
+
 buf.is_changed()                                        *tabby.buf.is_changed()*
     Get if buffer is changed.
 
     Return: ~
         boolean, true if there are unwritten changes, false if not
+        <https://neovim.io/doc/user/options.html#'buftype'> for details.
+
 
 buf.type()                                                    *tabby.buf.type()*
     Get buftype option.
@@ -456,16 +453,16 @@ buf.type()                                                    *tabby.buf.type()*
         buftype, normal buffer is an empty string. check |buftype| or
         <https://neovim.io/doc/user/options.html#'buftype'> for details.
 
-NODE                                                                *tabby-node*
+
+NODE                                                    *tabby-customize-node*
 
 Node is the rendered unit for tabby. Node is a recursive structure. It can be:
-
 
 - A string: "nvim"
 - A Number: 12
 - A table containing a Node or an array of Node, with an optional property 'hl'
     to set highlight. Example:
-    >
+    >lua
         -- node 1
         {
           "tab1", 100
@@ -484,10 +481,9 @@ Node is the rendered unit for tabby. Node is a recursive structure. It can be:
     <
 
 
-HIGHLIGHT                                                    *tabby-highlight*
+HIGHLIGHT                                          *tabby-customize-highlight*
 
 There are two ways to declare a highlight:
-
 
 - Use the name of neovim highlight group: "TabLineSel"
 - Define "background", "foreground" and "style" in lua table:
@@ -503,7 +499,7 @@ There are two ways to declare a highlight:
     - italic
 
 
-API                                                                *tabby-api*
+API                                                      *tabby-customize-api*
 
 api.get_tabs()                                            *tabby.api.get_tabs()*
     Get all tab ids
@@ -532,6 +528,7 @@ api.is_float_win({winid})                             *tabby.api.is_float_win()*
 api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
     Return true if this window is not floating.
 
+
 ==============================================================================
 6. Use Presets                                             *tabby-use-presets*
 
@@ -540,7 +537,7 @@ should use a nerdfont-patched font to display that correctly.
 
 To use preset, you can use `use_preset({name}, {opt?})`, for example:
 
->
+>lua
     require('tabby.tabline').use_preset('active_wins_at_tail', {
       theme = {
         fill = 'TabLineFill', -- tabline background
@@ -560,60 +557,37 @@ To use preset, you can use `use_preset({name}, {opt?})`, for example:
     })
 <
 
-
 The `{opt}` is an optional parameter, including all option in
 |tabby-line-option|. And has some extending optins:
-
 
 - {theme}, the example shows the default value.
 - {nerdfont}, whether use nerdfont, default is true.
 
-
 There are five `{name}` of presets:
 
-
 - active_wins_at_tail
-
-
-Put all windows’ labels in active tabpage at end of whold tabline.
-
-
+    Put all windows’ labels in active tabpage at end of whold tabline.
 - active_wins_at_end
-
-
-Put all windows’ labels in active tabpage after all tags label. In-active
-tabpage’s window won’t display.
-
-
+    Put all windows’ labels in active tabpage after all tags label. In-active
+    tabpage’s window won’t display.
 - tab_with_top_win
-
-
-Each tab lab with a top window label followed. The `top window` is the focus
-window when you enter a tabpage.
-
-
+    Each tab lab with a top window label followed. The `top window` is the focus
+    window when you enter a tabpage.
 - active_tab_with_wins
-
-
-Active tabpage’s windows’ labels is displayed after the active tabpage’s
-label.
-
-
+    Active tabpage’s windows’ labels is displayed after the active tabpage’s
+    label.
 - tab_only
+    No windows label, only tab. and use focus window to name tab
 
-
-No windows label, only tab. and use focus window to name tab
 
 ==============================================================================
 7. TODO                                                           *tabby-todo*
-
 
 - Custom click handler
 - Telescope support
 - Style option for presets
 - Expand tabby to support statusline and winbar
 - Git info and lsp info
-
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 

@@ -1,15 +1,15 @@
+<!-- panvimdoc-ignore-start -->
+
 # tabby.nvim
 
 A declarative, highly configurable, and neovim style tabline plugin. Use your
 nvim tabs as a workspace multiplexer!
 
-<!-- panvimdoc-ignore-start -->
-
 ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/banner.png)
 
 <!-- panvimdoc-ignore-end -->
 
-**To v1.x users**
+## To v1.x users
 
 Tabby thinks it's essential to stay backward compatible! So even if Tabby
 releases a brand new 2.0, it will not break the 1.0 configuration. If needed,
@@ -20,7 +20,7 @@ The reasons for making the 2.0, and the improvements in 2.0, can be found at
 
 ## Concept
 
-### A line for the vim tab page, not for buffers
+**A line for the vim tab page, not for buffers**
 
 A tab page in vim holds one or more windows(not buffers). You can easily switch
 between tab pages to have several collections of windows to work on different
@@ -39,7 +39,7 @@ For example, you are writing a backend service:
 - Tab4: Neogit.nvim
 ```
 
-### Declarative, highly configurable
+**Declarative, highly configurable**
 
 Tabby provides a declarative way to configure tabline. You can set the tabline
 to whatever neovim natively supports and complete the config with any lua code.
@@ -542,55 +542,55 @@ There are five `{name}` of presets:
 
 - active_wins_at_tail
 
-<!-- panvimdoc-ignore-start -->
+  <!-- panvimdoc-ignore-start -->
 
-![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_wins_at_tail.png)
+  ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_wins_at_tail.png)
 
-<!-- panvimdoc-ignore-end -->
+  <!-- panvimdoc-ignore-end -->
 
-Put all windows' labels in active tabpage at end of whold tabline.
+  Put all windows' labels in active tabpage at end of whold tabline.
 
 - active_wins_at_end
 
-Put all windows' labels in active tabpage after all tags label. In-active
-tabpage's window won't display.
+  Put all windows' labels in active tabpage after all tags label. In-active
+  tabpage's window won't display.
 
-<!-- panvimdoc-ignore-start -->
+  <!-- panvimdoc-ignore-start -->
 
-![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tabby-default-1.png)
+  ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tabby-default-1.png)
 
-<!-- panvimdoc-ignore-end -->
+  <!-- panvimdoc-ignore-end -->
 
 - tab_with_top_win
 
-Each tab lab with a top window label followed. The `top window` is the focus
-window when you enter a tabpage.
+  Each tab lab with a top window label followed. The `top window` is the focus
+  window when you enter a tabpage.
 
-<!-- panvimdoc-ignore-start -->
+  <!-- panvimdoc-ignore-start -->
 
-![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tab_with_top_win.png)
+  ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/tab_with_top_win.png)
 
-<!-- panvimdoc-ignore-end -->
+  <!-- panvimdoc-ignore-end -->
 
 - active_tab_with_wins
 
-Active tabpage's windows' labels is displayed after the active tabpage's label.
+  Active tabpage's windows' labels is displayed after the active tabpage's label.
 
-<!-- panvimdoc-ignore-start -->
+  <!-- panvimdoc-ignore-start -->
 
-![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_tab_with_wins.png)
+  ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/active_tab_with_wins.png)
 
-<!-- panvimdoc-ignore-end -->
+  <!-- panvimdoc-ignore-end -->
 
 - tab_only
 
-No windows label, only tab. and use focus window to name tab
+  No windows label, only tab. and use focus window to name tab
 
-<!-- panvimdoc-ignore-start -->
+  <!-- panvimdoc-ignore-start -->
 
-![](https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png)
+  ![](https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png)
 
-<!-- panvimdoc-ignore-end -->
+  <!-- panvimdoc-ignore-end -->
 
 ## TODO
 
