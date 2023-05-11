@@ -18,7 +18,7 @@ clear-test-nvim:
 
 gendoc:
 	@echo "> install and update panvimdoc..."
-	@if [ ! -d "panvimdoc" ]; then git clone https://github.com/nanozuki/panvimdoc.git; fi
+	@if [ ! -d "panvimdoc" ]; then git clone --depth=1 https://github.com/kdheepak/panvimdoc.git; fi
 	@cd panvimdoc && git pull && cd ..
 	@echo "> generate documents..."
 	@panvimdoc/panvimdoc.sh \
