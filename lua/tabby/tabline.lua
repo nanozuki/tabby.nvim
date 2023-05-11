@@ -99,7 +99,7 @@ end
 ---@return TabbyNode
 local function preset_tab(line, tab, opt)
   local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
-  local status_icon = opt.nerdfont and { '', '' } or { '+', '' }
+  local status_icon = opt.nerdfont and { '', '󰆣' } or { '+', '' }
   return {
     line.sep(left_sep(opt), hl, opt.theme.fill),
     tab.is_current() and status_icon[1] or status_icon[2],

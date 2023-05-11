@@ -32,7 +32,7 @@ function setup.low_level()
           type = 'tab',
           tabid = tabid,
           label = {
-            '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+            ' 󰆤 ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
             hl = hl_tabline_sel,
           },
           left_sep = line.sep('', hl_tabline_sel, hl_tabline_fill),
@@ -63,7 +63,7 @@ function setup.low_level()
           type = 'tab',
           tabid = tabid,
           label = {
-            '  ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
+            ' 󰆣 ' .. vim.api.nvim_tabpage_get_number(tabid) .. ' ',
             hl = hl_tabline,
           },
           left_sep = line.sep('', hl_tabline, hl_tabline_fill),

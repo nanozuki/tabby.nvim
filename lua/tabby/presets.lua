@@ -12,14 +12,14 @@ local hl_tabline_sel = 'TabLineSel'
 local hl_tabline_fill = 'TabLineFill'
 
 local function tab_label(tabid, active)
-  local icon = active and '' or ''
+  local icon = active and '󰆤' or '󰆣'
   local number = api.get_tab_number(tabid)
   local name = tab_name.get(tabid)
   return string.format(' %s %d: %s ', icon, number, name)
 end
 
 local function clear_tab_label(tabid, active)
-  local icon = active and '' or ''
+  local icon = active and '󰆤' or '󰆣'
   local name = tab_name.get_raw(tabid)
   local number = vim.api.nvim_tabpage_get_number(tabid)
   local wins = api.get_tab_wins(tabid)
