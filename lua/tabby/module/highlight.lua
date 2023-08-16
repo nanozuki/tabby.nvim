@@ -60,6 +60,12 @@ function highlight.extract(group_name)
     return extract_cache[group_name]
   end
   local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
+  local links_to = string.match(hl_str, 'links to (.*)$')
+  if links_to then
+    local hl = highlight.extract(links_to)
+    extract_cache[group_name] = hl
+    return hl
+  end
   local hl = {}
   for k, v in string.gmatch(hl_str, '([^%s=]+)=([^%s=]+)') do
     if k == 'guifg' then
