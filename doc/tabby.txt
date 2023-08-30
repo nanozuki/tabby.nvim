@@ -150,6 +150,8 @@ Discussions: show and tell
 PRESETS                                                  *tabby-setup-presets*
 
 If you want to quick start? That’s fine, you can |tabby-use-preset-configs|.
+And you can use lualine’s theme
+<https://github.com/nvim-lualine/lualine.nvim#setting-a-theme> in presets.
 
 
 KEY MAPPING EXAMPLE                          *tabby-setup-key-mapping-example*

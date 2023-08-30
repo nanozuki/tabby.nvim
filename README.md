@@ -126,7 +126,7 @@ share your own!
 
 ### Presets
 
-If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Presets).
+If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Presets). And you can use [lualine's theme](https://github.com/nvim-lualine/lualine.nvim#setting-a-theme) in presets.
 
 ### Key mapping example
 
