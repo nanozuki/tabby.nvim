@@ -523,6 +523,7 @@ require('tabby.tabline').use_preset('active_wins_at_tail', {
     tail = 'TabLine', -- tail element highlight
   },
   nerdfont = true, -- whether use nerdfont
+  lualine_theme = nil -- lualine theme name
   tab_name = {
       name_fallback = 'function({tabid}), return a string',
   },
@@ -537,6 +538,7 @@ The `{opt}` is an optional parameter, including all option in
 
 - {theme}, the example shows the default value.
 - {nerdfont}, whether use nerdfont, default is true.
+- {lualine_theme}, use lualine theme to make `theme`. if `theme` is set, this option will be ignored. default is empty.
 
 There are five `{name}` of presets:
 
