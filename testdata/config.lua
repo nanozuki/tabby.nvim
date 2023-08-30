@@ -23,6 +23,10 @@ vim.opt.runtimepath:prepend(lazypath)
 local plugins = {
   { 'rose-pine/neovim', name = 'rose-pine' },
   { 'shaunsingh/nord.nvim' },
+  { 'ellisonleao/gruvbox.nvim' },
+  { 'AlexvZyl/nordic.nvim' },
+  { 'folke/tokyonight.nvim' },
+  { 'nvim-lualine/lualine.nvim' },
 }
 require('lazy').setup(plugins, {
   root = root .. '/plugins',
@@ -36,4 +40,6 @@ vim.opt.background = 'light'
 vim.cmd.colorscheme('rose-pine')
 
 -- put your test config to here
-require('tabby.tabline').use_preset('active_wins_at_tail')
+require('tabby.tabline').use_preset('active_wins_at_tail', {
+  -- lualine_theme = 'rose-pine',
+})

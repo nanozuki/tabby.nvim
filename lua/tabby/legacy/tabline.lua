@@ -16,8 +16,8 @@ local api = require('tabby.module.api')
 
 ---@class TabbyTabLabelOpt
 ---@field label string|LegacyText|fun(tabid:number):LegacyText
----@field left_sep string|LegacyText
----@field right_sep string|LegacyText
+---@field left_sep? string|LegacyText
+---@field right_sep? string|LegacyText
 
 ---@alias TabbyTablineLayout
 ---| "active_wins_at_tail" # windows in active tab will be display at end of tabline
@@ -28,9 +28,9 @@ local api = require('tabby.module.api')
 
 ---@class TabbyWinLabelOpt
 ---@field label string|LegacyText|fun(winid:number):LegacyText
----@field left_sep string|LegacyText
----@field inner_sep string|LegacyText won't works in "tab_with_top_win" layout
----@field right_sep string|LegacyText
+---@field left_sep? string|LegacyText
+---@field inner_sep? string|LegacyText won't works in "tab_with_top_win" layout
+---@field right_sep? string|LegacyText
 
 ---@param tabid number tab id
 ---@param opt TabbyTabLabelOpt

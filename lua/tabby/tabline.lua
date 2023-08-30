@@ -39,8 +39,9 @@ end
 local preset = {}
 
 ---@class TabbyTablinePresetOption: TabbyLineOption
----@field theme TabbyTablinePresetTheme
----@field nerdfont boolean whether use nerdfont @default true
+---@field theme? TabbyTablinePresetTheme
+---@field nerdfont? boolean whether use nerdfont @default true
+---@field lualine_theme? string lualine theme name @default ''
 
 ---@class TabbyTablinePresetTheme
 ---@field fill TabbyHighlight
@@ -61,6 +62,7 @@ local default_preset_option = {
     tail = 'TabLine',
   },
   nerdfont = true,
+  lualine_theme = '',
 }
 
 ---@param opt TabbyTablinePresetOption
@@ -126,6 +128,22 @@ local function preset_win(line, win, opt)
     hl = opt.theme.win,
     margin = ' ',
   }
+end
+
+local function pre_process_opt(opt)
+  if opt and opt.theme == nil and opt.lualine_theme ~= nil then
+    local ok, ll_theme = pcall(require, string.format('lualine.themes.%s', opt.lualine_theme))
+    if ok then
+      opt.theme = {
+        fill = ll_theme.normal.c,
+        head = ll_theme.visual.a,
+        current_tab = ll_theme.normal.a,
+        tab = ll_theme.normal.b,
+        win = ll_theme.normal.b,
+        tail = ll_theme.normal.b,
+      }
+    end
+  end
 end
 
 function preset.active_wins_at_tail(opt)
@@ -224,6 +242,7 @@ end
 ---@param name 'active_wins_at_tail'|'active_wins_at_end'|'tab_with_top_win'|'active_tab_with_wins'|'tab_only'
 ---@param opt? TabbyTablinePresetOption
 function tabline.use_preset(name, opt)
+  pre_process_opt(opt)
   if name == 'active_wins_at_tail' then
     preset.active_wins_at_tail(opt)
   elseif name == 'active_wins_at_end' then
