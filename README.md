@@ -58,12 +58,25 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
 
 ## Setup
 
+### Tabline option
+
 At default, neovim only display tabline when there are at least two tab pages.
 If you want always display tabline:
 
 ```lua
 vim.o.showtabline = 2
 ```
+
+### Save and restore in session
+
+You can save and restore tab layout and tab names in session, by adding word
+'tabpages' to `vim.opt.sessionoptions`. This is a valid `sessionoptions`:
+
+```lua
+vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
+```
+
+### Setup tabby.nvim
 
 And you can setup your own tabline like this (check [Customize](#Customize) for
 more details):

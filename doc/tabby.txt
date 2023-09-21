@@ -7,6 +7,9 @@ Table of Contents                                    *tabby-table-of-contents*
 2. Concept                                                     |tabby-concept|
 3. Install                                                     |tabby-install|
 4. Setup                                                         |tabby-setup|
+  - Tabline option                                |tabby-setup-tabline-option|
+  - Save and restore in session      |tabby-setup-save-and-restore-in-session|
+  - Setup tabby.nvim                            |tabby-setup-setup-tabby.nvim|
   - Examples and Gallery                    |tabby-setup-examples-and-gallery|
   - Presets                                              |tabby-setup-presets|
   - Key mapping example                      |tabby-setup-key-mapping-example|
@@ -78,12 +81,28 @@ Use your plugin manager to installing 'nanozuki/tabby.com':
 ==============================================================================
 4. Setup                                                         *tabby-setup*
 
+
+TABLINE OPTION                                    *tabby-setup-tabline-option*
+
 At default, neovim only display tabline when there are at least two tab pages.
 If you want always display tabline:
 
 >lua
     vim.o.showtabline = 2
 <
+
+
+SAVE AND RESTORE IN SESSION          *tabby-setup-save-and-restore-in-session*
+
+You can save and restore tab layout and tab names in session, by adding word
+'tabpages' to `vim.opt.sessionoptions`. This is a valid `sessionoptions`:
+
+>lua
+    vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
+<
+
+
+SETUP TABBY.NVIM                                *tabby-setup-setup-tabby.nvim*
 
 And you can setup your own tabline like this (check |tabby-customize| for more
 details):
