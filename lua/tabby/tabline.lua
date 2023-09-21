@@ -1,3 +1,4 @@
+local tab_name = require "tabby.feature.tab_name"
 local tabline = {}
 
 local module = {
@@ -27,6 +28,7 @@ function tabline.set(fn, opt)
 end
 
 function tabline.init()
+  tab_name.load()
   vim.o.tabline = '%!TabbyRenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0, <f-args>)]])
 end
