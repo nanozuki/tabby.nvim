@@ -28,12 +28,12 @@ function tabline.set(fn, opt)
 end
 
 function tabline.init()
-  tab_name.load()
   vim.o.tabline = '%!TabbyRenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0, <f-args>)]])
 end
 
 function tabline.render()
+  tab_name.pre_render()
   local line = lines.get_line(module.opt)
   return render.node(module.fn(line))
 end

@@ -65,7 +65,7 @@ function render.node(node, ctx)
 end
 
 ---render element with raw content
----@param el string|number
+---@param el string|number|TabbyElement
 ---@param ctx TabbyRendererContext
 ---@return string, TabbyRendererContext nvim statusline-styled string
 function render.raw_element(el, ctx)
