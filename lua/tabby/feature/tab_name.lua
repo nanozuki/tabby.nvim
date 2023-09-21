@@ -32,14 +32,33 @@ function tab_name.set_default_option(opt)
   default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
-local tab_name_var = 'tabby_tab_name'
+--- mapping tab_name to tabid
+---@type table<string, string>
+local tab_names = {}
 
 ---set tab name
 ---@param tabid number tab id, 0 for current tab
 ---@param name string
 function tab_name.set(tabid, name)
-  vim.api.nvim_tabpage_set_var(tabid, tab_name_var, name)
+  if tabid == 0 then
+    tabid = api.get_current_tab()
+  end
+  tab_names[tostring(tabid)] = name
   vim.cmd('redrawtabline')
+end
+
+---get tab's raw name
+---@param tabid number
+---@return string if no name for tab, return empty string
+function tab_name.get_raw(tabid)
+  if tabid == 0 then
+    tabid = api.get_current_tab()
+  end
+  local name = tab_names[tostring(tabid)]
+  if name ~= nil then
+    return name
+  end
+  return ''
 end
 
 ---get tab's name
@@ -47,26 +66,55 @@ end
 ---@param opt? TabbyTabNameOption
 ---@return string
 function tab_name.get(tabid, opt)
+  local raw_name = tab_name.get_raw(tabid)
+  if raw_name ~= '' then
+    return raw_name
+  end
   local o = default_option
   if opt ~= nil then
     o = vim.tbl_deep_extend('force', default_option, opt)
   end
-  local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tab_name_var)
-  if ok then
-    return result
-  end
   return o.name_fallback(tabid)
 end
 
----get tab's raw name
----@param tabid number
----@return string if no name for tab, return empty string
-function tab_name.get_raw(tabid)
-  local ok, result = pcall(vim.api.nvim_tabpage_get_var, tabid, tab_name_var)
-  if not ok then
-    return ''
+---save tab names to vim global variable.
+---convert tabid to tab number, and save to TabbyTabNames
+local function save()
+  local names_to_number = {} ---@type table<string, string>
+  for tabid, name in pairs(tab_names) do
+    local ok, tab_num = pcall(api.get_tab_number, tonumber(tabid))
+    if ok then
+      names_to_number[tostring(tab_num)] = name
+    end
   end
-  return result
+  vim.g.TabbyTabNames = vim.json.encode(names_to_number)
+end
+
+---load tab names from vim global variable.
+local function load()
+  local ok, names_to_number = pcall(vim.json.decode, vim.g.TabbyTabNames)
+  if not (ok and type(names_to_number) == 'table') then
+    return
+  end
+  for _, tabid in ipairs(api.get_tabs()) do
+    local tab_num = api.get_tab_number(tabid)
+    local name = names_to_number[tostring(tab_num)]
+    if name ~= nil then
+      tab_names[tostring(tabid)] = name
+    end
+  end
+end
+
+local loaded = false
+
+---pre render hook, load and save tab names
+function tab_name.pre_render()
+  if not loaded then
+    load()
+    loaded = true
+  else
+    save()
+  end
 end
 
 return tab_name

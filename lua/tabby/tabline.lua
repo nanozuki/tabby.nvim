@@ -1,3 +1,4 @@
+local tab_name = require "tabby.feature.tab_name"
 local tabline = {}
 
 local module = {
@@ -32,6 +33,7 @@ function tabline.init()
 end
 
 function tabline.render()
+  tab_name.pre_render()
   local line = lines.get_line(module.opt)
   return render.node(module.fn(line))
 end
