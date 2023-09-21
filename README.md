@@ -70,7 +70,8 @@ vim.o.showtabline = 2
 ### Save and restore in session
 
 You can save and restore tab layout and tab names in session, by adding word
-'tabpages' to `vim.opt.sessionoptions`. This is a valid `sessionoptions`:
+`tabpages`(for layout) and `globals`(for tab names) to `vim.opt.sessionoptions`.
+This is a valid `sessionoptions`:
 
 ```lua
 vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
