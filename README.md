@@ -62,8 +62,8 @@ If you use `lazy.nvim`, you can refer the following example:
 }
 ```
 
-You don't need lazy load since 'tabby.nvim' is not slow. If you realy want, you
-can use `VimEnter` or `VeryLazy` or anything else you like. Some of them
+You don't need lazy load since 'tabby.nvim' is not slow. If you really want,
+you can use `VimEnter` or `VeryLazy` or anything else you like. Some of them
 (like `VeryLazy`) will make the raw tabline render first, and re-render to
 tabby's line quickly.
 
