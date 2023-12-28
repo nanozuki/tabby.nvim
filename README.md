@@ -48,13 +48,24 @@ quick start or as your example.
 
 ## Install
 
-Use your plugin manager to installing 'nanozuki/tabby.com':
-
-- packer.nvim
+Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.
+If you use `lazy.nvim`, you can refer the following example:
 
 ```lua
-  use 'nanozuki/tabby.nvim',
+return {
+  'nanozuki/tabby.nvim',
+  event = 'VimEnter',
+  dependencies = 'nvim-tree/nvim-web-devicons',
+  config = funcion(),
+    -- configs...
+  end,
+}
 ```
+
+You don't need lazy load since 'tabby.nvim' is not slow. If you realy want, you
+can use `VimEnter` or `VeryLazy` or anything else you like. Some of them
+(like `VeryLazy`) will make the raw tabline render first, and re-render to
+tabby's line quickly.
 
 ## Setup
 
