@@ -52,7 +52,7 @@ Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.
 If you use `lazy.nvim`, you can refer the following example:
 
 ```lua
-return {
+{
   'nanozuki/tabby.nvim',
   event = 'VimEnter',
   dependencies = 'nvim-tree/nvim-web-devicons',
