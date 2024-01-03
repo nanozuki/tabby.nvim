@@ -56,7 +56,7 @@ If you use `lazy.nvim`, you can refer the following example:
   'nanozuki/tabby.nvim',
   event = 'VimEnter',
   dependencies = 'nvim-tree/nvim-web-devicons',
-  config = funcion(),
+  config = function(),
     -- configs...
   end,
 }
@@ -250,7 +250,7 @@ line.wins({filter...}).foreach({callback})         *tabby.line.wins().foreach()*
 
     Example: ~
       - Don't display NvimTree: >
-            local funcion no_nvimtree(win)
+            local function no_nvimtree(win)
               return not string.match(win.buf_name(), 'NvimTree')
             end
             ...
