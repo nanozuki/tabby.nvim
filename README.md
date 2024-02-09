@@ -46,6 +46,17 @@ to whatever neovim natively supports and complete the config with any lua code.
 At least that's the goal of tabby. And also, the tabby provides some presets to
 quick start or as your example.
 
+## Playground
+
+Want to try your new config with no fear? Want to reproduct/debug a problem?
+Want to contribute? Use the playground!
+
+1. Clone this repository, or open the directory your plugin manager installed
+   tabby.nvim.
+2. Put your config in 'playground/config.lua'
+3. Execute `make play`, into a temporary neovim to check the config.
+4. Use `make clear-play` to clean the change.
+
 ## Install
 
 Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.

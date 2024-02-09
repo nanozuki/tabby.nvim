@@ -1,7 +1,6 @@
--- set repreduce/testing environment
+-- set reproduce/testing/playground environment
 -- inspired by https://github.com/folke/lazy.nvim/wiki/Minimal-%60init.lua%60-to-Reproduce-an-Issue
--- set stdpath, use ./testenv
-local root = vim.fn.fnamemodify('./testenv', ':p')
+local root = vim.fn.fnamemodify('./playground', ':p')
 for _, name in ipairs({ 'config', 'data', 'state', 'cache' }) do
   vim.env[('XDG_%s_HOME'):format(name:upper())] = root .. '/' .. name
 end
@@ -22,11 +21,11 @@ vim.opt.runtimepath:prepend(lazypath)
 -- install theme and other plugins you need
 local plugins = {
   { 'rose-pine/neovim', name = 'rose-pine' },
-  { 'shaunsingh/nord.nvim' },
-  { 'ellisonleao/gruvbox.nvim' },
-  { 'AlexvZyl/nordic.nvim' },
-  { 'folke/tokyonight.nvim' },
-  { 'nvim-lualine/lualine.nvim' },
+  -- { 'shaunsingh/nord.nvim' },
+  -- { 'ellisonleao/gruvbox.nvim' },
+  -- { 'AlexvZyl/nordic.nvim' },
+  -- { 'folke/tokyonight.nvim' },
+  -- { 'nvim-lualine/lualine.nvim' },
 }
 require('lazy').setup(plugins, {
   root = root .. '/plugins',
@@ -39,7 +38,12 @@ vim.opt.showtabline = 2
 vim.opt.background = 'light'
 vim.cmd.colorscheme('rose-pine')
 
--- put your test config to here
+-- put your test config to here, use tabby in repository directly
+-- 1. use customer configs:
+-- require('tabby.tabline').set(function(line)
+--   <your config>
+-- end
+-- 2. use preset:
 require('tabby.tabline').use_preset('active_wins_at_tail', {
   -- lualine_theme = 'rose-pine',
 })

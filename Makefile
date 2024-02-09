@@ -1,20 +1,19 @@
-test-nvim:
-	@echo "> create test environment..."
-	@mkdir -p testenv/config/nvim/lua
-	@mkdir -p testenv/config/nvim/plugin
-	@-cp -n ./testdata/config.lua ./testenv/config/nvim/init.lua
-	@ln -sf $(PWD)/testdata/setup.lua  $(PWD)/testenv/config/nvim/lua/setup.lua
-	@ln -sf $(PWD)/lua/tabby           $(PWD)/testenv/config/nvim/lua
-	@ln -sf $(PWD)/plugin/tabby.vim    $(PWD)/testenv/config/nvim/plugin/tabby.vim
+play:
+	@echo "> create playground..."
+	@mkdir -p playground/config/nvim/lua
+	@mkdir -p playground/config/nvim/plugin
+	@ln -sf $(PWD)/lua/tabby           $(PWD)/playground/config/nvim/lua
+	@ln -sf $(PWD)/plugin/tabby.vim    $(PWD)/playground/config/nvim/plugin/tabby.vim
 	@echo "> sync plugins..."
-	@nvim -u ./testenv/config/nvim/init.lua --headless "+Lazy! sync" +qa
+	@nvim -u ./playground/config.lua --headless "+Lazy! sync" +qa
 	@echo "> run tests nvim..."
-	@nvim -u ./testenv/config/nvim/init.lua -R -p lua/tabby/feature/tabwins.lua lua/tabby/feature/lines.lua \
+	@nvim -u ./playground/config.lua -R -p lua/tabby/feature/tabwins.lua lua/tabby/feature/lines.lua \
 		"+0tabnew" "+terminal" "+tabnext $$" "+vs README.md"
 
-clear-test-nvim:
+clear-play:
 	@echo "> remove test environment..."
-	@-rm -rf ./testenv
+	@-rm -rf ./playground/config ./playground/data ./playground/state ./playground/cache
+	@git checkout -- playground/config.lua
 
 gendoc:
 	@echo "> install and update panvimdoc..."

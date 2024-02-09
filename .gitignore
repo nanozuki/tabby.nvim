@@ -44,8 +44,9 @@ luac.out
 .idea/
 .code/
 
-# test environment
-testenv/
+# playground
+playground/*
+!playground/config.lua
 
 # doc script helper
 panvimdoc/

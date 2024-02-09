@@ -5,15 +5,16 @@ Table of Contents                                    *tabby-table-of-contents*
 
 1. To v1.x users                                         |tabby-to-v1.x-users|
 2. Concept                                                     |tabby-concept|
-3. Install                                                     |tabby-install|
-4. Setup                                                         |tabby-setup|
+3. Playground                                               |tabby-playground|
+4. Install                                                     |tabby-install|
+5. Setup                                                         |tabby-setup|
   - Tabline option                                |tabby-setup-tabline-option|
   - Save and restore in session      |tabby-setup-save-and-restore-in-session|
   - Setup tabby.nvim                            |tabby-setup-setup-tabby.nvim|
   - Examples and Gallery                    |tabby-setup-examples-and-gallery|
   - Presets                                              |tabby-setup-presets|
   - Key mapping example                      |tabby-setup-key-mapping-example|
-5. Customize                                                 |tabby-customize|
+6. Customize                                                 |tabby-customize|
   - Line                                                |tabby-customize-line|
   - Line Option                                  |tabby-customize-line-option|
   - Tab                                                  |tabby-customize-tab|
@@ -22,8 +23,8 @@ Table of Contents                                    *tabby-table-of-contents*
   - Node                                                |tabby-customize-node|
   - Highlight                                      |tabby-customize-highlight|
   - API                                                  |tabby-customize-api|
-6. Use Presets                                             |tabby-use-presets|
-7. TODO                                                           |tabby-todo|
+7. Use Presets                                             |tabby-use-presets|
+8. TODO                                                           |tabby-todo|
 
 ==============================================================================
 1. To v1.x users                                         *tabby-to-v1.x-users*
@@ -67,7 +68,20 @@ to quick start or as your example.
 
 
 ==============================================================================
-3. Install                                                     *tabby-install*
+3. Playground                                               *tabby-playground*
+
+Want to try your new config with no fear? Want to reproduct/debug a problem?
+Want to contribute? Use the playground!
+
+1. Clone this repository, or open the directory your plugin manager installed
+tabby.nvim.
+2. Put your config in 'playground/config.lua'
+3. Execute `make play`, into a temporary neovim to check the config.
+4. Use `make clear-play` to clean the change.
+
+
+==============================================================================
+4. Install                                                     *tabby-install*
 
 Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.
 If you use `lazy.nvim`, you can refer the following example:
@@ -77,7 +91,7 @@ If you use `lazy.nvim`, you can refer the following example:
       'nanozuki/tabby.nvim',
       event = 'VimEnter',
       dependencies = 'nvim-tree/nvim-web-devicons',
-      config = funcion(),
+      config = function(),
         -- configs...
       end,
     }
@@ -90,7 +104,7 @@ tabby’s line quickly.
 
 
 ==============================================================================
-4. Setup                                                         *tabby-setup*
+5. Setup                                                         *tabby-setup*
 
 
 TABLINE OPTION                                    *tabby-setup-tabline-option*
@@ -217,7 +231,7 @@ The `{count}` is the number displayed in presets.
 
 
 ==============================================================================
-5. Customize                                                 *tabby-customize*
+6. Customize                                                 *tabby-customize*
 
 Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
 
@@ -281,7 +295,7 @@ line.wins({filter...}).foreach({callback})         *tabby.line.wins().foreach()*
 
     Example: ~
       - Don't display NvimTree: >
-            local funcion no_nvimtree(win)
+            local function no_nvimtree(win)
               return not string.match(win.buf_name(), 'NvimTree')
             end
             ...
@@ -563,7 +577,7 @@ api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
 
 
 ==============================================================================
-6. Use Presets                                             *tabby-use-presets*
+7. Use Presets                                             *tabby-use-presets*
 
 You can use presets for a quick start. The preset config uses nerdfont, and you
 should use a nerdfont-patched font to display that correctly.
@@ -619,7 +633,7 @@ There are five `{name}` of presets:
 
 
 ==============================================================================
-7. TODO                                                           *tabby-todo*
+8. TODO                                                           *tabby-todo*
 
 - Custom click handler
 - Telescope support
