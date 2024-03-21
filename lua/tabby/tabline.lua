@@ -1,4 +1,4 @@
-local tab_name = require "tabby.feature.tab_name"
+local tab_name = require('tabby.feature.tab_name')
 local tabline = {}
 
 local module = {
@@ -30,6 +30,7 @@ end
 function tabline.init()
   vim.o.tabline = '%!TabbyRenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0, <f-args>)]])
+  vim.cmd([[command! PickWindow lua require('tabby.feature.win_picker').select()]])
 end
 
 function tabline.render()
