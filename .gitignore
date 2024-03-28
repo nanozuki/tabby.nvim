@@ -48,5 +48,6 @@ luac.out
 playground/*
 !playground/config.lua
 
-# doc script helper
-panvimdoc/
+# environment
+.envrc
+.direnv/

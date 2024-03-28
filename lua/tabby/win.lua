@@ -5,7 +5,7 @@ local api = require('tabby.module.api')
 local buf_name = require('tabby.feature.buf_name')
 
 ---@class TabbyWinOption
----@field bufname_mode 'unique'|'relative'|'tail'|'shorten' @defult unique
+---@field bufname_mode 'unique'|'relative'|'tail'|'shorten' @default unique
 
 ---set win option
 ---@param opt TabbyWinOption

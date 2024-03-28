@@ -40,7 +40,7 @@ function util.get_tab_name(tabid, fallback)
   return tab_name.get(tabid)
 end
 
---- conbine texts
+--- combine texts
 ---@deprecated use TabbyNode.margin
 ---@param texts string[] texts to be combine
 ---@param sep? string the separator, default is ' '
