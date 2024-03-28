@@ -164,6 +164,12 @@ share your own!
 
 If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Presets). And you can use theme of [lualine](https://github.com/nvim-lualine/lualine.nvim) in presets.
 
+### Commands
+
+- `Tabby rename_tab <tabname>`: Rename tab. Use name in line by `tab.name()`
+  (ref: [Tab](#Tab)). Config fallback name by [Line-Option](#Line-Option)
+- `Tabby pick_window`: Open a selector to pick window in tabpages.
+
 ### Key mapping example
 
 Tabby uses native nvim tab, so you can directly use nvim tab operation. Maybe
@@ -338,7 +344,7 @@ line.api                                                        *tabby.line.api*
 
 #### tab_name
 
-Use command `TabRename <tabname>` to rename tab. Use `tab.name()` (ref:
+Use command `Tabby rename_tab <tabname>` to rename tab. Use `tab.name()` (ref:
 [Tab](#Tab)) to add in your config. If no name provided, `tab.name()` will
 display fallback name. The default fallback name is current window's buffer name.
 
