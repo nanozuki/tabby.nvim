@@ -19,7 +19,7 @@
         in
         {
           devShells.default = pkgs.mkShell {
-            packages = [ strpkgs.panvimdoc ];
+            packages = [ strpkgs.panvimdoc pkgs.typos ];
           };
         };
     };

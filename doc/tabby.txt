@@ -609,7 +609,7 @@ To use preset, you can use `use_preset({name}, {opt?})`, for example:
 <
 
 The `{opt}` is an optional parameter, including all option in
-|tabby-line-option|. And has some extending optins:
+|tabby-line-option|. And has some extending options:
 
 - {theme}, the example shows the default value.
 - {nerdfont}, whether use nerdfont, default is true.

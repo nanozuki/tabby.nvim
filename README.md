@@ -573,7 +573,7 @@ require('tabby.tabline').use_preset('active_wins_at_tail', {
 ```
 
 The `{opt}` is an optional parameter, including all option in
-[Line Option](#Line-Option). And has some extending optins:
+[Line Option](#Line-Option). And has some extending options:
 
 - {theme}, the example shows the default value.
 - {nerdfont}, whether use nerdfont, default is true.
