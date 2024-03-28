@@ -16,11 +16,8 @@ clear-play:
 	@git checkout -- playground/config.lua
 
 gendoc:
-	@echo "> install and update panvimdoc..."
-	@if [ ! -d "panvimdoc" ]; then git clone --depth=1 https://github.com/kdheepak/panvimdoc.git; fi
-	@cd panvimdoc && git pull && cd ..
 	@echo "> generate documents..."
-	@panvimdoc/panvimdoc.sh \
+	@panvimdoc \
 		--project-name tabby \
 		--input-file README.md \
 		--vim-version 0.5 \

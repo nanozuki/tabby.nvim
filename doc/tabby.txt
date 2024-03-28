@@ -91,7 +91,7 @@ If you use `lazy.nvim`, you can refer the following example:
       'nanozuki/tabby.nvim',
       event = 'VimEnter',
       dependencies = 'nvim-tree/nvim-web-devicons',
-      config = function(),
+      config = function()
         -- configs...
       end,
     }
