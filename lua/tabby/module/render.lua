@@ -47,7 +47,7 @@ function render.node(node, ctx)
   elseif type(node) == 'string' or type(node) == 'number' then
     return render.raw_element({ node, hl = ctx.parent_hl }, ctx)
   else -- type(node) == 'table'
-    if vim.tbl_islist(node) then
+    if vim.islist(node) then
       local strs = {}
       for i, sub in ipairs(node) do
         log.debug.format('render sub-node[%d]: %s', i, log.inspect(sub))
