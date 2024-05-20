@@ -1,4 +1,3 @@
----@type TabbyAPI
 local api = {}
 
 ---Tabby API is some useful neovim api's wrapper
@@ -59,7 +58,13 @@ function api.get_win_buf(winid)
 end
 
 function api.get_buf_type(bufid)
-  return vim.api.nvim_buf_get_option(bufid, 'buftype')
+  if vim.fn.has('nvim-0.10') == 1 then
+    local buf_number = vim.fn.bufnr(bufid)
+    return vim.api.nvim_get_option_value('buftype', { buf = buf_number })
+  else
+    ---@diagnostic disable-next-line: deprecated
+    return vim.api.nvim_buf_get_option(bufid, 'buftype')
+  end
 end
 
 function api.get_buf_is_changed(bufid)
