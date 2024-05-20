@@ -54,7 +54,7 @@ function highlight.register(hl)
 end
 
 local function get_hl_str(group_name)
-  if vim.fn.has('nvim-0.10') then
+  if vim.fn.has('nvim-0.10') == 1 then
     return vim.api.nvim_exec2('highlight ' .. group_name, { output = true }).output
   else
     ---@diagnostic disable-next-line: deprecated

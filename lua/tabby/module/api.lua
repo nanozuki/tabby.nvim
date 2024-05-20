@@ -58,7 +58,7 @@ function api.get_win_buf(winid)
 end
 
 function api.get_buf_type(bufid)
-  if vim.fn.has('nvim-0.10') then
+  if vim.fn.has('nvim-0.10') == 1 then
     local buf_number = vim.fn.bufnr(bufid)
     return vim.api.nvim_get_option_value('buftype', { buf = buf_number })
   else

@@ -30,7 +30,7 @@ convert to raw element
 --]]
 
 local function is_list(tbl)
-  if vim.fn.has('nvim-0.10') then
+  if vim.fn.has('nvim-0.10') == 1 then
     return vim.islist(tbl)
   else
     ---@diagnostic disable-next-line: deprecated
