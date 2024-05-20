@@ -53,13 +53,22 @@ function highlight.register(hl)
   return group
 end
 
+local function get_hl_str(group_name)
+  if vim.fn.has('nvim-0.10') then
+    return vim.api.nvim_exec2('highlight ' .. group_name, { output = true }).output
+  else
+    ---@diagnostic disable-next-line: deprecated
+    return vim.api.nvim_exec('highlight ' .. group_name, true)
+  end
+end
+
 ---@param group_name string
 ---@return TabbyHighlightObject
 function highlight.extract(group_name)
   if extract_cache[group_name] ~= nil then
     return extract_cache[group_name]
   end
-  local hl_str = vim.api.nvim_exec('highlight ' .. group_name, true)
+  local hl_str = get_hl_str(group_name)
   local links_to = string.match(hl_str, 'links to (.*)$')
   if links_to then
     local hl = highlight.extract(links_to)

@@ -29,6 +29,15 @@ convert to raw element
   -> render every item, with context { parent_hl = <hl> }
 --]]
 
+local function is_list(tbl)
+  if vim.fn.has('nvim-0.10') then
+    return vim.islist(tbl)
+  else
+    ---@diagnostic disable-next-line: deprecated
+    return vim.tbl_islist(tbl)
+  end
+end
+
 ---render node to tabline string
 ---@param node TabbyNode
 ---@param ctx TabbyRendererContext? highlight group in context
@@ -45,9 +54,10 @@ function render.node(node, ctx)
   if type(node) == 'nil' then
     return '', ctx
   elseif type(node) == 'string' or type(node) == 'number' then
+    ---@diagnostic disable-next-line: assign-type-mismatch
     return render.raw_element({ node, hl = ctx.parent_hl }, ctx)
   else -- type(node) == 'table'
-    if vim.tbl_islist(node) then
+    if is_list(node) then
       local strs = {}
       for i, sub in ipairs(node) do
         log.debug.format('render sub-node[%d]: %s', i, log.inspect(sub))
@@ -106,12 +116,14 @@ function render.hyper_element(el, ctx)
     if s ~= '' then
       strs[#strs + 1], inner_ctx = s, c
       if (el.margin or '') ~= '' and i ~= #el then
+        ---@diagnostic disable-next-line: assign-type-mismatch
         strs[#strs + 1], inner_ctx = render.raw_element({ el.margin, hl = el.hl }, inner_ctx)
       end
     end
   end
   local inner_text = table.concat(strs, '')
   ctx.current_hl = inner_ctx.current_hl
+  ---@diagnostic disable-next-line: assign-type-mismatch
   return render.raw_element({ inner_text, hl = el.hl, lo = el.lo, click = el.click, margin = el.margin }, ctx)
 end
 
