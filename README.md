@@ -9,14 +9,22 @@ nvim tabs as a workspace multiplexer!
 
 <!-- panvimdoc-ignore-end -->
 
-## To v1.x users
+## Compatibility and Versions
 
-Tabby thinks it's essential to stay backward compatible! So even if Tabby
-releases a brand new 2.0, it will not break the 1.0 configuration. If needed,
-check out the [Readme V1](./README_v1.md)!
+Compatibility has always been a key consideration for `tabby.nvim`. Since its
+inception during the Neovim 0.5 era, the landscape of plugin management and
+semantic versioning has not been widely adopted; hence, we have made every
+effort to maintain backward compatibility with each release.
 
-The reasons for making the 2.0, and the improvements in 2.0, can be found at
-[#82](https://github.com/nanozuki/tabby.nvim/pull/82).
+However, since then, numerous Neovim APIs have been added, altered, or
+deprecated, and the design philosophy of `tabby.nvim` has also gone through
+several iterations. Maintaining complete backward compatibility has become
+increasingly challenging. Therefore, starting from this version, `tabby.nvim`
+will adhere to semantic versioning. Within the same major version, no breaking
+changes will be introduced.
+
+At next major version, v3, `tabby.nvim` will cleaner all deprecated apis and
+remove all vimscript.
 
 ## Concept
 
