@@ -9,14 +9,22 @@ nvim tabs as a workspace multiplexer!
 
 <!-- panvimdoc-ignore-end -->
 
-## To v1.x users
+## Compatibility and Versions
 
-Tabby thinks it's essential to stay backward compatible! So even if Tabby
-releases a brand new 2.0, it will not break the 1.0 configuration. If needed,
-check out the [Readme V1](./README_v1.md)!
+Compatibility has always been a key consideration for `tabby.nvim`. Since its
+inception during the Neovim 0.5 era, the landscape of plugin management and
+semantic versioning has not been widely adopted; hence, we have made every
+effort to maintain backward compatibility with each release.
 
-The reasons for making the 2.0, and the improvements in 2.0, can be found at
-[#82](https://github.com/nanozuki/tabby.nvim/pull/82).
+However, since then, numerous Neovim APIs have been added, altered, or
+deprecated, and the design philosophy of `tabby.nvim` has also gone through
+several iterations. Maintaining complete backward compatibility has become
+increasingly challenging. Therefore, starting from this version, `tabby.nvim`
+will adhere to semantic versioning. Within the same major version, no breaking
+changes will be introduced.
+
+At next major version, v3, `tabby.nvim` will cleaner all deprecated apis and
+remove all vimscript.
 
 ## Concept
 
@@ -65,7 +73,7 @@ If you use `lazy.nvim`, you can refer the following example:
 ```lua
 {
   'nanozuki/tabby.nvim',
-  event = 'VimEnter',
+  -- event = 'VimEnter', -- if you want lazy load, see below
   dependencies = 'nvim-tree/nvim-web-devicons',
   config = function()
     -- configs...
@@ -114,44 +122,50 @@ local theme = {
   win = 'TabLine',
   tail = 'TabLine',
 }
-require('tabby.tabline').set(function(line)
-  return {
-    {
-      { '  ', hl = theme.head },
-      line.sep('', theme.head, theme.fill),
-    },
-    line.tabs().foreach(function(tab)
-      local hl = tab.is_current() and theme.current_tab or theme.tab
-      return {
-        line.sep('', hl, theme.fill),
-        tab.is_current() and '' or '󰆣',
-        tab.number(),
-        tab.name(),
-        tab.close_btn(''),
-        line.sep('', hl, theme.fill),
-        hl = hl,
-        margin = ' ',
-      }
-    end),
-    line.spacer(),
-    line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-      return {
-        line.sep('', theme.win, theme.fill),
-        win.is_current() and '' or '',
-        win.buf_name(),
-        line.sep('', theme.win, theme.fill),
-        hl = theme.win,
-        margin = ' ',
-      }
-    end),
-    {
-      line.sep('', theme.tail, theme.fill),
-      { '  ', hl = theme.tail },
-    },
-    hl = theme.fill,
-  }
-end)
+require('tabby').setup({
+  line = function(line)
+    return {
+      {
+        { '  ', hl = theme.head },
+        line.sep('', theme.head, theme.fill),
+      },
+      line.tabs().foreach(function(tab)
+        local hl = tab.is_current() and theme.current_tab or theme.tab
+        return {
+          line.sep('', hl, theme.fill),
+          tab.is_current() and '' or '󰆣',
+          tab.number(),
+          tab.name(),
+          tab.close_btn(''),
+          line.sep('', hl, theme.fill),
+          hl = hl,
+          margin = ' ',
+        }
+      end),
+      line.spacer(),
+      line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+        return {
+          line.sep('', theme.win, theme.fill),
+          win.is_current() and '' or '',
+          win.buf_name(),
+          line.sep('', theme.win, theme.fill),
+          hl = theme.win,
+          margin = ' ',
+        }
+      end),
+      {
+        line.sep('', theme.tail, theme.fill),
+        { '  ', hl = theme.tail },
+      },
+      hl = theme.fill,
+    }
+  end,
+  -- option = {}, -- setup modules' option,
+})
 ```
+
+> In recent versions, we use `require('tabby.tabline').set(fn, opt?)` to set up
+> the tabline. You can continue to use this.
 
 ### Examples and Gallery
 
@@ -203,17 +217,17 @@ The `{count}` is the number displayed in presets.
 
 ## Customize
 
-Customize tabby with `require('tabby.tabline').set(fn, opt?)`:
+Customize tabby with `require('tabby').setup(opts)`:
 
 ```vimdoc
-tabline.set({fn}, {opt?})                                  *tabby.tabline.set()*
+tabline.set({opts})                                             *tabby.setup()*
     Set tabline renderer function
 
     Parameters: ~
-        {fn}    A renderer function, like "function(line)"
-                - parameter: {line}, |tabby.object.line|, a Line object
-                - return: renderer node. |tabby.object.node|
-        {opt?}  |LineOption|. Option of line rendering
+      • {opts}   Options dict:
+                 • line (funtion) required: renderer function, receive a line
+                   (|tabby.object.line|), return a node (|tabby.object.node|).
+                 • option (|LineOption|) optional: renderer option.
 ```
 
 All you need is to provide a render function, that use the variable `line`
@@ -227,7 +241,8 @@ example, if you want display current directory in tabline, you can do like
 this:
 
 ```lua
-require('tabby.tabline').set(function(line)
+require('tabby').setup({
+  line = function(line)
     local cwd = ' ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' '
     return {
         {
@@ -236,7 +251,9 @@ require('tabby.tabline').set(function(line)
         },
         ".....",
     }
-end, {})
+  end,
+  option = {},
+})
 ```
 
 ### Line
@@ -552,29 +569,31 @@ api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
 You can use presets for a quick start. The preset config uses nerdfont,
 and you should use a nerdfont-patched font to display that correctly.
 
-To use preset, you can use `use_preset({name}, {opt?})`, for example:
+To use preset, you can use `setup({ preset , option? })`, for example:
 
 ```lua
-require('tabby.tabline').use_preset('active_wins_at_tail', {
-  theme = {
-    fill = 'TabLineFill',       -- tabline background
-    head = 'TabLine',           -- head element highlight
-    current_tab = 'TabLineSel', -- current tab label highlight
-    tab = 'TabLine',            -- other tab label highlight
-    win = 'TabLine',            -- window highlight
-    tail = 'TabLine',           -- tail element highlight
+require('tabby').setup({
+  preset = 'active_wins_at_tail',
+  option = {
+    theme = {
+      fill = 'TabLineFill',       -- tabline background
+      head = 'TabLine',           -- head element highlight
+      current_tab = 'TabLineSel', -- current tab label highlight
+      tab = 'TabLine',            -- other tab label highlight
+      win = 'TabLine',            -- window highlight
+      tail = 'TabLine',           -- tail element highlight
+    },
+    nerdfont = true,              -- whether use nerdfont
+    lualine_theme = nil,          -- lualine theme name
+    tab_name = {
+      name_fallback = function(tabid)
+        return tabid
+      end,
+    },
+    buf_name = {
+      mode = "'unique'|'relative'|'tail'|'shorten'",
+    },
   },
-  nerdfont = true,              -- whether use nerdfont
-  lualine_theme = nil,          -- lualine theme name
-  tab_name = {
-    name_fallback = function(tabid)
-      return tabid
-    end,
-  },
-  buf_name = {
-    mode = "'unique'|'relative'|'tail'|'shorten'",
-  },
-
 })
 ```
 
@@ -638,11 +657,3 @@ There are five `{name}` of presets:
   ![](https://user-images.githubusercontent.com/4208028/136306954-815d01df-bcf1-4e88-8621-8fb7aca4eac3.png)
 
   <!-- panvimdoc-ignore-end -->
-
-## TODO
-
-- Custom click handler
-- Telescope support
-- Style option for presets
-- Expand tabby to support statusline and winbar
-- Git info and lsp info

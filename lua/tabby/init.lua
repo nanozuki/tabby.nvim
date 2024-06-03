@@ -6,24 +6,45 @@ local tab_name = require('tabby.feature.tab_name')
 
 local tabby = {}
 
----@type TabbyConfig
+---@type TabbyLegacyConfig
 local tabby_opt = config.defaults
 
----@param cfg? TabbyConfig
+---@class TabbyConfig
+---@field line? fun(line:TabbyLine):TabbyNode
+---@field preset? 'active_wins_at_tail'|'active_wins_at_end'|'tab_with_top_win'|'active_tab_with_wins'|'tab_only'
+---@field option? TabbyLineOption|TabbyTablinePresetOption
+
+---@param cfg? TabbyConfig|TabbyLegacyConfig
+local function is_legacy_config(cfg)
+  return cfg ~= nil and (cfg.tabline ~= nil or cfg.components ~= nil or cfg.opt ~= nil)
+end
+
+---@param cfg? TabbyConfig|TabbyLegacyConfig
 function tabby.setup(cfg)
-  tabby_opt = vim.tbl_extend('force', config.defaults, cfg or {})
-
-  vim.cmd([[
-  augroup tabby_show_control
-    autocmd!
-    autocmd TabNew,TabClosed * lua require("tabby").show_tabline()
-  augroup end
-  ]])
-
-  if vim.api.nvim_get_vvar('vim_did_enter') then
-    tabby.init()
+  if is_legacy_config(cfg) then
+    -- config is TabbyLegacyConfig
+    tabby_opt = vim.tbl_extend('force', config.defaults, cfg or {})
+    vim.cmd([[
+      augroup tabby_show_control
+      autocmd!
+      autocmd TabNew,TabClosed * lua require("tabby").show_tabline()
+      augroup end
+    ]])
+    if vim.api.nvim_get_vvar('vim_did_enter') then
+      tabby.init()
+    else
+      vim.cmd("au VimEnter * lua require'tabby'.init()")
+    end
   else
-    vim.cmd("au VimEnter * lua require'tabby'.init()")
+    -- config is TabbyConfig
+    local tbl = require('tabby.tabline')
+    if cfg == nil or cfg.line == nil then
+      cfg = vim.tbl_extend('force', { preset = 'active_wins_at_tail' }, cfg or {}) ---@type TabbyConfig
+      ---@diagnostic disable-next-line: param-type-mismatch
+      tbl.use_preset(cfg.preset, cfg.option)
+    else
+      tbl.set(cfg.line, cfg.option)
+    end
   end
 end
 

@@ -2,21 +2,18 @@ local presets = require('tabby.presets')
 
 local config = {}
 
----@class TabbyConfig
+---@class TabbyLegacyConfig
 ---@field tabline? TabbyTablineOpt           high-level api
 ---@field components? fun():TabbyComponent[] low-level api
----@field opt? TabbyOption
+---@field opt? TabbyLegacyOption
 
----@class TabbyOption
+---@class TabbyLegacyOption
 ---@field show_at_least number show tabline when there are at least n tabs.
 
----@type TabbyConfig
+---@type TabbyLegacyConfig
 config.defaults = {
   tabline = presets.active_wins_at_tail,
-  showtabline = 'always',
-  opt = {
-    show_at_least = 1,
-  },
+  opt = { show_at_least = 1 },
 }
 
 return config
