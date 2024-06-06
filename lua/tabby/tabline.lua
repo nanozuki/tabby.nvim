@@ -1,4 +1,4 @@
-local builder = require('tabby.module.builder'):new()
+local builder = require('tabby.module.builder')
 local lines = require('tabby.feature.lines')
 local tab_name = require('tabby.feature.tab_name')
 local win_picker = require('tabby.feature.win_picker')
@@ -48,8 +48,9 @@ end
 function tabline.render()
   tab_name.pre_render()
   local line = lines.get_line(module.opt)
-  builder:render_element(module.fn(line), {})
-  return builder:build()
+  local b = builder:new()
+  b:render_element(module.fn(line), {})
+  return b:build()
 end
 
 local preset = {}

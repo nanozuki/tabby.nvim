@@ -3,25 +3,18 @@ local highlight = require('tabby.module.highlight')
 ---@class Tabby.LineBuilder
 ---@field strs string[]
 ---@field current_hl string
-local LineBuilder = {
-  strs = {},
-  current_hl = '',
-}
+local LineBuilder = {}
 
 ---@return Tabby.LineBuilder
 function LineBuilder:new()
   local o = { strs = {}, current_hl = '' }
-  setmetatable(o or {}, self)
-  self.__index = self
+  setmetatable(o, { __index = LineBuilder })
   return o
 end
 
 ---@param s string
 ---@param hl? string
 function LineBuilder:add(s, hl)
-  if s == '' then
-    return
-  end
   if hl ~= nil and hl ~= self.current_hl then
     self.strs[#self.strs + 1] = string.format('%%#%s#', hl)
     self.current_hl = hl
@@ -56,14 +49,14 @@ function LineBuilder:add_click(click, heads, tails)
   })
   if click[1] == 'to_tab' then
     local number = vim.api.nvim_tabpage_get_number(click[2])
-    heads[#heads + 1] = self:lazy_add('%' .. tostring(number) .. 'T')
+    heads[#heads + 1] = self:lazy_add(string.format('%%%dT', number))
     tails[#tails + 1] = self:lazy_add('%T')
   elseif click[1] == 'x_tab' then
     local number = vim.api.nvim_tabpage_get_number(click[2])
-    heads[#heads + 1] = self:lazy_add('%' .. tostring(number) .. 'X')
+    heads[#heads + 1] = self:lazy_add(string.format('%%%dX', number))
     tails[#tails + 1] = self:lazy_add('%X')
   elseif click[1] == 'customer' then
-    heads[#heads + 1] = self:lazy_add('%' .. click[2] .. '@TabbyCustomClickHandler@')
+    heads[#heads + 1] = self:lazy_add(string.format('%%%d@TabbyCustomClickHandler@', click[2]))
     tails[#tails + 1] = self:lazy_add('%X')
   end
 end
@@ -75,23 +68,19 @@ end
 function LineBuilder:add_layout(lo, heads, tails)
   vim.validate({
     lo = { lo, 'table' },
-    ['lo.justify'] = { lo.justify, 'string', true }, -- TODO: check this, it should be 'left' or 'right'?
+    ['lo.justify'] = { lo.justify, 'string', true },
     ['lo.min_width'] = { lo.min_width, 'number', true },
     ['lo.max_width'] = { lo.max_width, 'number', true },
   })
-
   -- text is: %-{min_width}.{maxwid}(<string>%)
-  local head = '%-'
+  local head = ((lo.justify or 'left') == 'right') and '%' or '%-'
   local width = ''
-  if (lo.justify or 'left') == 'right' then
-    head = '%'
-  end
   if (lo.max_width or 0) > 0 then
     width = string.format('%d.%d', lo.min_width or 0, lo.max_width or 0)
   elseif (lo.min_width or 0) > 0 then
     width = tostring(lo.min_width)
   end
-  heads[#heads + 1] = self:lazy_add(table.concat({ head, width, '(' }))
+  heads[#heads + 1] = self:lazy_add(string.format('%s%s(', head, width))
   tails[#tails + 1] = self:lazy_add('%)')
 end
 
@@ -112,15 +101,10 @@ end
 ---@param heads fun()[]
 ---@return number number of added strs
 function LineBuilder:render_element(element, heads)
-  local beg = #self.strs
-  heads = heads or {}
+  local hl_group = parse_highlight(element.hl)
   local tails = {} ---@type fun()[]
   local head_added = false
-  local hl_group = parse_highlight(element.hl)
-  local add = function(s, hl)
-    if s == '' then
-      return
-    end
+  local add = function(s, hl) -- add heads to builder if has real things to add
     if not head_added then
       if element.click ~= nil then
         self:add_click(element.click, heads, tails)
@@ -137,9 +121,11 @@ function LineBuilder:render_element(element, heads)
     self:add(s, hl)
   end
 
+  local beg = #self.strs
   local hasMargin = false
+
   for i, node in ipairs(element) do
-    if type(node) == 'string' then
+    if type(node) == 'string' and node ~= '' then
       if element.margin and i ~= 1 then
         add(element.margin, hl_group)
       end
@@ -154,7 +140,7 @@ function LineBuilder:render_element(element, heads)
         heads[#heads + 1] = self:lazy_add(element.margin, hl_group)
         hasMargin = true
       end
-      node = node ---@as TabbyElement
+      ---@cast node TabbyElement
       if node.hl == nil then
         node.hl = hl_group
       end
