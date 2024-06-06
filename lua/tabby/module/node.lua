@@ -1,10 +1,13 @@
+---@alias TabbyText string|number
+---@alias TabbyNode TabbyElement|TabbyText
+
 ---A element is a "hyper text" object
 ---@class TabbyElement
----@field [...] TabbyNode[] children node
 ---@field hl? TabbyHighlight
 ---@field lo? TabbyLayout
 ---@field click? TabbyClickHandler
 ---@field margin? string
+---@field [...] TabbyNode[] children node
 
 ---@class TabbyLayout
 ---@field justify? 'left'|'right' justify @default 'left'
@@ -24,9 +27,6 @@
 ---@class TabbyCustomHander
 ---@field [1] "custom"
 ---@field [2] number handle id
-
----@alias TabbyText string|number
----@alias TabbyNode TabbyElement|TabbyText
 
 local node = {}
 
