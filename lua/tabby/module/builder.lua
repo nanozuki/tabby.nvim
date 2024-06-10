@@ -112,10 +112,10 @@ function LineBuilder:render_element(element, heads)
       if element.lo ~= nil and (element.lo.max_width or 0 > 0 or element.lo.min_width or 0 > 0) then
         self:add_layout(element.lo, heads, tails)
       end
-      for _, fn in ipairs(heads) do
+      for i, fn in ipairs(heads) do
         fn()
+        heads[i] = nil
       end
-      heads = {}
       head_added = true
     end
     self:add(s, hl)
@@ -136,7 +136,7 @@ function LineBuilder:render_element(element, heads)
       end
       add(tostring(node), hl_group)
     elseif type(node) == 'table' then
-      if element.margin and i ~= 1 and not hasMargin then
+      if (element.margin or '') ~= '' and i ~= 1 and not hasMargin then
         heads[#heads + 1] = self:lazy_add(element.margin, hl_group)
         hasMargin = true
       end
