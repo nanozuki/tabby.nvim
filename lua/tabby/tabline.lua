@@ -48,8 +48,12 @@ end
 function tabline.render()
   tab_name.pre_render()
   local line = lines.get_line(module.opt)
+  local element = module.fn(line)
+  if element.hl == nil or element.hl == '' then
+    element.hl = 'TabLineFill'
+  end
   local b = builder:new()
-  b:render_element(module.fn(line), {})
+  b:render_element(element, {})
   return b:build()
 end
 
