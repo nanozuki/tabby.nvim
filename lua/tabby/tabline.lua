@@ -45,12 +45,34 @@ function tabline.init()
   })
 end
 
+local last_render = 0
+local cached_build
+
+local function can_render()
+  local now = vim.uv.now()
+
+  if not module.opt or not module.opt.max_refresh_ms then
+    return true
+  end
+
+  return now - last_render > module.opt.max_refresh_ms
+end
+
 function tabline.render()
-  tab_name.pre_render()
-  local line = lines.get_line(module.opt)
-  local b = builder:new()
-  b:render_element(module.fn(line), {})
-  return b:build()
+  if can_render() then
+    tab_name.pre_render()
+    local line = lines.get_line(module.opt)
+    local b = builder:new()
+    b:render_element(module.fn(line), {})
+    local new_build = b:build()
+
+    cached_build = new_build
+    last_render = vim.uv.now()
+
+    return new_build
+  else
+    return cached_build
+  end
 end
 
 local preset = {}

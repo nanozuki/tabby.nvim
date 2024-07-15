@@ -390,7 +390,8 @@ LINE OPTION                                      *tabby-customize-line-option*
         },
         buf_name = {
             mode = "'unique'|'relative'|'tail'|'shorten'",
-        }
+        },
+        max_refresh_ms = 0,
     }
 <
 
@@ -422,6 +423,9 @@ the result of every mode are:
 - tail: "user.py", "user.py", "admin.py"
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
 
+MAX_REFRESH_MS ~
+
+Do not refresh more often than the provided amount of milliseconds.
 
 TAB                                                      *tabby-customize-tab*
 

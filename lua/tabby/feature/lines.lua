@@ -26,6 +26,7 @@ end
 ---@class TabbyLineOption
 ---@field tab_name? TabbyTabNameOption
 ---@field buf_name? TabbyBufNameOption
+---@field max_refresh_ms? number
 
 ---get line object
 ---@param opt? TabbyLineOption

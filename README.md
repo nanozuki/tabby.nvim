@@ -355,7 +355,8 @@ line.api                                                        *tabby.line.api*
     },
     buf_name = {
         mode = "'unique'|'relative'|'tail'|'shorten'",
-    }
+    },
+    max_refresh_ms = 0, # 0 to disable it
 }
 ```
 
@@ -383,6 +384,10 @@ the result of every mode are:
 - relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
 - tail: "user.py", "user.py", "admin.py"
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
+
+#### max_refresh_ms
+
+Do not refresh more often than the provided amount of milliseconds.
 
 ### Tab
 
