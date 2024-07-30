@@ -1,6 +1,7 @@
 local tabwins = {}
 
 local api = require('tabby.module.api')
+local win_picker = require('tabby.feature.win_picker')
 
 ---@class TabbyTab
 ---@field id number tabid
@@ -46,6 +47,10 @@ function tabwins.new_tab(tabid, opt)
         return symbol
       else
         return ''
+      end
+    end,
+    picker = function()
+      if win_picker.toggle_alt_draw then
       end
     end,
   }

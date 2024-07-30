@@ -5,7 +5,7 @@ local win_picker = require('tabby.feature.win_picker')
 
 local tabline = {}
 
-local module = {
+tabline.cfg = {
   ---@type fun(line:TabbyLine):TabbyElement
   fn = nil,
   ---@type TabbyLineOption?
@@ -13,10 +13,10 @@ local module = {
 }
 
 ---set tabline render function
----@param fn fun(line:TabbyLine):TabbyNode
+---@param fn fun(line:TabbyLine):TabbyElement
 ---@param opt? TabbyLineOption
 function tabline.set(fn, opt)
-  module = {
+  tabline.cfg = {
     fn = fn,
     opt = opt,
   }
@@ -47,8 +47,8 @@ end
 
 function tabline.render()
   tab_name.pre_render()
-  local line = lines.get_line(module.opt)
-  local element = module.fn(line)
+  local line = lines.get_line(tabline.cfg.opt)
+  local element = tabline.cfg.fn(line)
   if element.hl == nil or element.hl == '' then
     element.hl = 'TabLineFill'
   end

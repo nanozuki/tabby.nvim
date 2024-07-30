@@ -24,4 +24,15 @@ function win_picker.select()
   end)
 end
 
+win_picker.tabline_alt_draw = false
+
+function win_picker.toggle_alt_draw()
+  win_picker.tabline_alt_draw = not win_picker.tabline_alt_draw
+  vim.cmd.redrawtabline()
+  if win_picker.tabline_alt_draw then
+    local line_opt = require('tabby.tabline').cfg.opt -- TODO: ugly, refact this
+    local tabs = tabwins.new_tabs(line_opt or {}).tabs
+  end
+end
+
 return win_picker
