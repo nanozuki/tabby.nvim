@@ -11,7 +11,8 @@ local tab_jumper = require('tabby.feature.tab_jumper')
 ---@field is_current fun():boolean return if this tab is current tab
 ---@field name fun():string return tab name
 ---@field close_btn fun(symbol:string):TabbyNode return close btn
----@field jumper fun():string return jumper
+---@field in_jump_mode fun():boolean return if tab is in jump mode
+---@field jump_char fun():TabbyNode return jumper
 
 ---new TabbyTab
 ---@param tabid number
@@ -50,7 +51,10 @@ function tabwins.new_tab(tabid, opt)
         return ''
       end
     end,
-    jumper = function()
+    in_jump_mode = function()
+      return tab_jumper.is_start
+    end,
+    jump_char = function()
       if tab_jumper.is_start then
         return tab_jumper.get_char(tabid)
       end

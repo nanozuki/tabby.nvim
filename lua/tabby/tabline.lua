@@ -36,13 +36,13 @@ function tabline.init()
       tab_name.set(0, opts.fargs[2] or '')
     elseif opts.fargs[1] == 'pick_window' then
       win_picker.select()
-    elseif opts.fargs[1] == 'jump_tab' then
+    elseif opts.fargs[1] == 'jump_to_tab' then
       tab_jumper.start()
     end
   end, {
     nargs = '+',
     complete = function(_, _, _)
-      return { 'rename_tab', 'pick_window', 'jump_tab' }
+      return { 'rename_tab', 'pick_window', 'jump_to_tab' }
     end,
   })
 end
@@ -128,9 +128,11 @@ local function preset_tab(line, tab, opt)
   local status_icon = opt.nerdfont and { '', '󰆣' } or { '+', '' }
   return {
     line.sep(left_sep(opt), hl, opt.theme.fill),
-    tab.is_current() and status_icon[1] or status_icon[2],
-    tab.jumper(),
-    tab.number(),
+    tab.in_jump_mode() and tab.jump_char() or {
+      tab.is_current() and status_icon[1] or status_icon[2],
+      tab.number(),
+      margin = ' ',
+    },
     tab.name(),
     tab.close_btn(opt.nerdfont and '' or '(x)'),
     line.sep(right_sep(opt), hl, opt.theme.fill),

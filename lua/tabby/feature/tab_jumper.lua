@@ -61,12 +61,16 @@ function tab_jumper.start()
   tab_jumper.is_start = true
 
   vim.cmd.redrawtabline()
-  local c = vim.fn.getcharstr():upper()
+  local ok, tabid = pcall(function()
+    local c = string.char(vim.fn.getchar()):upper()
+    return tab_jumper.char_to_tabid[c]
+  end)
+
   tab_jumper.is_start = false
-  if tab_jumper.char_to_tabid[c] ~= nil then
-    vim.api.nvim_set_current_tabpage(tab_jumper.char_to_tabid[c])
+  tab_jumper.reset()
+  if ok and tabid then
+    vim.api.nvim_set_current_tabpage(tabid)
   else
-    tab_jumper.reset()
     vim.cmd.redrawtabline()
   end
 end
