@@ -1,6 +1,7 @@
 local tabwins = {}
 
 local api = require('tabby.module.api')
+local tab_jumper = require('tabby.feature.tab_jumper')
 
 ---@class TabbyTab
 ---@field id number tabid
@@ -10,6 +11,8 @@ local api = require('tabby.module.api')
 ---@field is_current fun():boolean return if this tab is current tab
 ---@field name fun():string return tab name
 ---@field close_btn fun(symbol:string):TabbyNode return close btn
+---@field in_jump_mode fun():boolean return if tab is in jump mode
+---@field jump_key fun():TabbyNode return jumper
 
 ---new TabbyTab
 ---@param tabid number
@@ -47,6 +50,15 @@ function tabwins.new_tab(tabid, opt)
       else
         return ''
       end
+    end,
+    in_jump_mode = function()
+      return tab_jumper.is_start
+    end,
+    jump_key = function()
+      if tab_jumper.is_start then
+        return tab_jumper.get_char(tabid)
+      end
+      return ''
     end,
   }
 end

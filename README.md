@@ -2,8 +2,8 @@
 
 # tabby.nvim
 
-A declarative, highly configurable, and neovim style tabline plugin. Use your
-nvim tabs as a workspace multiplexer!
+A highly configurable, and neovim style tabline plugin. Use your nvim tabs as
+a workspace multiplexer!
 
 ![](https://raw.githubusercontent.com/wiki/nanozuki/tabby.nvim/assets/banner.png)
 
@@ -26,13 +26,13 @@ changes will be introduced.
 At next major version, v3, `tabby.nvim` will cleaner all deprecated apis and
 remove all vimscript.
 
-## Concept
+## Features
 
-**A line for the vim tab page, not for buffers**
+### Tabline, not bufferline
 
-A tab page in vim holds one or more windows(not buffers). You can easily switch
-between tab pages to have several collections of windows to work on different
-things.
+A line for the vim tab page, not for buffers. A tabpage in vim holds one or
+more windows(not buffers). You can easily switch between tab pages to have
+several collections of windows to work on different things.
 
 Tabline can help you use multiple tabs. Meanwhile, the bufferline is simply an
 array of opened files. As a result, Bufferline limits the power of vim,
@@ -47,12 +47,46 @@ For example, you are writing a backend service:
 - Tab4: Neogit.nvim
 ```
 
-**Declarative, highly configurable**
+### Highly configurable
 
-Tabby provides a declarative way to configure tabline. You can set the tabline
-to whatever neovim natively supports and complete the config with any lua code.
-At least that's the goal of tabby. And also, the tabby provides some presets to
-quick start or as your example.
+Tabby provides a highly configurable way to set up your personalized tabline.
+There is no DSL for config; you can write any lua codes following the type hint.
+But also, Tabby provides some presets for quick start and as your example.
+
+### Tab rename
+
+You can rename a tab by `Tabby rename_tab <tabname>`. Display the tab name by
+`tab.name()` (reference: [Tab](#Tab)) in your config. Config fallback name by
+[Line-Option](#Line-Option)
+
+### Window picker
+
+Use command `Tabby pick_window` to open a selector to pick window in tabpages.
+This picker use native neovim selector, you can use a general UI plugin to
+enhance the appearance.
+
+### Jump mode for tabs
+
+Inspired by [barbar.nvim](https://github.com/romgrk/barbar.nvim?tab=readme-ov-file#jump-to-buffer-mode).
+Type one key to jump to a tabpage.
+
+<!-- panvimdoc-ignore-start -->
+
+![](https://github.com/nanozuki/tabby.nvim/wiki/assets/tab-jump-mode.png)
+
+<!-- panvimdoc-ignore-end -->
+
+Use command `Tabby jump_to_tab` to get into jump mode. In jump mode, each tab
+have a key which displayed in tabline by `tab.jump_key()`. You can check if in
+jump mode by `tab.in_jump_mode()`. (reference: [Tab](#Tab))
+
+For example in your config:
+
+```lua
+tab.in_jump_mode() and tab.jump_key() or tab.number()
+```
+
+The jump char is also displayed in presets.
 
 ## Playground
 
@@ -183,6 +217,8 @@ If you want to quick start? That's fine, you can [Use Preset Configs](#Use-Prese
 - `Tabby rename_tab <tabname>`: Rename tab. Use name in line by `tab.name()`
   (ref: [Tab](#Tab)). Config fallback name by [Line-Option](#Line-Option)
 - `Tabby pick_window`: Open a selector to pick window in tabpages.
+- `Tabby jump_to_tab`: Get one key to jump to tabpage, each keys are displayed
+  in tabline by `tab.jump_key()`
 
 ### Key mapping example
 
@@ -427,6 +463,17 @@ tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
 
     Return: ~
         Node |tabby-node|, close button node.
+
+tab.jump_key()                                            *tabby.tab.jump_key()*
+    In jump mode, return a key to jump to this tab, otherwise return empty
+    string.
+
+    Return: ~
+        String, a key to jump to this tab.
+
+tab.in_jump_mode()                                    *tabby.tab.in_jump_mode()*
+    Return: ~
+        Boolean, if this tab is in jump mode.
 ```
 
 ### Win

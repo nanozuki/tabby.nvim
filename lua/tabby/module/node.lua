@@ -7,7 +7,7 @@
 ---@field lo? TabbyLayout
 ---@field click? TabbyClickHandler
 ---@field margin? string
----@field [...] TabbyNode[] children node
+---@field [...] TabbyNode children node
 
 ---@class TabbyLayout
 ---@field justify? 'left'|'right' justify @default 'left'

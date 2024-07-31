@@ -4,7 +4,12 @@
 Table of Contents                                    *tabby-table-of-contents*
 
 1. Compatibility and Versions               |tabby-compatibility-and-versions|
-2. Concept                                                     |tabby-concept|
+2. Features                                                   |tabby-features|
+  - Tabline, not bufferline           |tabby-features-tabline,-not-bufferline|
+  - Highly configurable                   |tabby-features-highly-configurable|
+  - Tab rename                                     |tabby-features-tab-rename|
+  - Window picker                               |tabby-features-window-picker|
+  - Jump mode for tabs                     |tabby-features-jump-mode-for-tabs|
 3. Playground                                               |tabby-playground|
 4. Install                                                     |tabby-install|
 5. Setup                                                         |tabby-setup|
@@ -46,13 +51,14 @@ remove all vimscript.
 
 
 ==============================================================================
-2. Concept                                                     *tabby-concept*
+2. Features                                                   *tabby-features*
 
-**A line for the vim tab page, not for buffers**
 
-A tab page in vim holds one or more windows(not buffers). You can easily switch
-between tab pages to have several collections of windows to work on different
-things.
+TABLINE, NOT BUFFERLINE               *tabby-features-tabline,-not-bufferline*
+
+A line for the vim tab page, not for buffers. A tabpage in vim holds one or
+more windows(not buffers). You can easily switch between tab pages to have
+several collections of windows to work on different things.
 
 Tabline can help you use multiple tabs. Meanwhile, the bufferline is simply an
 array of opened files. As a result, Bufferline limits the power of vim,
@@ -67,12 +73,46 @@ For example, you are writing a backend service:
     - Tab4: Neogit.nvim
 <
 
-**Declarative, highly configurable**
 
-Tabby provides a declarative way to configure tabline. You can set the tabline
-to whatever neovim natively supports and complete the config with any lua code.
-At least that’s the goal of tabby. And also, the tabby provides some presets
-to quick start or as your example.
+HIGHLY CONFIGURABLE                       *tabby-features-highly-configurable*
+
+Tabby provides a highly configurable way to set up your personalized tabline.
+There is no DSL for config; you can write any lua codes following the type
+hint. But also, Tabby provides some presets for quick start and as your
+example.
+
+
+TAB RENAME                                         *tabby-features-tab-rename*
+
+You can rename a tab by `Tabby rename_tab <tabname>`. Display the tab name by
+`tab.name()` (reference: |tabby-tab|) in your config. Config fallback name by
+|tabby-line-option|
+
+
+WINDOW PICKER                                   *tabby-features-window-picker*
+
+Use command `Tabby pick_window` to open a selector to pick window in tabpages.
+This picker use native neovim selector, you can use a general UI plugin to
+enhance the appearance.
+
+
+JUMP MODE FOR TABS                         *tabby-features-jump-mode-for-tabs*
+
+Inspired by barbar.nvim
+<https://github.com/romgrk/barbar.nvim?tab=readme-ov-file#jump-to-buffer-mode>.
+Type one key to jump to a tabpage.
+
+Use command `Tabby jump_to_tab` to get into jump mode. In jump mode, each tab
+have a key which displayed in tabline by `tab.jump_key()`. You can check if in
+jump mode by `tab.in_jump_mode()`. (reference: |tabby-tab|)
+
+For example in your config:
+
+>lua
+    tab.in_jump_mode() and tab.jump_key() or tab.number()
+<
+
+The jump char is also displayed in presets.
 
 
 ==============================================================================
@@ -218,6 +258,8 @@ COMMANDS                                                *tabby-setup-commands*
 - `Tabby rename_tab <tabname>`: Rename tab. Use name in line by `tab.name()`
     (ref: |tabby-tab|). Config fallback name by |tabby-line-option|
 - `Tabby pick_window`: Open a selector to pick window in tabpages.
+- `Tabby jump_to_tab`: Get one key to jump to tabpage, each keys are displayed
+    in tabline by `tab.jump_key()`
 
 
 KEY MAPPING EXAMPLE                          *tabby-setup-key-mapping-example*
@@ -465,6 +507,17 @@ tab.close_btn({symbol})                                  *tabby.tab.close_btn()*
 
     Return: ~
         Node |tabby-node|, close button node.
+
+tab.jump_key()                                            *tabby.tab.jump_key()*
+    In jump mode, return a key to jump to this tab, otherwise return empty
+    string.
+
+    Return: ~
+        String, a key to jump to this tab.
+
+tab.in_jump_mode()                                    *tabby.tab.in_jump_mode()*
+    Return: ~
+        Boolean, if this tab is in jump mode.
 
 
 WIN                                                      *tabby-customize-win*
