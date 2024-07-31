@@ -128,7 +128,7 @@ local function preset_tab(line, tab, opt)
   local status_icon = opt.nerdfont and { '', '󰆣' } or { '+', '' }
   return {
     line.sep(left_sep(opt), hl, opt.theme.fill),
-    tab.in_jump_mode() and tab.jump_char() or {
+    tab.in_jump_mode() and tab.jump_key() or {
       tab.is_current() and status_icon[1] or status_icon[2],
       tab.number(),
       margin = ' ',
