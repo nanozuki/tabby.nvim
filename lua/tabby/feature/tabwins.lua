@@ -1,7 +1,7 @@
 local tabwins = {}
 
 local api = require('tabby.module.api')
-local win_picker = require('tabby.feature.win_picker')
+local tab_jumper = require('tabby.feature.tab_jumper')
 
 ---@class TabbyTab
 ---@field id number tabid
@@ -11,6 +11,7 @@ local win_picker = require('tabby.feature.win_picker')
 ---@field is_current fun():boolean return if this tab is current tab
 ---@field name fun():string return tab name
 ---@field close_btn fun(symbol:string):TabbyNode return close btn
+---@field jumper fun():string return jumper
 
 ---new TabbyTab
 ---@param tabid number
@@ -49,9 +50,11 @@ function tabwins.new_tab(tabid, opt)
         return ''
       end
     end,
-    picker = function()
-      if win_picker.toggle_alt_draw then
+    jumper = function()
+      if tab_jumper.is_start then
+        return tab_jumper.get_char(tabid)
       end
+      return ''
     end,
   }
 end

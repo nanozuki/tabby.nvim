@@ -2,6 +2,7 @@ local builder = require('tabby.module.builder')
 local lines = require('tabby.feature.lines')
 local tab_name = require('tabby.feature.tab_name')
 local win_picker = require('tabby.feature.win_picker')
+local tab_jumper = require('tabby.feature.tab_jumper')
 
 local tabline = {}
 
@@ -31,16 +32,17 @@ function tabline.init()
   vim.o.tabline = '%!TabbyRenderTabline()'
   vim.cmd([[command! -nargs=1 TabRename lua require('tabby.feature.tab_name').set(0,<f-args>)]])
   vim.api.nvim_create_user_command('Tabby', function(opts)
-    vim.print('fargs:', opts.fargs)
     if opts.fargs[1] == 'rename_tab' then
       tab_name.set(0, opts.fargs[2] or '')
     elseif opts.fargs[1] == 'pick_window' then
       win_picker.select()
+    elseif opts.fargs[1] == 'jump_tab' then
+      tab_jumper.start()
     end
   end, {
     nargs = '+',
     complete = function(_, _, _)
-      return { 'rename_tab', 'pick_window' }
+      return { 'rename_tab', 'pick_window', 'jump_tab' }
     end,
   })
 end
@@ -48,6 +50,7 @@ end
 function tabline.render()
   tab_name.pre_render()
   local line = lines.get_line(tabline.cfg.opt)
+  tab_jumper.pre_render(line)
   local element = tabline.cfg.fn(line)
   if element.hl == nil or element.hl == '' then
     element.hl = 'TabLineFill'
@@ -126,6 +129,7 @@ local function preset_tab(line, tab, opt)
   return {
     line.sep(left_sep(opt), hl, opt.theme.fill),
     tab.is_current() and status_icon[1] or status_icon[2],
+    tab.jumper(),
     tab.number(),
     tab.name(),
     tab.close_btn(opt.nerdfont and '' or '(x)'),
