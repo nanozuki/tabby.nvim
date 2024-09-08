@@ -53,6 +53,11 @@ function api.is_not_float_win(winid)
   return vim.api.nvim_win_get_config(winid).relative == ''
 end
 
+function api.get_bufs()
+  local bufs = vim.api.nvim_list_bufs()
+  return vim.tbl_filter(vim.api.nvim_buf_is_loaded, bufs)
+end
+
 function api.get_win_buf(winid)
   return vim.api.nvim_win_get_buf(winid)
 end
