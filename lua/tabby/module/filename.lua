@@ -153,32 +153,28 @@ end
 
 ---@param winid number
 ---@return string filename
-function filename.relative(winid)
-  local bufid = vim.api.nvim_win_get_buf(winid)
+function filename.relative(bufid)
   local fname = vim.api.nvim_buf_get_name(bufid)
   return wrap_name(relative(fname))
 end
 
 ---@param winid number
 ---@return string filename
-function filename.tail(winid)
-  local bufid = vim.api.nvim_win_get_buf(winid)
+function filename.tail(bufid)
   local fname = vim.api.nvim_buf_get_name(bufid)
   return wrap_name(tail(fname))
 end
 
 ---@param winid number
 ---@return string filename
-function filename.shorten(winid)
-  local bufid = vim.api.nvim_win_get_buf(winid)
+function filename.shorten(bufid)
   local fname = vim.api.nvim_buf_get_name(bufid)
   return wrap_name(shorten(fname))
 end
 
 ---@param winid number
 ---@return string filename
-function filename.unique(winid)
-  local bufid = vim.api.nvim_win_get_buf(winid)
+function filename.unique(bufid)
   return wrap_name(unique_names:get_name(bufid))
 end
 

@@ -126,13 +126,15 @@ function tabwins.new_win(winid, opt)
     end,
     file_icon = function()
       -- require 'kyazdani42/nvim-web-devicons'
-      local name = require('tabby.module.filename').tail(winid)
+      local bufid = vim.api.nvim_win_get_buf(winid)
+      local name = require('tabby.module.filename').tail(bufid)
       local extension = vim.fn.fnamemodify(name, ':e')
       local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
     end,
     buf_name = function()
-      return require('tabby.feature.buf_name').get(winid, opt.buf_name)
+      local bufid = vim.api.nvim_win_get_buf(winid)
+      return require('tabby.feature.buf_name').get(bufid, opt.buf_name)
     end,
   }
 end
@@ -181,8 +183,21 @@ end
 function tabwins.new_buf(bufid)
   return {
     id = bufid,
+    is_current = function()
+        return vim.fn.bufnr('%') == bufid
+    end,
     is_changed = function()
       return api.get_buf_is_changed(bufid)
+    end,
+    file_icon = function()
+      -- require 'kyazdani42/nvim-web-devicons'
+      local name = require('tabby.module.filename').tail(bufid)
+      local extension = vim.fn.fnamemodify(name, ':e')
+      local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
+      return icon
+    end,
+    name = function()
+        return require('tabby.module.filename').unique(bufid)
     end,
     type = function()
       return api.get_buf_type(bufid)
