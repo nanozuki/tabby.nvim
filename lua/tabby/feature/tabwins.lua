@@ -190,4 +190,26 @@ function tabwins.new_buf(bufid)
   }
 end
 
+function tabwins.new_bufs(opt, ...)
+  local bufs = vim.tbl_map(function(bufid)
+    return tabwins.new_buf(bufid)
+  end, api.get_bufs())
+  for _, filter in ipairs({ ... }) do
+    bufs = vim.tbl_filter(filter, bufs)
+  end
+  return {
+    bufs = bufs,
+    foreach = function(fn)
+      local nodes = {}
+      for _, buf in ipairs(bufs) do
+        local node = fn(buf)
+        if node ~= nil and node ~= '' then
+          nodes[#nodes + 1] = node
+        end
+      end
+      return nodes
+    end,
+  }
+end
+
 return tabwins
