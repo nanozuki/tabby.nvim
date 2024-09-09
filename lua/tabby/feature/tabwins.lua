@@ -205,6 +205,17 @@ function tabwins.new_buf(bufid)
   }
 end
 
+local function wrap_buf_node(node, bufid)
+  if type(node) == 'string' then
+    return { node, click = { 'to_buf', bufid } }
+  elseif type(node) == 'table' then
+    node.click = { 'to_buf', bufid }
+    return node
+  else
+    return ''
+  end
+end
+
 function tabwins.new_bufs(opt, ...)
   local bufids = api.get_bufs()
   table.sort(bufids, function(a, b)
@@ -223,7 +234,7 @@ function tabwins.new_bufs(opt, ...)
       for _, buf in ipairs(bufs) do
         local node = fn(buf)
         if node ~= nil and node ~= '' then
-          nodes[#nodes + 1] = node
+          nodes[#nodes + 1] = wrap_buf_node(node, buf.id)
         end
       end
       return nodes
