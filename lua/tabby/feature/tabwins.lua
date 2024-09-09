@@ -208,7 +208,7 @@ function tabwins.new_buf(bufid)
       return icon
     end,
     name = function()
-        return require('tabby.module.filename').unique(bufid)
+        return require('tabby.module.filename').unique(bufid, true)
     end,
     type = function()
       return api.get_buf_type(bufid)

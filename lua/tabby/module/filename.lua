@@ -103,18 +103,24 @@ function unique_names:update_index()
   return not has_dup or count == 0
 end
 
-function unique_names:build()
+function unique_names:build(use_bufs)
   self.indexes = {}
   self.names = {}
 
-  local wins = vim.tbl_filter(function(winid)
-    return vim.api.nvim_win_get_config(winid).relative == ''
-  end, vim.api.nvim_list_wins())
-  local buffer_ids = {}
-  for _, winid in ipairs(wins) do
-    local bufid = vim.api.nvim_win_get_buf(winid)
-    if buffer_ids[bufid] == nil then
-      buffer_ids[bufid] = {}
+  local bufs = nil
+  if use_bufs then
+      bufs = require('tabby.module.api').get_bufs()
+  else
+      local wins = vim.tbl_filter(function(winid)
+        return vim.api.nvim_win_get_config(winid).relative == ''
+      end, vim.api.nvim_list_wins())
+      bufs = vim.tbl_map(vim.api.nvim_win_get_buf, wins)
+  end
+
+  local processed = {}
+  for _, bufid in ipairs(bufs) do
+    if not processed[bufid] then
+      processed[bufid] = true
       local name = vim.api.nvim_buf_get_name(bufid)
       if name == '' then
         self:set(bufid, noname_placeholder)
@@ -133,9 +139,9 @@ end
 
 ---@param bufid number
 ---@return string
-function unique_names:get_name(bufid)
+function unique_names:get_name(bufid, use_bufs)
   if self.names == nil then
-    self:build()
+    self:build(use_bufs)
   end
   return self.names[bufid]
 end
@@ -174,8 +180,9 @@ end
 
 ---@param winid number
 ---@return string filename
-function filename.unique(bufid)
-  return wrap_name(unique_names:get_name(bufid))
+function filename.unique(bufid, use_bufs)
+  bufs = bufs or false
+  return wrap_name(unique_names:get_name(bufid, use_bufs))
 end
 
 return filename
