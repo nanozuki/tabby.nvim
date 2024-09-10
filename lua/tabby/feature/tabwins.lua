@@ -217,13 +217,9 @@ local function wrap_buf_node(node, bufid)
 end
 
 function tabwins.new_bufs(opt, ...)
-  local bufids = api.get_bufs()
-  table.sort(bufids, function(a, b)
-    return vim.api.nvim_buf_get_name(a) < vim.api.nvim_buf_get_name(b)
-  end)
   local bufs = vim.tbl_map(function(bufid)
     return tabwins.new_buf(bufid)
-  end, bufids)
+  end, api.get_bufs())
   for _, filter in ipairs({ ... }) do
     bufs = vim.tbl_filter(filter, bufs)
   end
