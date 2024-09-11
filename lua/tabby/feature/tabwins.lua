@@ -87,13 +87,16 @@ function tabwins.new_tabs(opt)
   end, api.get_tabs())
   return {
     tabs = tabs,
-    foreach = function(fn)
+    foreach = function(fn, params)
       local nodes = {}
       for _, tab in ipairs(tabs) do
         local node = fn(tab)
         if node ~= nil and node ~= '' then
           nodes[#nodes + 1] = wrap_tab_node(node, tab.id)
         end
+      end
+      if params ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, params)
       end
       return nodes
     end,
@@ -157,13 +160,16 @@ function tabwins.new_wins(win_ids, opt, ...)
   end
   return {
     wins = wins,
-    foreach = function(fn)
+    foreach = function(fn, params)
       local nodes = {}
       for _, win in ipairs(wins) do
         local node = fn(win)
         if node ~= nil and node ~= '' then
           nodes[#nodes + 1] = node
         end
+      end
+      if params ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, params)
       end
       return nodes
     end,
