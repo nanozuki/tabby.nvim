@@ -89,8 +89,8 @@ function tabwins.new_tabs(opt)
     tabs = tabs,
     foreach = function(fn, params)
       local nodes = {}
-      for _, tab in ipairs(tabs) do
-        local node = fn(tab)
+      for i, tab in ipairs(tabs) do
+        local node = fn(tab, i, #tabs)
         if node ~= nil and node ~= '' then
           nodes[#nodes + 1] = wrap_tab_node(node, tab.id)
         end
@@ -162,8 +162,8 @@ function tabwins.new_wins(win_ids, opt, ...)
     wins = wins,
     foreach = function(fn, params)
       local nodes = {}
-      for _, win in ipairs(wins) do
-        local node = fn(win)
+      for i, win in ipairs(wins) do
+        local node = fn(win, i, #wins)
         if node ~= nil and node ~= '' then
           nodes[#nodes + 1] = node
         end
