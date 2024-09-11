@@ -8,6 +8,7 @@ local filename = require('tabby.module.filename')
 ---@type TabbyBufNameOption
 local default_option = {
   mode = 'unique',
+  override = function() return nil end,
 }
 
 function buf_name.set_default_option(opt)
@@ -22,6 +23,11 @@ function buf_name.get(winid, opt)
   local o = default_option
   if opt ~= nil then
     o = vim.tbl_deep_extend('force', default_option, opt)
+  end
+  local bufid = vim.api.nvim_win_get_buf(winid)
+  local override = o.override(bufid)
+  if override ~= nil then
+      return override
   end
   if o.mode == 'unique' then
     return buf_name.get_unique_name(winid)
