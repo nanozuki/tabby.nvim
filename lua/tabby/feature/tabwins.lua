@@ -71,7 +71,9 @@ local function wrap_tab_node(node, tabid)
   if type(node) == 'string' then
     return { node, click = { 'to_tab', tabid } }
   elseif type(node) == 'table' then
-    node.click = { 'to_tab', tabid }
+    if node.click == nil then
+      node.click = { 'to_tab', tabid }
+    end
     return node
   else
     return ''
@@ -87,7 +89,7 @@ function tabwins.new_tabs(opt)
   end, api.get_tabs())
   return {
     tabs = tabs,
-    foreach = function(fn, params)
+    foreach = function(fn, props)
       local nodes = {}
       for i, tab in ipairs(tabs) do
         local node = fn(tab, i, #tabs)
@@ -95,8 +97,8 @@ function tabwins.new_tabs(opt)
           nodes[#nodes + 1] = wrap_tab_node(node, tab.id)
         end
       end
-      if params ~= nil then
-        nodes = vim.tbl_extend('keep', nodes, params)
+      if props ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, props)
       end
       return nodes
     end,
@@ -160,7 +162,7 @@ function tabwins.new_wins(win_ids, opt, ...)
   end
   return {
     wins = wins,
-    foreach = function(fn, params)
+    foreach = function(fn, props)
       local nodes = {}
       for i, win in ipairs(wins) do
         local node = fn(win, i, #wins)
@@ -168,8 +170,8 @@ function tabwins.new_wins(win_ids, opt, ...)
           nodes[#nodes + 1] = node
         end
       end
-      if params ~= nil then
-        nodes = vim.tbl_extend('keep', nodes, params)
+      if props ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, props)
       end
       return nodes
     end,
