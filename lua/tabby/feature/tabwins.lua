@@ -195,7 +195,7 @@ function tabwins.new_buf(bufid)
   return {
     id = bufid,
     is_current = function()
-        return vim.fn.bufnr('%') == bufid
+      return vim.fn.bufnr('%') == bufid
     end,
     is_changed = function()
       return api.get_buf_is_changed(bufid)
@@ -208,7 +208,7 @@ function tabwins.new_buf(bufid)
       return icon
     end,
     name = function()
-        return require('tabby.module.filename').unique(bufid, true)
+      return require('tabby.module.filename').unique(bufid, true)
     end,
     type = function()
       return api.get_buf_type(bufid)

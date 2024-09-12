@@ -44,7 +44,7 @@ function lines.get_line(opt)
       return tabwins.new_wins(api.get_tab_wins(tabid), opt, ...)
     end,
     bufs = function(...)
-        return tabwins.new_bufs(opt, ...)
+      return tabwins.new_bufs(opt, ...)
     end,
     sep = function(symbol, cur_hl, back_hl)
       local cur_hl_obj = ensure_hl_obj(cur_hl)

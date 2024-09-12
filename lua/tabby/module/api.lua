@@ -54,14 +54,14 @@ function api.is_not_float_win(winid)
 end
 
 function api.get_bufs()
-    local bufinfo = vim.fn.getbufinfo()
-    local bufs = {}
-    for _, buf in ipairs(bufinfo) do
-        if vim.api.nvim_buf_is_valid(buf.bufnr) and buf.listed == 1 then
-            bufs[#bufs + 1] = buf.bufnr
-        end
+  local bufinfo = vim.fn.getbufinfo()
+  local bufs = {}
+  for _, buf in ipairs(bufinfo) do
+    if vim.api.nvim_buf_is_valid(buf.bufnr) and buf.listed == 1 then
+      bufs[#bufs + 1] = buf.bufnr
     end
-    return bufs
+  end
+  return bufs
 end
 
 function api.get_win_buf(winid)

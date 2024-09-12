@@ -109,12 +109,12 @@ function unique_names:build(use_bufs)
 
   local bufs = nil
   if use_bufs then
-      bufs = require('tabby.module.api').get_bufs()
+    bufs = require('tabby.module.api').get_bufs()
   else
-      local wins = vim.tbl_filter(function(winid)
-        return vim.api.nvim_win_get_config(winid).relative == ''
-      end, vim.api.nvim_list_wins())
-      bufs = vim.tbl_map(vim.api.nvim_win_get_buf, wins)
+    local wins = vim.tbl_filter(function(winid)
+      return vim.api.nvim_win_get_config(winid).relative == ''
+    end, vim.api.nvim_list_wins())
+    bufs = vim.tbl_map(vim.api.nvim_win_get_buf, wins)
   end
 
   local processed = {}
