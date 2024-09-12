@@ -391,6 +391,7 @@ line.api                                                        *tabby.line.api*
     },
     buf_name = {
         mode = "'unique'|'relative'|'tail'|'shorten'",
+        override = function(bufid) return nil end,
     }
 }
 ```
@@ -419,6 +420,12 @@ the result of every mode are:
 - relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
 - tail: "user.py", "user.py", "admin.py"
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
+
+Additionally, you can override the default name of the buffer by providing
+`option.buf_name.override` function (ref: [Line Option](#Line Option)) which is
+going to force tabby to display whatever string it returns, unless it is `nil`,
+in which case it falls back to default behavior. It can be used to display a
+more meaningful name for temporary buffers, like ones used by [vim-fugitive](https://github.com/tpope/vim-fugitive).
 
 ### Tab
 
@@ -639,6 +646,7 @@ require('tabby').setup({
     },
     buf_name = {
       mode = "'unique'|'relative'|'tail'|'shorten'",
+      override = function(bufid) return nil end,
     },
   },
 })
