@@ -347,6 +347,20 @@ line.wins_in_tab({tabid}, {filter...}).foreach({callback})
     Example: ~
         - Don't display NvimTree: See |tabby.line.wins().foreach()|.
 
+                                            *tabby.line.bufs().foreach()*
+line.bufs({filter...}).foreach({callback})
+    Use callback function to renderer every bufs.
+
+    Parameters: ~
+        {filter...}  Filter functions. Each function receive a |tabby-buf| and
+                     return a boolean. If filter return false, this window won't
+                     be displayed in tabline.
+        {callback}   Function, receive a Buf |tabby-buf|, return a
+                     Node |tabby-node|. Skip render when return is empty string.
+
+    Return: ~
+        Node |tabby-node|, rendered result of all bufs.
+
 line.spacer()                                              *tabby.line.spacer()*
     Separation point between alignment sections. Each section will be separated
     by an equal number of spaces.
@@ -520,12 +534,33 @@ buf.id                                                            *tabby.buf.id*
     id of buffer, buffer handle for nvim api.
 
 
+buf.is_current()                                        *tabby.buf.is_current()*
+
+    Return: ~
+        Boolean, if this buffer is a buffer of the current window.
+
+
 buf.is_changed()                                        *tabby.buf.is_changed()*
     Get if buffer is changed.
 
     Return: ~
         boolean, true if there are unwritten changes, false if not
         <https://neovim.io/doc/user/options.html#'buftype'> for details.
+
+
+buf.file_icon()                                          *tabby.buf.file_icon()*
+    Get file icon of filetype. You need to installed plugin
+    'kyazdani42/nvim-web-devicons'.
+
+    Return: ~
+        Node |tabby-node|, file icon.
+
+
+buf.name()                                                    *tabby.buf.name()*
+
+    Return: ~
+        String, name of this buffer. You can specify the form by using
+        option ".buf_name.mode" in LineOption |tabby-line-option|.
 
 
 buf.type()                                                    *tabby.buf.type()*
@@ -609,6 +644,9 @@ api.is_float_win({winid})                             *tabby.api.is_float_win()*
 
 api.is_not_float_win({winid})                     *tabby.api.is_not_float_win()*
     Return true if this window is not floating.
+
+api.get_bufs()                                            *tabby.api.get_bufs()*
+    Get all listed buf ids
 ```
 
 ## Use Presets
