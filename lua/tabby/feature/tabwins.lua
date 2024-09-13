@@ -125,6 +125,9 @@ function tabwins.new_win(winid, opt)
       return api.get_tab_current_win(api.get_win_tab(winid)) == winid
     end,
     file_icon = function()
+      if vim.fn.isdirectory(vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(winid))) == 1 then
+        return ''
+      end
       -- require 'kyazdani42/nvim-web-devicons'
       local name = require('tabby.module.filename').tail(winid)
       local extension = vim.fn.fnamemodify(name, ':e')
