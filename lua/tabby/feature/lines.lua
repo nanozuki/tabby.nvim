@@ -9,6 +9,7 @@ local tabwins = require('tabby.feature.tabwins')
 ---@field tabs fun():TabbyTabs return all tabs
 ---@field wins fun(...:WinFilter):TabbyWins return all wins
 ---@field wins_in_tab fun(tabid:number,...:WinFilter):TabbyWins return all wins in that tab
+---@field bufs fun(...:BufFilter):TabbyBufs return all bufs
 ---@field sep fun(symbol:string,cur_hl:TabbyHighlight,back_hl:TabbyHighlight):TabbyNode make a separator
 ---@field spacer fun():TabbyNode Separation point between alignment sections. Each section will be separated by an equal number of spaces.
 ---@field truncate_point fun():TabbyNode Where to truncate line if too long. Default is at the start. Only first point will be active.

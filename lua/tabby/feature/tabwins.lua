@@ -153,7 +153,7 @@ end
 
 ---@alias WinFilter fun(win:TabbyWin):boolean filter for window
 
----new win object
+---new TabbyWins
 ---@param win_ids number[] win id list
 ---@param opt TabbyLineOption
 ---@param ... WinFilter
@@ -185,13 +185,17 @@ end
 
 ---@class TabbyBuf
 ---@field id number buffer id
+---@field is_current fun():boolean return if buffer is a buffer of the current window
 ---@field is_changed fun():boolean return if buffer is changed
+---@field file_icon fun():string? file icon, require devicons
+---@field name fun():string file name
 ---@field type fun():string return buffer type
 
----new buf object
----@param bufid any
----@return table
-function tabwins.new_buf(bufid)
+---new TabbyBuf
+---@param bufid number
+---@param opt TabbyLineOption
+---@return TabbyBuf
+function tabwins.new_buf(bufid, opt)
   return {
     id = bufid,
     is_current = function()
@@ -216,6 +220,12 @@ function tabwins.new_buf(bufid)
   }
 end
 
+---@class TabbyBufs
+---@field bufs TabbyBuf[] buffers
+---@field foreach fun(fn:fun(buf:TabbyBuf):TabbyNode):TabbyNode render bufs by given render function
+
+---@alias BufFilter fun(buf:TabbyBuf):boolean filter for buffer
+
 local function wrap_buf_node(node, bufid)
   if type(node) == 'string' then
     return { node, click = { 'to_buf', bufid } }
@@ -227,6 +237,10 @@ local function wrap_buf_node(node, bufid)
   end
 end
 
+---new TabbyBufs
+---@param opt TabbyLineOption
+---@param ... BufFilter
+---@return TabbyBufs
 function tabwins.new_bufs(opt, ...)
   local bufs = vim.tbl_map(function(bufid)
     return tabwins.new_buf(bufid, opt)

@@ -11,6 +11,7 @@ local api = {}
 ---@field get_win_tab fun(winid):number get tab of this win
 ---@field is_float_win fun(winid:number):boolean return true if this window is floating
 ---@field is_not_float_win fun(winid:number):boolean return true if this window is not floating
+---@field get_bufs fun():number[] get all listed buffers
 ---@field get_win_buf fun(winid:number):number get buffer of this window
 ---@field get_buf_type fun(bufid:number):string get buffer type
 ---@field get_buf_is_changed fun(bufid:number):boolean get buffer is changed
