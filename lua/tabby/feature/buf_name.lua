@@ -18,13 +18,13 @@ end
 ---@param winid number
 ---@param opt? TabbyBufNameOption
 ---@return string
-function buf_name.get(bufid, opt)
+function buf_name.get(bufid, opt, use_bufs)
   local o = default_option
   if opt ~= nil then
     o = vim.tbl_deep_extend('force', default_option, opt)
   end
   if o.mode == 'unique' then
-    return buf_name.get_unique_name(bufid)
+    return buf_name.get_unique_name(bufid, use_bufs)
   elseif o.mode == 'relative' then
     return buf_name.get_relative_name(bufid)
   elseif o.mode == 'tail' then
@@ -38,8 +38,8 @@ end
 
 ---@param winid number
 ---@return string filename
-function buf_name.get_unique_name(bufid)
-  return filename.unique(bufid)
+function buf_name.get_unique_name(bufid, use_bufs)
+  return filename.unique(bufid, use_bufs)
 end
 
 ---@param winid number
