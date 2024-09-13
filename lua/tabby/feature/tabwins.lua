@@ -119,7 +119,7 @@ function tabwins.new_win(winid, opt)
       return tabwins.new_tab(api.get_win_tab(winid), opt)
     end,
     buf = function()
-      return tabwins.new_buf(api.get_win_buf(winid))
+      return tabwins.new_buf(api.get_win_buf(winid), opt)
     end,
     is_current = function()
       return api.get_tab_current_win(api.get_win_tab(winid)) == winid
@@ -197,7 +197,7 @@ function tabwins.new_buf(bufid)
       return icon
     end,
     name = function()
-      return require('tabby.module.filename').unique(bufid, true)
+      return require('tabby.feature.buf_name').get(bufid, opt.buf_name, true)
     end,
     type = function()
       return api.get_buf_type(bufid)
@@ -218,7 +218,7 @@ end
 
 function tabwins.new_bufs(opt, ...)
   local bufs = vim.tbl_map(function(bufid)
-    return tabwins.new_buf(bufid)
+    return tabwins.new_buf(bufid, opt)
   end, api.get_bufs())
   for _, filter in ipairs({ ... }) do
     bufs = vim.tbl_filter(filter, bufs)
