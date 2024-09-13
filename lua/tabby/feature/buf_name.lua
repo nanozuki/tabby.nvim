@@ -3,7 +3,8 @@ local buf_name = {}
 local filename = require('tabby.module.filename')
 
 ---@class TabbyBufNameOption
----@field mode 'unique'|'relative'|'tail'|'shorten' @defult unique
+---@field mode 'unique'|'relative'|'tail'|'shorten' @default unique
+---@field override fun(bufid:number):string?
 
 ---@type TabbyBufNameOption
 local default_option = {

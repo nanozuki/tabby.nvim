@@ -23,7 +23,7 @@ local function clear_tab_label(tabid, active)
   local name = tab_name.get_raw(tabid)
   local number = vim.api.nvim_tabpage_get_number(tabid)
   local wins = api.get_tab_wins(tabid)
-  local labels = {}
+  local labels
   if name == '' then
     labels = { '', icon, number, string.format('[%d]', #wins), '' }
   else

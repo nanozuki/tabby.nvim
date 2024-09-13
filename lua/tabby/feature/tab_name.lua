@@ -13,7 +13,7 @@ local default_option = {
   name_fallback = function(tabid)
     local wins = api.get_tab_wins(tabid)
     local cur_win = api.get_tab_current_win(tabid)
-    local name = ''
+    local name
     if api.is_float_win(cur_win) then
       name = '[Floating]'
     else
