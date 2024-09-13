@@ -138,6 +138,7 @@ function unique_names:build(use_bufs)
 end
 
 ---@param bufid number
+---@param use_bufs boolean
 ---@return string
 function unique_names:get_name(bufid, use_bufs)
   if self.names == nil then
@@ -179,6 +180,7 @@ function filename.shorten(bufid)
 end
 
 ---@param winid number
+---@param use_bufs boolean
 ---@return string filename
 function filename.unique(bufid, use_bufs)
   bufs = bufs or false
