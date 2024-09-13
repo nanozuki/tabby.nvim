@@ -65,7 +65,7 @@ end
 
 ---@class TabbyTabs
 ---@field tabs TabbyTab[] tabs
----@field foreach fun(fn:fun(tab:TabbyTab):TabbyNode):TabbyNode render tabs by given render function
+---@field foreach fun(fn:fun(tab:TabbyTab,i:number,n:number):TabbyNode,props:TabbyNode):TabbyNode render tabs by given render function
 
 local function wrap_tab_node(node, tabid)
   if type(node) == 'string' then
@@ -144,7 +144,7 @@ end
 
 ---@class TabbyWins
 ---@field wins TabbyWin[] windows
----@field foreach fun(fn:fun(win:TabbyWin):TabbyNode):TabbyNode render wins by given render function
+---@field foreach fun(fn:fun(win:TabbyWin,i:number,n:number):TabbyNode,props:TabbyNode):TabbyNode render wins by given render function
 
 ---@alias WinFilter fun(win:TabbyWin):boolean filter for window
 
