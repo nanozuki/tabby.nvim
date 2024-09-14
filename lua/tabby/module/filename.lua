@@ -3,7 +3,7 @@ local filename = {}
 vim.cmd([[
   augroup highlight_cache
     autocmd!
-    autocmd WinNew,WinClosed,BufWinEnter,BufWinLeave * lua require("tabby.module.filename").flush_unique_name_cache()
+    autocmd WinNew,WinClosed,BufWinEnter,BufWinLeave,BufDelete * lua require("tabby.module.filename").flush_unique_name_cache()
   augroup end
 ]])
 
