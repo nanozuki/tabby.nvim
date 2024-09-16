@@ -7,8 +7,6 @@ vim.cmd([[
   augroup end
 ]])
 
-local noname_placeholder = '[No Name]'
-
 local function relative(name)
   return vim.fn.fnamemodify(name, ':~:.')
 end
@@ -117,7 +115,7 @@ function unique_names:build()
       buffer_ids[bufid] = {}
       local name = vim.api.nvim_buf_get_name(bufid)
       if name == '' then
-        self:set(bufid, noname_placeholder)
+        self:set(bufid, name)
       else
         name = relative(name)
         self:insert_index(bufid, tail(name), head(name))
@@ -144,42 +142,46 @@ function filename.flush_unique_name_cache()
   unique_names:init()
 end
 
-local function wrap_name(name)
+local function wrap_name(name, placeholder)
   if (name or '') == '' then
-    return noname_placeholder
+    return placeholder or '[No Name]'
   end
   return name
 end
 
 ---@param winid number
+---@param placeholder string?
 ---@return string filename
-function filename.relative(winid)
+function filename.relative(winid, placeholder)
   local bufid = vim.api.nvim_win_get_buf(winid)
   local fname = vim.api.nvim_buf_get_name(bufid)
-  return wrap_name(relative(fname))
+  return wrap_name(relative(fname), placeholder)
 end
 
 ---@param winid number
+---@param placeholder string?
 ---@return string filename
-function filename.tail(winid)
+function filename.tail(winid, placeholder)
   local bufid = vim.api.nvim_win_get_buf(winid)
   local fname = vim.api.nvim_buf_get_name(bufid)
-  return wrap_name(tail(fname))
+  return wrap_name(tail(fname), placeholder)
 end
 
 ---@param winid number
+---@param placeholder string?
 ---@return string filename
-function filename.shorten(winid)
+function filename.shorten(winid, placeholder)
   local bufid = vim.api.nvim_win_get_buf(winid)
   local fname = vim.api.nvim_buf_get_name(bufid)
-  return wrap_name(shorten(fname))
+  return wrap_name(shorten(fname), placeholder)
 end
 
 ---@param winid number
+---@param placeholder string?
 ---@return string filename
-function filename.unique(winid)
+function filename.unique(winid, placeholder)
   local bufid = vim.api.nvim_win_get_buf(winid)
-  return wrap_name(unique_names:get_name(bufid))
+  return wrap_name(unique_names:get_name(bufid), placeholder)
 end
 
 return filename
