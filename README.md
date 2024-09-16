@@ -295,25 +295,30 @@ require('tabby').setup({
 ### Line
 
 ```vimdoc
-line.tabs().foreach({callback})                    *tabby.line.tabs().foreach()*
+line.tabs().foreach({callback}, {params})          *tabby.line.tabs().foreach()*
     Use callback function to renderer every tabs.
 
     Parameters: ~
-        {callback}  Function, receive a Tab |tabby-tab|, return a
-                    Node |tabby-node|. Skip render when return is empty string.
+        {callback}  Function, receive a Tab |tabby-tab|, index and number of
+                    tabs, return a Node |tabby-node|. Skip render when return is
+                    empty string.
+        {props}     Additional properties added to the returned node.
 
     Return: ~
         Node |tabby-node|, rendered result of all tabs.
 
-line.wins({filter...}).foreach({callback})         *tabby.line.wins().foreach()*
+                                                   *tabby.line.wins().foreach()*
+line.wins({filter...}).foreach({callback}, {props})
     Use callback function to renderer every wins.
 
     Parameters: ~
         {filter...}  Filter functions. Each function receive a |tabby-win| and
                      return a boolean. If filter return false, this window won't
                      be displayed in tabline.
-        {callback}   Function, receive a Win |tabby-win|, return a
-                     Node |tabby-node|. Skip render when return is empty string.
+        {callback}   Function, receive a Win |tabby-win|, index and number of
+                     wins, return a Node |tabby-node|. Skip render when return
+                     is empty string.
+        {props}      Additional properties added to the returned node.
 
     Return: ~
         Node |tabby-node|, rendered result of all wins.
@@ -338,8 +343,9 @@ line.wins_in_tab({tabid}, {filter...}).foreach({callback})
         {filter...}  Filter functions. Each function receive a |tabby-win| and
                      return a boolean. If filter return false, this window won't
                      be displayed in tabline.
-        {callback}   Function, receive a Win |tabby-win|, return a
-                     Node |tabby-node|. Skip render when return is empty string.
+        {callback}   Function, receive a Win |tabby-win|, index and number of
+                     wins, return a Node |tabby-node|. Skip render when return
+                     is empty string.
 
     Return: ~
         Node |tabby-node|, rendered result of all wins in specified tab.
