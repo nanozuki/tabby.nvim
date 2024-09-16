@@ -6,6 +6,13 @@ function! TabbyCustomClickHandler(minwid, clicks, btn, modifiers) abort
         \)
 endfunction
 
+function! TabbyOpenBuffer(minwid, clicks, btn, modifiers) abort
+    " Run the following code only on a single left mouse button click without modifiers pressed
+    if a:clicks == 1 && a:btn is# 'l' && a:modifiers !~# '[^ ]'
+        execute 'buffer' a:minwid
+    endif
+endfunction
+
 function! TabbyTabline() abort
     return luaeval("require'tabby'.update()")
 endfunction

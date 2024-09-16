@@ -124,7 +124,7 @@ function tabwins.new_win(winid, opt)
       return tabwins.new_tab(api.get_win_tab(winid), opt)
     end,
     buf = function()
-      return tabwins.new_buf(api.get_win_buf(winid))
+      return tabwins.new_buf(api.get_win_buf(winid), opt)
     end,
     is_current = function()
       return api.get_tab_current_win(api.get_win_tab(winid)) == winid
@@ -134,13 +134,15 @@ function tabwins.new_win(winid, opt)
         return ''
       end
       -- require 'kyazdani42/nvim-web-devicons'
-      local name = require('tabby.module.filename').tail(winid)
+      local bufid = vim.api.nvim_win_get_buf(winid)
+      local name = require('tabby.module.filename').tail(bufid)
       local extension = vim.fn.fnamemodify(name, ':e')
       local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
     end,
     buf_name = function()
-      return require('tabby.feature.buf_name').get(winid, opt.buf_name)
+      local bufid = vim.api.nvim_win_get_buf(winid)
+      return require('tabby.feature.buf_name').get(bufid, opt.buf_name)
     end,
   }
 end
@@ -151,7 +153,7 @@ end
 
 ---@alias WinFilter fun(win:TabbyWin):boolean filter for window
 
----new win object
+---new TabbyWins
 ---@param win_ids number[] win id list
 ---@param opt TabbyLineOption
 ---@param ... WinFilter
@@ -183,20 +185,80 @@ end
 
 ---@class TabbyBuf
 ---@field id number buffer id
+---@field is_current fun():boolean return if buffer is a buffer of the current window
 ---@field is_changed fun():boolean return if buffer is changed
+---@field file_icon fun():string? file icon, require devicons
+---@field name fun():string file name
 ---@field type fun():string return buffer type
 
----new buf object
----@param bufid any
----@return table
-function tabwins.new_buf(bufid)
+---new TabbyBuf
+---@param bufid number
+---@param opt TabbyLineOption
+---@return TabbyBuf
+function tabwins.new_buf(bufid, opt)
   return {
     id = bufid,
+    is_current = function()
+      return vim.fn.bufnr('%') == bufid
+    end,
     is_changed = function()
       return api.get_buf_is_changed(bufid)
     end,
+    file_icon = function()
+      -- require 'kyazdani42/nvim-web-devicons'
+      local name = require('tabby.module.filename').tail(bufid)
+      local extension = vim.fn.fnamemodify(name, ':e')
+      local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
+      return icon
+    end,
+    name = function()
+      return require('tabby.feature.buf_name').get(bufid, opt.buf_name, true)
+    end,
     type = function()
       return api.get_buf_type(bufid)
+    end,
+  }
+end
+
+---@class TabbyBufs
+---@field bufs TabbyBuf[] buffers
+---@field foreach fun(fn:fun(buf:TabbyBuf):TabbyNode):TabbyNode render bufs by given render function
+
+---@alias BufFilter fun(buf:TabbyBuf):boolean filter for buffer
+
+local function wrap_buf_node(node, bufid)
+  if type(node) == 'string' then
+    return { node, click = { 'to_buf', bufid } }
+  elseif type(node) == 'table' then
+    node.click = { 'to_buf', bufid }
+    return node
+  else
+    return ''
+  end
+end
+
+---new TabbyBufs
+---@param opt TabbyLineOption
+---@param ... BufFilter
+---@return TabbyBufs
+function tabwins.new_bufs(opt, ...)
+  local bufs = vim.tbl_map(function(bufid)
+    return tabwins.new_buf(bufid, opt)
+  end, api.get_bufs())
+  for _, filter in ipairs({ ... }) do
+    bufs = vim.tbl_filter(filter, bufs)
+  end
+  return {
+    bufs = bufs,
+    foreach = function(fn)
+      local nodes = {}
+      for _, buf in ipairs(bufs) do
+        local node = fn(buf)
+        if node ~= nil and node ~= '' then
+          nodes[#nodes + 1] = wrap_buf_node(node, buf.id)
+        end
+      end
+      return nodes
     end,
   }
 end

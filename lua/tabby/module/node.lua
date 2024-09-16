@@ -14,7 +14,7 @@
 ---@field max_width? number maximum width
 ---@field min_width? number minimum width
 
----@alias TabbyClickHandler TabbyClickTab|TabbyCloseTab|TabbyCustomHander
+---@alias TabbyClickHandler TabbyClickTab|TabbyCloseTab|TabbyClickBuf|TabbyCustomHander
 
 ---@class TabbyClickTab
 ---@field [1] "to_tab"
@@ -23,6 +23,10 @@
 ---@class TabbyCloseTab
 ---@field [1] "x_tab"
 ---@field [2] number tabid
+
+---@class TabbyClickBuf
+---@field [1] "to_buf"
+---@field [2] number bufid
 
 ---@class TabbyCustomHander
 ---@field [1] "custom"

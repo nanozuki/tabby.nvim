@@ -34,7 +34,8 @@ end
 ---@param winid number
 ---@return string bufname
 function win.get_bufname(winid)
-  return buf_name.get(winid)
+  local bufid = vim.api.nvim_win_get_buf(winid)
+  return buf_name.get(bufid)
 end
 
 ---list all win id

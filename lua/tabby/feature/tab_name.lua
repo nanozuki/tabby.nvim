@@ -17,7 +17,8 @@ local default_option = {
     if api.is_float_win(cur_win) then
       name = '[Floating]'
     else
-      name = buf_name.get(cur_win)
+      local bufid = vim.api.nvim_win_get_buf(cur_win)
+      name = buf_name.get(bufid)
     end
     if #wins > 1 then
       name = string.format('%s[%d+]', name, #wins - 1)

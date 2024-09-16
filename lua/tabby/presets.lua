@@ -34,7 +34,8 @@ end
 
 local function win_label(winid, top)
   local icon = top and '' or ''
-  return string.format(' %s %s ', icon, filename.unique(winid))
+  local bufid = vim.api.nvim_win_get_buf(winid)
+  return string.format(' %s %s ', icon, filename.unique(bufid))
 end
 
 presets.active_wins_at_tail = {
@@ -214,8 +215,9 @@ presets.tab_with_top_win = {
   },
   active_win = {
     label = function(winid)
+      local bufid = vim.api.nvim_win_get_buf(winid)
       return {
-        string.format(' %s ', filename.unique(winid)),
+        string.format(' %s ', filename.unique(bufid)),
         hl = hl_normal,
       }
     end,
@@ -224,8 +226,9 @@ presets.tab_with_top_win = {
   },
   win = {
     label = function(winid)
+      local bufid = vim.api.nvim_win_get_buf(winid)
       return {
-        string.format(' %s ', filename.unique(winid)),
+        string.format(' %s ', filename.unique(bufid)),
         hl = hl_normal,
       }
     end,
