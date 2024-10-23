@@ -142,7 +142,7 @@ function tabwins.new_win(winid, opt)
     end,
     buf_name = function()
       local bufid = vim.api.nvim_win_get_buf(winid)
-      return require('tabby.feature.buf_name').get(bufid, opt.buf_name)
+      return require('lua.tabby.feature.win_name').get(bufid, opt.buf_name)
     end,
   }
 end
@@ -212,7 +212,7 @@ function tabwins.new_buf(bufid, opt)
       return icon
     end,
     name = function()
-      return require('tabby.feature.buf_name').get(bufid, opt.buf_name, true)
+      return require('tabby.feature.buf_name').get(bufid, opt.buf_name)
     end,
     type = function()
       return api.get_buf_type(bufid)
