@@ -1,4 +1,4 @@
-local FileNameResolver = require('tabby.module.filename_resolver')
+local FileNameResolver = require('tabby.module.file_name_resolver')
 local api = require('tabby.module.api')
 
 local win_name = {}
@@ -15,7 +15,7 @@ function win_name.set_default_option(opt)
   default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
-local resolver = FileNameResolver.new({
+local resolver = FileNameResolver:new({
   get_name = function(winid)
     local bufid = vim.api.nvim_win_get_buf(winid)
     return vim.api.nvim_buf_get_name(bufid)
@@ -39,15 +39,15 @@ vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'BufWinEnter', 'BufWinLeave
 })
 
 ---get buf name
----@param bufid number
+---@param winid number
 ---@param opt? TabbyBufNameOption
 ---@return string
-function win_name.get(bufid, opt)
+function win_name.get(winid, opt)
   local o = default_option
   if opt ~= nil then
     o = vim.tbl_deep_extend('force', default_option, opt)
   end
-  return resolver:get_name(bufid, o.mode)
+  return resolver:get_name(winid, o.mode)
 end
 
 return win_name

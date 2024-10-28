@@ -1,4 +1,4 @@
-local FileNameResolver = require('tabby.module.filename_resolver')
+local FileNameResolver = require('tabby.module.file_name_resolver')
 local api = require('tabby.module.api')
 
 local buf_name = {}
@@ -15,7 +15,7 @@ function buf_name.set_default_option(opt)
   default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
-local resolver = FileNameResolver.new({
+local resolver = FileNameResolver:new({
   get_name = function(bufid)
     return vim.api.nvim_buf_get_name(bufid)
   end,

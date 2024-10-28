@@ -1,7 +1,6 @@
 local component = require('tabby.legacy.component')
 local config = require('tabby.legacy.config')
 local tabline = require('tabby.legacy.tabline')
-local filename = require('tabby.module.filename')
 local tab_name = require('tabby.feature.tab_name')
 
 local tabby = {}
@@ -14,7 +13,7 @@ local tabby_opt = config.defaults
 ---@field preset? 'active_wins_at_tail'|'active_wins_at_end'|'tab_with_top_win'|'active_tab_with_wins'|'tab_only'
 ---@field option? TabbyLineOption|TabbyTablinePresetOption
 
----@param cfg? TabbyConfig|TabbyLegacyConfig
+---@param cfg? table
 local function is_legacy_config(cfg)
   return cfg ~= nil and (cfg.tabline ~= nil or cfg.components ~= nil or cfg.opt ~= nil)
 end
@@ -22,7 +21,7 @@ end
 ---@param cfg? TabbyConfig|TabbyLegacyConfig
 function tabby.setup(cfg)
   if is_legacy_config(cfg) then
-    -- config is TabbyLegacyConfig
+    ---@cast cfg TabbyLegacyConfig
     tabby_opt = vim.tbl_extend('force', config.defaults, cfg or {})
     vim.cmd([[
       augroup tabby_show_control
@@ -36,7 +35,7 @@ function tabby.setup(cfg)
       vim.cmd("au VimEnter * lua require'tabby'.init()")
     end
   else
-    -- config is TabbyConfig
+    ---@cast cfg TabbyConfig
     local tbl = require('tabby.tabline')
     if cfg == nil or cfg.line == nil then
       cfg = vim.tbl_extend('force', { preset = 'active_wins_at_tail' }, cfg or {}) ---@type TabbyConfig
@@ -64,7 +63,6 @@ function tabby.show_tabline()
 end
 
 function tabby.update()
-  filename.flush_unique_name_cache()
   if tabby_opt.components ~= nil then
     local components = tabby_opt.components()
     return table.concat(vim.tbl_map(component.render, components), '')

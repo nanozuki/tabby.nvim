@@ -42,7 +42,7 @@ end
 
 ---@private
 function FileNameResolver:uniquify_names()
-  local all_names = self.loader()
+  local all_names = self.loader.get_names()
   local indexes = {} ---@type table<string, {h: string, n:number}>
 
   for handler, name in pairs(all_names) do
@@ -134,3 +134,5 @@ function FileNameResolver:flush()
   self.uniquified_names = {}
   self.uniquified = false
 end
+
+return FileNameResolver

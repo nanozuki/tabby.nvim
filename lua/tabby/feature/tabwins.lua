@@ -134,15 +134,13 @@ function tabwins.new_win(winid, opt)
         return ''
       end
       -- require 'kyazdani42/nvim-web-devicons'
-      local bufid = vim.api.nvim_win_get_buf(winid)
-      local name = require('tabby.module.filename').tail(bufid)
+      local name = require('tabby.feature.win_name').get(winid, { mode = 'tail' })
       local extension = vim.fn.fnamemodify(name, ':e')
       local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
     end,
     buf_name = function()
-      local bufid = vim.api.nvim_win_get_buf(winid)
-      return require('lua.tabby.feature.win_name').get(bufid, opt.buf_name)
+      return require('tabby.feature.win_name').get(winid, opt.buf_name)
     end,
   }
 end
@@ -151,20 +149,14 @@ end
 ---@field wins TabbyWin[] windows
 ---@field foreach fun(fn:fun(win:TabbyWin,i:number,n:number):TabbyNode,props:TabbyNode):TabbyNode render wins by given render function
 
----@alias WinFilter fun(win:TabbyWin):boolean filter for window
-
 ---new TabbyWins
 ---@param win_ids number[] win id list
 ---@param opt TabbyLineOption
----@param ... WinFilter
 ---@return TabbyWins
-function tabwins.new_wins(win_ids, opt, ...)
+function tabwins.new_wins(win_ids, opt)
   local wins = vim.tbl_map(function(winid)
     return tabwins.new_win(winid, opt)
   end, win_ids)
-  for _, filter in ipairs({ ... }) do
-    wins = vim.tbl_filter(filter, wins)
-  end
   return {
     wins = wins,
     foreach = function(fn, props)
@@ -206,7 +198,7 @@ function tabwins.new_buf(bufid, opt)
     end,
     file_icon = function()
       -- require 'kyazdani42/nvim-web-devicons'
-      local name = require('tabby.module.filename').tail(bufid)
+      local name = require('tabby.faature.buf_name').get(bufid, { mode = 'tail' })
       local extension = vim.fn.fnamemodify(name, ':e')
       local icon = require('nvim-web-devicons').get_icon(name, extension, { default = true })
       return icon
@@ -224,8 +216,6 @@ end
 ---@field bufs TabbyBuf[] buffers
 ---@field foreach fun(fn:fun(buf:TabbyBuf):TabbyNode):TabbyNode render bufs by given render function
 
----@alias BufFilter fun(buf:TabbyBuf):boolean filter for buffer
-
 local function wrap_buf_node(node, bufid)
   if type(node) == 'string' then
     return { node, click = { 'to_buf', bufid } }
@@ -239,15 +229,11 @@ end
 
 ---new TabbyBufs
 ---@param opt TabbyLineOption
----@param ... BufFilter
 ---@return TabbyBufs
-function tabwins.new_bufs(opt, ...)
+function tabwins.new_bufs(opt)
   local bufs = vim.tbl_map(function(bufid)
     return tabwins.new_buf(bufid, opt)
   end, api.get_bufs())
-  for _, filter in ipairs({ ... }) do
-    bufs = vim.tbl_filter(filter, bufs)
-  end
   return {
     bufs = bufs,
     foreach = function(fn)
