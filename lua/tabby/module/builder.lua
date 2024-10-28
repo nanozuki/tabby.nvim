@@ -57,7 +57,7 @@ function LineBuilder:add_click(click, heads, tails)
     tails[#tails + 1] = self:lazy_add('%X')
   elseif click[1] == 'to_buf' then
     local number = vim.fn.bufnr(click[2])
-    heads[#heads + 1] = self:lazy_add(string.format('%%%d@TabbyOpenBuffer@', click[2]))
+    heads[#heads + 1] = self:lazy_add(string.format('%%%d@TabbyOpenBuffer@', number))
     tails[#tails + 1] = self:lazy_add('%X')
   elseif click[1] == 'customer' then
     heads[#heads + 1] = self:lazy_add(string.format('%%%d@TabbyCustomClickHandler@', click[2]))

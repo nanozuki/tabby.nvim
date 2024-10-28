@@ -2,7 +2,7 @@ local tab = {}
 
 local api = require('tabby.module.api')
 local tab_name = require('tabby.feature.tab_name')
-local tabwins = require('tabby.feature.tabwins')
+local tabs = require('tabby.feature.tabs')
 
 ---set tab option
 ---@param opt TabbyTabNameOption
@@ -93,7 +93,7 @@ end
 ---@param symbol string
 ---@return TabbyNode
 function tab.close_btn(tabid, symbol)
-  return tabwins.new_tab(tabid, {}).close_btn(symbol)
+  return tabs.new_tab(tabid, {}).close_btn(symbol)
 end
 
 return tab
