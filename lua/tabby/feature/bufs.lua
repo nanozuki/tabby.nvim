@@ -39,10 +39,12 @@ function M.new_buf(bufid, opt)
   }
 end
 
+---@alias TabbyBufFilter fun(buf:TabbyBuf):boolean
+---@alias TabbyBufIterator fun(buf:TabbyBuf,i:number?,total:number?):TabbyNode
 ---@class TabbyBufs
----@field bufs TabbyBuf[]
----@field filter(fun(buf:TabbyBuf):boolean):TabbyBufs
----@field foreach(fun(buf:TabbyBuf, i:number, total:number):TabbyNode, props:TabbyNode?):TabbyNode[]
+---@field bufs TabbyBuf[] bufs
+---@field filter fun(fn:TabbyBufFilter):TabbyBufs filter bufs, keep the truely value
+---@field foreach fun(it:TabbyBufIterator,props:TabbyNode?):TabbyNode[] render bufs by given render function
 
 ---@param node TabbyNode
 ---@param buf TabbyBuf

@@ -39,10 +39,12 @@ function M.new_win(winid, opt)
   }
 end
 
+---@alias TabbyWinFilter fun(win:TabbyWin):boolean
+---@alias TabbyWinIterator fun(win:TabbyWin,i:number?,total:number?):TabbyNode
 ---@class TabbyWins
----@field wins TabbyWin[]
----@field filter(fun(win:TabbyWin):boolean):TabbyWins
----@field foreach(fun(win:TabbyWin, i:number, total:number):TabbyNode, props:TabbyNode?):TabbyNode[]
+---@field wins TabbyWin[] wins
+---@field filter fun(fn:TabbyWinFilter):TabbyWins filter wins, keep the truely value
+---@field foreach fun(it:TabbyWinIterator,props:TabbyNode?):TabbyNode[] render wins by given render function
 
 ---new TabbyWins
 ---@param win_ids number[] win id list

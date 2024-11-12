@@ -63,10 +63,12 @@ function M.new_tab(tabid, opt)
   }
 end
 
+---@alias TabbyTabFilter fun(tab:TabbyTab):boolean
+---@alias TabbyTabIterator fun(tab:TabbyTab,i:number?,total:number?):TabbyNode
 ---@class TabbyTabs
 ---@field tabs TabbyTab[] tabs
----@field filter fun(fn:fun(tab:TabbyTab):boolean):TabbyTabs filter tabs
----@field foreach fun(fn:fun(tab:TabbyTab,i:number,n:number):TabbyNode,props:TabbyNode):TabbyNode render tabs by given render function
+---@field filter fun(fn:TabbyTabFilter):TabbyTabs filter tabs, keep the truely value
+---@field foreach fun(it:TabbyTabIterator,props:TabbyNode?):TabbyNode render tabs by given render function
 
 local function wrap_tab_node(node, tabid)
   if type(node) == 'string' then
