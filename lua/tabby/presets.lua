@@ -1,8 +1,8 @@
 local presets = {}
 
-local filename = require('tabby.module.filename')
 local api = require('tabby.module.api')
 local tab_name = require('tabby.feature.tab_name')
+local win_name = require('tabby.feature.win_name')
 local line = require('tabby.feature.lines').get_line()
 
 local hl_head = 'TabLine'
@@ -34,7 +34,7 @@ end
 
 local function win_label(winid, top)
   local icon = top and '' or ''
-  return string.format(' %s %s ', icon, filename.unique(winid))
+  return string.format(' %s %s ', icon, win_name.get(winid, { mode = 'unique' }))
 end
 
 presets.active_wins_at_tail = {
@@ -215,7 +215,7 @@ presets.tab_with_top_win = {
   active_win = {
     label = function(winid)
       return {
-        string.format(' %s ', filename.unique(winid)),
+        string.format(' %s ', win_name.get(winid, { mode = 'unique' })),
         hl = hl_normal,
       }
     end,
@@ -225,7 +225,7 @@ presets.tab_with_top_win = {
   win = {
     label = function(winid)
       return {
-        string.format(' %s ', filename.unique(winid)),
+        string.format(' %s ', win_name.get(winid, { mode = 'unique' })),
         hl = hl_normal,
       }
     end,

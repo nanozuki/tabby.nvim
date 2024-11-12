@@ -1,6 +1,6 @@
 local win_picker = {}
 
-local tabwins = require('tabby.feature.tabwins')
+local win_module = require('tabby.feature.wins')
 local api = require('tabby.module.api')
 
 ---@type TabbyLineOption
@@ -14,7 +14,7 @@ local opt = {
 }
 
 function win_picker.select()
-  local wins = tabwins.new_wins(api.get_wins(), opt).wins
+  local wins = win_module.new_wins(api.get_wins(), opt).wins
   vim.ui.select(wins, {
     format_item = function(win)
       return string.format('Tab %s: %s', win.tab().name(), win.buf_name())

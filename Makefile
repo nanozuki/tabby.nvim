@@ -7,7 +7,7 @@ play:
 	@echo "> sync plugins..."
 	@nvim -u ./playground/config.lua --headless "+Lazy! sync" +qa
 	@echo "> run tests nvim..."
-	@nvim -u ./playground/config.lua -R -p lua/tabby/feature/tabwins.lua lua/tabby/feature/lines.lua \
+	@nvim -u ./playground/config.lua -R -p lua/tabby/feature/tabs.lua lua/tabby/feature/lines.lua \
 		"+0tabnew" "+terminal" "+tabnext $$" "+vs README.md"
 
 clear-play:
