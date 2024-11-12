@@ -9,6 +9,12 @@
 ---@field margin? string
 ---@field [...] TabbyNode children node
 
+---@class TabbyAttrs
+---@field hl? TabbyHighlight
+---@field lo? TabbyLayout
+---@field click? TabbyClickHandler
+---@field margin? string
+
 ---@class TabbyLayout
 ---@field justify? 'left'|'right' justify @default 'left'
 ---@field max_width? number maximum width

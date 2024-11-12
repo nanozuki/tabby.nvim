@@ -44,7 +44,7 @@ end
 ---@class TabbyWins
 ---@field wins TabbyWin[] wins
 ---@field filter fun(fn:TabbyWinFilter):TabbyWins filter wins, keep the truely value
----@field foreach fun(it:TabbyWinIterator,props:TabbyNode?):TabbyNode[] render wins by given render function
+---@field foreach fun(it:TabbyWinIterator,attrs:TabbyAttrs?):TabbyNode[] render wins by given render function
 
 ---new TabbyWins
 ---@param win_ids number[] win id list
@@ -56,7 +56,7 @@ function M.new_wins(win_ids, opt)
   end, win_ids)
   local obj = {
     wins = wins,
-    foreach = function(fn, props)
+    foreach = function(fn, attrs)
       local nodes = {}
       for i, win in ipairs(wins) do
         local node = fn(win, i, #wins)
@@ -64,8 +64,8 @@ function M.new_wins(win_ids, opt)
           nodes[#nodes + 1] = node
         end
       end
-      if props ~= nil then
-        nodes = vim.tbl_extend('keep', nodes, props)
+      if attrs ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, attrs)
       end
       return nodes
     end,

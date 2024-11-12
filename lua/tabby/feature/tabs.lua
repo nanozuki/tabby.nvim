@@ -68,7 +68,7 @@ end
 ---@class TabbyTabs
 ---@field tabs TabbyTab[] tabs
 ---@field filter fun(fn:TabbyTabFilter):TabbyTabs filter tabs, keep the truely value
----@field foreach fun(it:TabbyTabIterator,props:TabbyNode?):TabbyNode render tabs by given render function
+---@field foreach fun(it:TabbyTabIterator,attrs:TabbyAttrs?):TabbyNode render tabs by given render function
 
 local function wrap_tab_node(node, tabid)
   if type(node) == 'string' then
@@ -92,7 +92,7 @@ function M.new_tabs(opt)
   end, api.get_tabs())
   local obj = {
     tabs = tabs,
-    foreach = function(fn, props)
+    foreach = function(fn, attrs)
       local nodes = {}
       for i, tab in ipairs(tabs) do
         local node = fn(tab, i, #tabs)
@@ -100,8 +100,8 @@ function M.new_tabs(opt)
           nodes[#nodes + 1] = wrap_tab_node(node, tab.id)
         end
       end
-      if props ~= nil then
-        nodes = vim.tbl_extend('keep', nodes, props)
+      if attrs ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, attrs)
       end
       return nodes
     end,

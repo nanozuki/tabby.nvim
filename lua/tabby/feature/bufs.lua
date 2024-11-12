@@ -44,7 +44,7 @@ end
 ---@class TabbyBufs
 ---@field bufs TabbyBuf[] bufs
 ---@field filter fun(fn:TabbyBufFilter):TabbyBufs filter bufs, keep the truely value
----@field foreach fun(it:TabbyBufIterator,props:TabbyNode?):TabbyNode[] render bufs by given render function
+---@field foreach fun(it:TabbyBufIterator,attrs:TabbyAttrs?):TabbyNode[] render bufs by given render function
 
 ---@param node TabbyNode
 ---@param buf TabbyBuf
@@ -69,7 +69,7 @@ function M.new_bufs(opt)
   end, api.get_bufs())
   local obj = {
     bufs = bufs,
-    foreach = function(fn, props)
+    foreach = function(fn, attrs)
       local nodes = {} ---@type TabbyNode[]
       for i, buf in ipairs(bufs) do
         local node = fn(buf, i, #bufs)
@@ -77,8 +77,8 @@ function M.new_bufs(opt)
           nodes[#nodes + 1] = wrap_buf_node(node, buf)
         end
       end
-      if props ~= nil then
-        nodes = vim.tbl_extend('keep', nodes, props)
+      if attrs ~= nil then
+        nodes = vim.tbl_extend('keep', nodes, attrs)
       end
       return nodes
     end,
