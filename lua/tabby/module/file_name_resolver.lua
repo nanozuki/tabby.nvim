@@ -68,7 +68,7 @@ function FileNameResolver:uniquify_names()
           else
             local name = table.concat({ tail(item.h), t_name }, '/')
             next_index[name] = next_index[name] or {}
-            table.insert(next_index[name], { h = item.h, n = item.n })
+            table.insert(next_index[name], { h = hh, n = item.n })
           end
         end
       end
