@@ -1,7 +1,8 @@
 local tab_name = {}
 
 ---@class TabbyTabNameOption
----@field name_fallback fun(tabid:number):string
+---@field name_fallback? fun(tabid:number):string
+---@field override? fun(tabid:number):string?
 
 local api = require('tabby.module.api')
 local win_name = require('tabby.feature.win_name')
@@ -64,13 +65,16 @@ end
 ---@param opt? TabbyTabNameOption
 ---@return string
 function tab_name.get(tabid, opt)
+  local o = vim.tbl_deep_extend('force', default_option, opt or {})
+  if o.override then
+    local overrided = o.override(tabid)
+    if overrided ~= nil then
+      return overrided
+    end
+  end
   local raw_name = tab_name.get_raw(tabid)
   if raw_name ~= '' then
     return raw_name
-  end
-  local o = default_option
-  if opt ~= nil then
-    o = vim.tbl_deep_extend('force', default_option, opt)
   end
   return o.name_fallback(tabid)
 end
