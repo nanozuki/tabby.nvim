@@ -47,15 +47,16 @@ end
 ---@field foreach fun(it:TabbyWinIterator,attrs:TabbyAttrs?):TabbyNode[] render wins by given render function
 
 ---new TabbyWins
----@param win_ids number[] win id list
+---@param wins TabbyWin[] win id list
 ---@param opt TabbyLineOption
 ---@return TabbyWins
-function M.new_wins(win_ids, opt)
-  local wins = vim.tbl_map(function(winid)
-    return M.new_win(winid, opt)
-  end, win_ids)
-  local obj = {
+function M.new_wins(wins, opt)
+  local obj = { ---@type TabbyWins
     wins = wins,
+    filter = function(filter)
+      local filtered = vim.tbl_filter(filter, wins)
+      return M.new_wins(filtered, opt)
+    end,
     foreach = function(fn, attrs)
       local nodes = {}
       for i, win in ipairs(wins) do
@@ -70,9 +71,6 @@ function M.new_wins(win_ids, opt)
       return nodes
     end,
   }
-  obj.filter = function(filter)
-    wins = vim.tbl_filter(filter, wins)
-  end
   return obj
 end
 

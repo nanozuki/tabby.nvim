@@ -61,14 +61,16 @@ local function wrap_buf_node(node, buf)
 end
 
 ---new TabbyBufs
+---@param bufs TabbyBuf[]
 ---@param opt TabbyLineOption
 ---@return TabbyBufs
-function M.new_bufs(opt)
-  local bufs = vim.tbl_map(function(bufid)
-    return M.new_buf(bufid, opt)
-  end, api.get_bufs())
-  local obj = {
+function M.new_bufs(bufs, opt)
+  local obj = { ---@type TabbyBufs
     bufs = bufs,
+    filter = function(filter)
+      local filtered = vim.tbl_filter(filter, bufs)
+      return M.new_bufs(filtered, opt)
+    end,
     foreach = function(fn, attrs)
       local nodes = {} ---@type TabbyNode[]
       for i, buf in ipairs(bufs) do
@@ -83,10 +85,6 @@ function M.new_bufs(opt)
       return nodes
     end,
   }
-  obj.filter = function(filter)
-    bufs = vim.tbl_filter(filter, bufs)
-    return obj
-  end
   return obj
 end
 

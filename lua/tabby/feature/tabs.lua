@@ -84,14 +84,16 @@ local function wrap_tab_node(node, tabid)
 end
 
 ---new TabbyTabs
+---@param tabs TabbyTab[]
 ---@param opt TabbyLineOption
 ---@return TabbyTabs
-function M.new_tabs(opt)
-  local tabs = vim.tbl_map(function(tabid)
-    return M.new_tab(tabid, opt)
-  end, api.get_tabs())
+function M.new_tabs(tabs, opt)
   local obj = {
     tabs = tabs,
+    filter = function(filter)
+      local filtered = vim.tbl_filter(filter, tabs)
+      return M.new_tabs(filtered, opt)
+    end,
     foreach = function(fn, attrs)
       local nodes = {}
       for i, tab in ipairs(tabs) do
@@ -106,10 +108,6 @@ function M.new_tabs(opt)
       return nodes
     end,
   }
-  obj.filter = function(filter)
-    tabs = vim.tbl_filter(filter, tabs)
-    return obj
-  end
   return obj
 end
 

@@ -38,16 +38,28 @@ function lines.get_line(opt)
   ---@type TabbyLine
   local line = {
     tabs = function()
-      return tabs.new_tabs(opt)
+      local ts = vim.tbl_map(function(tabid)
+        return tabs.new_tab(tabid, opt)
+      end, api.get_tabs())
+      return tabs.new_tabs(ts, opt)
     end,
     wins = function()
-      return wins.new_wins(api.get_wins(), opt)
+      local ws = vim.tbl_map(function(winid)
+        return wins.new_win(winid, opt)
+      end, api.get_wins())
+      return wins.new_wins(ws, opt)
     end,
     wins_in_tab = function(tabid)
-      return wins.new_wins(api.get_tab_wins(tabid), opt)
+      local ws = vim.tbl_map(function(winid)
+        return wins.new_win(winid, opt)
+      end, api.get_tab_wins(tabid))
+      return wins.new_wins(ws, opt)
     end,
     bufs = function()
-      return bufs.new_bufs(opt)
+      local bs = vim.tbl_map(function(bufid)
+        return bufs.new_buf(bufid, opt)
+      end, api.get_bufs())
+      return bufs.new_bufs(bs, opt)
     end,
     sep = function(symbol, cur_hl, back_hl)
       local cur_hl_obj = ensure_hl_obj(cur_hl)
