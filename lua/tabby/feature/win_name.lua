@@ -3,10 +3,6 @@ local api = require('tabby.module.api')
 
 local win_name = {}
 
----@class TabbyWinNameOption
----@field mode? TabbyFileNameMode @default unique
----@field name_fallback? fun(winid:number):string
-
 ---@type TabbyBufNameOption
 local default_option = {
   mode = 'unique',
@@ -44,12 +40,16 @@ vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'BufWinEnter', 'BufWinLeave
 
 ---get buf name
 ---@param winid number
----@param opt? TabbyWinNameOption
+---@param opt? TabbyBufNameOption
 ---@return string
 function win_name.get(winid, opt)
-  local o = default_option
-  if opt ~= nil then
-    o = vim.tbl_deep_extend('force', default_option, opt)
+  local o = vim.tbl_deep_extend('force', default_option, opt or {})
+  if o.override then
+    local bufid = vim.api.nvim_win_get_buf(winid)
+    local name = o.override(bufid)
+    if name then
+      return name
+    end
   end
   return resolver:get_name(winid, o.mode, o.name_fallback)
 end

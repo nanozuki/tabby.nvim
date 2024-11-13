@@ -6,6 +6,7 @@ local buf_name = {}
 ---@class TabbyBufNameOption
 ---@field mode? TabbyFileNameMode @default unique
 ---@field name_fallback? fun(bufid:number):string
+---@field override? fun(bufid:number):string?
 
 ---@type TabbyBufNameOption
 local default_option = {
@@ -45,9 +46,12 @@ vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'BufWinEnter', 'BufWinLeave
 ---@param opt? TabbyBufNameOption
 ---@return string
 function buf_name.get(bufid, opt)
-  local o = default_option
-  if opt ~= nil then
-    o = vim.tbl_deep_extend('force', default_option, opt)
+  local o = vim.tbl_deep_extend('force', default_option, opt or {})
+  if o.override then
+    local name = o.override(bufid)
+    if name then
+      return name
+    end
   end
   return resolver:get_name(bufid, o.mode, o.name_fallback)
 end
