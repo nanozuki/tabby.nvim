@@ -256,7 +256,7 @@ The `{count}` is the number displayed in presets.
 Customize tabby with `require('tabby').setup(opts)`:
 
 ```vimdoc
-tabline.set({opts})                                             *tabby.setup()*
+tabline.setup({opts})                                            *tabby.setup()*
     Set tabline renderer function
 
     Parameters: ~
@@ -295,77 +295,29 @@ require('tabby').setup({
 ### Line
 
 ```vimdoc
-line.tabs().foreach({callback}, {params})          *tabby.line.tabs().foreach()*
-    Use callback function to renderer every tabs.
-
-    Parameters: ~
-        {callback}  Function, receive a Tab |tabby-tab|, index and number of
-                    tabs, return a Node |tabby-node|. Skip render when return is
-                    empty string.
-        {props}     Additional properties added to the returned node.
+line.tabs()                                                  *tabby.line.tabs()*
 
     Return: ~
-        Node |tabby-node|, rendered result of all tabs.
+        |tabby-tabs|, a helper object for all tabs.
 
-                                                   *tabby.line.wins().foreach()*
-line.wins({filter...}).foreach({callback}, {props})
-    Use callback function to renderer every wins.
-
-    Parameters: ~
-        {filter...}  Filter functions. Each function receive a |tabby-win| and
-                     return a boolean. If filter return false, this window won't
-                     be displayed in tabline.
-        {callback}   Function, receive a Win |tabby-win|, index and number of
-                     wins, return a Node |tabby-node|. Skip render when return
-                     is empty string.
-        {props}      Additional properties added to the returned node.
+line.wins()                                                  *tabby.line.wins()*
 
     Return: ~
-        Node |tabby-node|, rendered result of all wins.
+        |tabby-wins|, a helper object for all wins.
 
-    Example: ~
-      - Don't display NvimTree: >
-            local function no_nvimtree(win)
-              return not string.match(win.buf_name(), 'NvimTree')
-            end
-            ...
-            line.wins(no_nvimtree).foreach(function
-              ...
-            end)
-<
-
-                                            *tabby.line.wins_in_tab().foreach()*
-line.wins_in_tab({tabid}, {filter...}).foreach({callback})
-    Use callback function to renderer every wins in specified tab.
+line.wins_in_tab({tabid})                   *tabby.line.wins_in_tab().foreach()*
 
     Parameters: ~
         {tabid}      Number, tab id
-        {filter...}  Filter functions. Each function receive a |tabby-win| and
-                     return a boolean. If filter return false, this window won't
-                     be displayed in tabline.
-        {callback}   Function, receive a Win |tabby-win|, index and number of
-                     wins, return a Node |tabby-node|. Skip render when return
-                     is empty string.
 
     Return: ~
-        Node |tabby-node|, rendered result of all wins in specified tab.
+        |tabby-wins|, a helper object for all wins in specified tab.
 
-    Example: ~
-        - Don't display NvimTree: See |tabby.line.wins().foreach()|.
 
-                                            *tabby.line.bufs().foreach()*
-line.bufs({filter...}).foreach({callback})
-    Use callback function to renderer every bufs.
-
-    Parameters: ~
-        {filter...}  Filter functions. Each function receive a |tabby-buf| and
-                     return a boolean. If filter return false, this window won't
-                     be displayed in tabline.
-        {callback}   Function, receive a Buf |tabby-buf|, return a
-                     Node |tabby-node|. Skip render when return is empty string.
+line.bufs()                                        *tabby.line.bufs().foreach()*
 
     Return: ~
-        Node |tabby-node|, rendered result of all bufs.
+        |tabby-bufs|, a helper object for all bufs.
 
 line.spacer()                                              *tabby.line.spacer()*
     Separation point between alignment sections. Each section will be separated
@@ -381,7 +333,7 @@ line.truncate_point()                              *tabby.line.truncate_point()*
     Return: ~
         Node |tabby-node|, spacer node.
 
-line.sep({symbol}, {hl}, {back_hl})            *tabby.line.sep()*
+line.sep({symbol}, {hl}, {back_hl})                           *tabby.line.sep()*
     Make a separator, and calculate highlight.
 
     Parameters: ~
@@ -402,29 +354,50 @@ line.api                                                        *tabby.line.api*
 
 ### Line Option
 
+The default value of LineOption is:
+
 ```lua
 {
     tab_name = {
         name_fallback = function(tabid)
             return "fallback name"
-        end
+        end,
+        override = nil,
     },
     buf_name = {
         mode = "'unique'|'relative'|'tail'|'shorten'",
+        name_fallback = function(bufid)
+          return '[No Name]'
+        end,
+        override = nil,
     }
 }
 ```
 
+- {tab_name}, option for name of tab
+  - {name_fallback} (fun(tabid:number):string) Function, receive a tab id,
+    return a string. If no name provided, use this function to get the name.
+  - {override} (fun(tabid:number):string) Function, receive a tab id, return a
+    string. If this function return a string, use this string as tab name.
+- {buf_name}, option for name of window and buffer
+  - {mode} (string) Mode of buffer name, see |tabby.buf_name|
+
 #### tab_name
 
 Use command `Tabby rename_tab <tabname>` to rename tab. Use `tab.name()` (ref:
-[Tab](#Tab)) to add in your config. If no name provided, `tab.name()` will
-display fallback name. The default fallback name is current window's buffer name.
+[Tab](#Tab)) to add in your config.
 
-You can change the fallback by provide a function in
-`opt.tab_name.name_fallback`.
+Options:
+
+- {name_fallback} (fun(tabid:number):string) Function, receive a tab id,
+  return a string. If no name provided, use this function to get the name.
+- {override} (fun(tabid:number):string) Function, receive a tab id, return a
+  string. If this function return a string, use this string as tab name.
 
 #### buf_name
+
+`buf_name` used by both `win.buf_name()` and `buf.name()`. You can customize by
+option "mode", "name_fallback" and "override".
 
 There are four mode of buffer name. If current directory is "~/project" and
 there are three buffers:
@@ -439,6 +412,47 @@ the result of every mode are:
 - relative: "a_repo/api/user.py", "b_repo/api/user.py", "b_repo/api/admin.py"
 - tail: "user.py", "user.py", "admin.py"
 - shorten: "r/a/user.py", "r/b/user.py", "r/b/admin.py"
+
+Options:
+
+- {mode} (string) Mode of buffer name, described above.
+- {name_fallback} (fun(bufid:number):string) Function, receive a buffer id,
+  return a string. If no name provided, use this function to get the name.
+- {override} (fun(bufid:number):string) Function, receive a buffer id, return a
+  string. If this function return a string, use this string as buffer name.
+
+### Tabs
+
+"Tabs" is a helper object for tabs.
+
+```vimdoc
+tabs.tabs                                                      *tabby.tabs.tabs*
+    An Array of Tab |tabby-tab| that contained in this object.
+
+tabs.foreach({callback}, {arrts})
+
+    Parameters: ~
+        {callback}  (fun(tab:TabbyTab,i:number,count:number):TabbyNode)
+                    Function, receive a Tab |tabby-tab|, index and number of
+                    tabs, return a Node |tabby-node|. Skip render when return is
+                    empty string.
+        {attrs}     Additional attributes added to the returned node.
+
+    Return: ~
+        Node |tabby-node|, rendered result of all tabs.
+
+
+tabs.filter({filter})                                      *tabby.tabs.filter()*
+    Filter tabs by filter function.
+
+    Parameters: ~
+        {filter}  (fun(tab:TabbyTab):boolean)
+                  Function, receive a Tab |tabby-tab|, return a boolean. Truely
+                  tab will be add to result.
+
+    Return: ~
+        Tabs |tabby-tabs|, filtered tabs.
+```
 
 ### Tab
 
@@ -496,6 +510,49 @@ tab.in_jump_mode()                                    *tabby.tab.in_jump_mode()*
         Boolean, if this tab is in jump mode.
 ```
 
+### Wins
+
+"Wins" is a helper object for windows.
+
+```vimdoc
+wins.wins                                                      *tabby.wins.wins*
+    An Array of Win |tabby-win| that contained in this object.
+
+wins.foreach({callback}, {arrts})                         *tabby.wins.foreach()*
+
+    Parameters: ~
+        {callback}  (fun(win:TabbyWin,i:number,count:number):TabbyNode)
+                    Function, receive a Win |tabby-win|, index and number of
+                    wins, return a Node |tabby-node|. Skip render when return is
+                    empty string.
+        {attrs}     Additional attributes added to the returned node.
+
+    Return: ~
+        Node |tabby-node|, rendered result of all wins.
+
+wins.filter({filter})                                      *tabby.wins.filter()*
+    Filter wins by filter function.
+
+    Parameters: ~
+        {filter}  (fun(win:TabbyWin):boolean)
+                  Function, receive a Win |tabby-win|, return a boolean. Truely
+                  win will be add to result.
+
+    Return: ~
+        Wins |tabby-wins|, filtered wins.
+
+    Example: ~
+      - Don't display NvimTree: >
+            local function no_nvimtree(win)
+              return not string.match(win.buf_name(), 'NvimTree')
+            end
+            ...
+            line.wins().filter(no_nvimtree).foreach(function
+              ...
+            end)
+<
+```
+
 ### Win
 
 ```vimdoc
@@ -527,8 +584,40 @@ win.file_icon()                                          *tabby.win.file_icon()*
 win.buf_name()                                                *tabby.win.name()*
 
     Return: ~
-        String, buffer name of this window. You can specify the form by using
-        option ".buf_name.mode" in LineOption |tabby-line-option|.
+        String, buffer name of this window. You can customize the name by using
+        option ".buf_name" in LineOption |tabby-line-option|.
+```
+
+### Bufs
+
+"Bufs" is a helper object for buffers.
+
+```vimdoc
+bufs.bufs                                                      *tabby.bufs.bufs*
+    An Array of Buf |tabby-buf| that contained in this object.
+
+bufs.foreach({callback}, {arrts})                         *tabby.bufs.foreach()*
+
+      Parameters: ~
+          {callback}  (fun(buf:TabbyBuf,i:number,count:number):TabbyNode)
+                      Function, receive a Buf |tabby-buf|, index and number of
+                      bufs, return a Node |tabby-node|. Skip render when return is
+                      empty string.
+          {attrs}     Additional attributes added to the returned node.
+
+      Return: ~
+          Node |tabby-node|, rendered result of all bufs.
+
+bufs.filter({filter})                                      *tabby.bufs.filter()*
+    Filter bufs by filter function.
+
+    Parameters: ~
+        {filter}  (fun(buf:TabbyBuf):boolean)
+                  Function, receive a Buf |tabby-buf|, return a boolean. Truely
+                  buf will be add to result.
+
+    Return: ~
+        Bufs |tabby-bufs|, filtered bufs.
 ```
 
 ### Buf
@@ -565,8 +654,8 @@ buf.file_icon()                                          *tabby.buf.file_icon()*
 buf.name()                                                    *tabby.buf.name()*
 
     Return: ~
-        String, name of this buffer. You can specify the form by using
-        option ".buf_name.mode" in LineOption |tabby-line-option|.
+        String, name of this buffer. You can customize the name by using
+        option ".buf_name" in LineOption |tabby-line-option|.
 
 
 buf.type()                                                    *tabby.buf.type()*
