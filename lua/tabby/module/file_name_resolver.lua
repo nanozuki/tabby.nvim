@@ -42,8 +42,10 @@ end
 
 ---@private
 function FileNameResolver:uniquify_names()
+  ---@alias TabbyFileNameIndexItem {h: string, n:number}
+  ---@alias TabbyFileNameIndex table<string, TabbyFileNameIndexItem[]>
   local all_names = self.loader.get_names()
-  local indexes = {} ---@type table<string, {h: string, n:number}>
+  local indexes = {} ---@type TabbyFileNameIndex
 
   for handler, name in pairs(all_names) do
     name = relative(name)
@@ -53,8 +55,8 @@ function FileNameResolver:uniquify_names()
     table.insert(indexes[t_name], { h = h_name, n = handler })
   end
 
-  local next_index = {} ---@type table<string, {h: string, n:number}>
-  while #indexes > 0 do
+  local next_index = {} ---@type TabbyFileNameIndex
+  while not vim.tbl_isempty(indexes) do
     for t_name, items in pairs(indexes) do
       if #items == 1 then
         self.uniquified_names[items[1].n] = t_name
@@ -118,7 +120,7 @@ end
 ---Get name of a handler
 ---@param handler number
 ---@param mode TabbyFileNameMode
----@param fallback? fun(handler:number):string
+---@param fallback fun(handler:number):string
 ---@return string
 function FileNameResolver:get_name(handler, mode, fallback)
   fallback = fallback or default_fallback

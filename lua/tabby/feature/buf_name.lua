@@ -4,11 +4,15 @@ local api = require('tabby.module.api')
 local buf_name = {}
 
 ---@class TabbyBufNameOption
----@field mode TabbyFileNameMode @default unique
+---@field mode? TabbyFileNameMode @default unique
+---@field name_fallback? fun(bufid:number):string
 
 ---@type TabbyBufNameOption
 local default_option = {
   mode = 'unique',
+  name_fallback = function(_)
+    return '[No Name]'
+  end,
 }
 
 function buf_name.set_default_option(opt)
@@ -45,7 +49,7 @@ function buf_name.get(bufid, opt)
   if opt ~= nil then
     o = vim.tbl_deep_extend('force', default_option, opt)
   end
-  return resolver:get_name(bufid, o.mode)
+  return resolver:get_name(bufid, o.mode, o.name_fallback)
 end
 
 return buf_name

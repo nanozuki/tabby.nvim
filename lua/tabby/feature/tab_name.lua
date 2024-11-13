@@ -3,10 +3,8 @@ local tab_name = {}
 ---@class TabbyTabNameOption
 ---@field name_fallback fun(tabid:number):string
 
---TODO change the fallback to "fun(tab:TabbyTab)"
-
 local api = require('tabby.module.api')
-local buf_name = require('tabby.feature.buf_name')
+local win_name = require('tabby.feature.win_name')
 
 ---@type TabbyTabNameOption
 local default_option = {
@@ -17,8 +15,7 @@ local default_option = {
     if api.is_float_win(cur_win) then
       name = '[Floating]'
     else
-      local bufid = vim.api.nvim_win_get_buf(cur_win)
-      name = buf_name.get(bufid)
+      name = win_name.get(cur_win)
     end
     if #wins > 1 then
       name = string.format('%s[%d+]', name, #wins - 1)
