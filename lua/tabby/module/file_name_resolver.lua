@@ -104,7 +104,7 @@ local transformers = {
 ---@param fallback fun(handler:number):string
 ---@return string
 function FileNameResolver:get_other_name(handler, mode, fallback)
-  local name = self.loader(handler)
+  local name = self.loader.get_name(handler)
   if not name then
     name = fallback(handler)
   else
@@ -127,7 +127,7 @@ function FileNameResolver:get_name(handler, mode, fallback)
   if mode == 'unique' then
     return self:get_unique_name(handler, fallback)
   else
-    return self:get_other_name(handler, self.mode --[[@as 'relative'|'tail'|'shorten']], fallback)
+    return self:get_other_name(handler, mode --[[@as 'relative'|'tail'|'shorten']], fallback)
   end
 end
 

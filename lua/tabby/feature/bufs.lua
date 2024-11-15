@@ -26,7 +26,7 @@ function M.new_buf(bufid, opt)
       if vim.fn.isdirectory(vim.api.nvim_buf_get_name(bufid)) == 1 then
         return ''
       end
-      local name = require('tabby.faature.buf_name').get(bufid, { mode = 'tail' })
+      local name = require('tabby.feature.buf_name').get(bufid, { mode = 'tail' })
       local extension = vim.fn.fnamemodify(name, ':e')
       return api.get_icon(name, extension)
     end,
