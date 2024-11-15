@@ -15,17 +15,20 @@ function win_name.set_default_option(opt)
   default_option = vim.tbl_deep_extend('force', default_option, opt)
 end
 
+-- Multiple windows can share the same buffer.
+-- Because we don't want to calculate name multiple times, we still use buffer id as handle.
 local resolver = FileNameResolver:new({
-  get_name = function(winid)
-    local bufid = vim.api.nvim_win_get_buf(winid)
+  get_name = function(bufid)
     return vim.api.nvim_buf_get_name(bufid)
   end,
   get_names = function()
     local wins = api.get_wins()
-    local names = {}
+    local names = {} ---@type table<number, string> bufid -> name
     for _, winid in ipairs(wins) do
       local bufid = vim.api.nvim_win_get_buf(winid)
-      names[winid] = vim.api.nvim_buf_get_name(bufid)
+      if not names[bufid] then
+        names[bufid] = vim.api.nvim_buf_get_name(bufid)
+      end
     end
     return names
   end,
@@ -44,14 +47,16 @@ vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'BufWinEnter', 'BufWinLeave
 ---@return string
 function win_name.get(winid, opt)
   local o = vim.tbl_deep_extend('force', default_option, opt or {})
+  local bufid = vim.api.nvim_win_get_buf(winid)
+
   if o.override then
-    local bufid = vim.api.nvim_win_get_buf(winid)
     local name = o.override(bufid)
     if name then
       return name
     end
   end
-  return resolver:get_name(winid, o.mode, o.name_fallback)
+
+  return resolver:get_name(bufid, o.mode, o.name_fallback)
 end
 
 return win_name
