@@ -34,12 +34,16 @@ local resolver = FileNameResolver:new({
   end,
 })
 
-vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'BufWinEnter', 'BufWinLeave', 'BufDelete' }, {
+vim.api.nvim_create_autocmd({ 'BufNew', 'BufDelete', 'BufEnter', 'BufLeave' }, {
   pattern = '*',
   callback = function()
     resolver:flush()
   end,
 })
+
+function buf_name.flush_cache()
+  resolver:flush()
+end
 
 ---get buf name
 ---@param bufid number
