@@ -217,7 +217,7 @@ function preset.active_tab_with_wins(opt)
         if tab.is_current() == false then
           return tab_node
         end
-        local wins_node = line.wins_in_tab(tab.id).foreach(function(win)
+        local wins_node = tab.wins().foreach(function(win)
           return preset_win(line, win, o)
         end)
         return { tab_node, wins_node }

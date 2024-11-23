@@ -25,7 +25,10 @@ function M.new_tab(tabid, opt)
       return require('tabby.feature.wins').new_win(api.get_tab_current_win(tabid), opt)
     end,
     wins = function()
-      return require('tabby.feature.wins').new_wins(api.get_tab_wins(tabid), opt)
+      local ws = vim.tbl_map(function(winid)
+        return require('tabby.feature.wins').new_win(winid, opt)
+      end, api.get_tab_wins(tabid))
+      return require('tabby.feature.wins').new_wins(ws, opt)
     end,
     number = function()
       return api.get_tab_number(tabid)
