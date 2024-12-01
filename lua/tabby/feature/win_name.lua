@@ -34,7 +34,7 @@ local resolver = FileNameResolver:new({
   end,
 })
 
-vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'WinLeave', 'WinEnter' }, {
+vim.api.nvim_create_autocmd({ 'WinNew', 'WinClosed', 'WinLeave', 'WinEnter', 'BufWinEnter', 'BufWinLeave', 'BufDelete' }, {
   pattern = '*',
   callback = function()
     resolver:flush()
