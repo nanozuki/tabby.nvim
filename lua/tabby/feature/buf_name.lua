@@ -49,7 +49,7 @@ end
 ---@param bufid number
 ---@param opt? TabbyBufNameOption
 ---@return string
-function buf_name.get(bufid, opt)
+function buf_name.get_by_bufid(bufid, opt)
   local o = vim.tbl_deep_extend('force', default_option, opt or {})
   if o.override then
     local name = o.override(bufid)
@@ -58,6 +58,14 @@ function buf_name.get(bufid, opt)
     end
   end
   return resolver:get_name(bufid, o.mode, o.name_fallback)
+end
+
+---get buf name by winid, compatible with old version
+---@param winid number
+---@param opt? TabbyBufNameOption
+function buf_name.get(winid, opt)
+  local bufid = vim.api.nvim_win_get_buf(winid)
+  return buf_name.get_by_bufid(bufid, opt)
 end
 
 return buf_name
