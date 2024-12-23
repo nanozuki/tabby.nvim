@@ -41,13 +41,17 @@ local function shorten(name)
 end
 
 ---@private
-function FileNameResolver:uniquify_names()
+---@param fallback fun(handler:number):string
+function FileNameResolver:uniquify_names(fallback)
   ---@alias TabbyFileNameIndexItem {h: string, n:number}
   ---@alias TabbyFileNameIndex table<string, TabbyFileNameIndexItem[]>
   local all_names = self.loader.get_names()
   local indexes = {} ---@type TabbyFileNameIndex
 
   for handler, name in pairs(all_names) do
+    if name == nil or name == '' then
+      name = fallback(handler)
+    end
     name = relative(name)
     local t_name = tail(name)
     local h_name = head(name)
@@ -85,7 +89,7 @@ end
 ---@return string
 function FileNameResolver:get_unique_name(handler, fallback)
   if not self.uniquified then
-    self:uniquify_names()
+    self:uniquify_names(fallback)
     self.uniquified = true
   end
   return self.uniquified_names[handler] or fallback(handler)
@@ -105,7 +109,7 @@ local transformers = {
 ---@return string
 function FileNameResolver:get_other_name(handler, mode, fallback)
   local name = self.loader.get_name(handler)
-  if not name then
+  if name == nil or name == '' then
     name = fallback(handler)
   else
     name = transformers[mode](name)
