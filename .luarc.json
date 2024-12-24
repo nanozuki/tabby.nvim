@@ -9,18 +9,19 @@
   },
   "diagnostics": {
     "groupSeverity": {
-      "ambiguity": "Warning",
-      "await": "Warning",
-      "codestyle": "Warning",
-      "duplicate": "Warning",
-      "global": "Warning",
-      "luadoc": "Warning",
-      "redefined": "Warning",
-      "strict": "Warning",
-      "strong": "Warning",
-      "type-check": "Warning",
-      "unbalanced": "Warning",
-      "unused": "Warning"
-    }
+      "ambiguity": "Information",
+      "await": "Information",
+      "codestyle": "Information",
+      "duplicate": "Information",
+      "global": "Information",
+      "luadoc": "Information",
+      "redefined": "Information",
+      "strict": "Information",
+      "strong": "Information",
+      "type-check": "Information",
+      "unbalanced": "Information",
+      "unused": "Information"
+    },
+    "globals": ["vim"]
   }
 }
