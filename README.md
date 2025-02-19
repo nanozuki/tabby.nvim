@@ -101,7 +101,7 @@ Want to contribute? Use the playground!
 
 ## Install
 
-Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.
+Use your favorite plugin manager or script to installing 'nanozuki/tabby.nvim'.
 If you use `lazy.nvim`, you can refer the following example:
 
 ```lua
