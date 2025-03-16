@@ -134,7 +134,7 @@ tabby.nvim.
 ==============================================================================
 4. Install                                                     *tabby-install*
 
-Use your favorite plugin manager or script to installing 'nanozuki/tabby.com'.
+Use your favorite plugin manager or script to installing 'nanozuki/tabby.nvim'.
 If you use `lazy.nvim`, you can refer the following example:
 
 >lua
@@ -402,19 +402,19 @@ The default value of LineOption is:
 
 >lua
     {
-        tab_name = {
-            name_fallback = function(tabid)
-                return "fallback name"
-            end,
-            override = nil,
-        },
-        buf_name = {
-            mode = "'unique'|'relative'|'tail'|'shorten'",
-            name_fallback = function(bufid)
-              return '[No Name]'
-            end,
-            override = nil,
-        }
+      tab_name = {
+        name_fallback = function(tabid)
+          return "fallback name"
+          end,
+        override = nil,
+      },
+      buf_name = {
+        mode = 'unique', -- or 'relative', 'tail', 'shorten'
+          name_fallback = function(bufid)
+          return '[No Name]'
+          end,
+        override = nil,
+      }
     }
 <
 
@@ -813,7 +813,7 @@ To use preset, you can use `setup({ preset , option? })`, for example:
           end,
         },
         buf_name = {
-          mode = "'unique'|'relative'|'tail'|'shorten'",
+          mode = 'unique', -- or 'relative', 'tail', 'shorten'
         },
       },
     })
