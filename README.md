@@ -358,19 +358,19 @@ The default value of LineOption is:
 
 ```lua
 {
-    tab_name = {
-        name_fallback = function(tabid)
-            return "fallback name"
-        end,
-        override = nil,
-    },
-    buf_name = {
-        mode = "'unique'|'relative'|'tail'|'shorten'",
-        name_fallback = function(bufid)
-          return '[No Name]'
-        end,
-        override = nil,
-    }
+  tab_name = {
+    name_fallback = function(tabid)
+      return "fallback name"
+      end,
+    override = nil,
+  },
+  buf_name = {
+    mode = 'unique', -- or 'relative', 'tail', 'shorten'
+      name_fallback = function(bufid)
+      return '[No Name]'
+      end,
+    override = nil,
+  }
 }
 ```
 
@@ -771,7 +771,7 @@ require('tabby').setup({
       end,
     },
     buf_name = {
-      mode = "'unique'|'relative'|'tail'|'shorten'",
+      mode = 'unique', -- or 'relative', 'tail', 'shorten'
     },
   },
 })
