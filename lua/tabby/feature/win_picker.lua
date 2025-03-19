@@ -14,7 +14,10 @@ local opt = {
 }
 
 function win_picker.select()
-  local wins = win_module.new_wins(api.get_wins(), opt).wins
+  local new_win = function(winid)
+    return win_module.new_win(winid, opt)
+  end
+  local wins = vim.iter(api.get_wins()):map(new_win):totable()
   vim.ui.select(wins, {
     format_item = function(win)
       return string.format('Tab %s: %s', win.tab().name(), win.buf_name())
