@@ -109,6 +109,14 @@ end
 
 local loaded = false
 
+-- load tab names when session loaded, in case of session load after tabby
+vim.api.nvim_create_autocmd({ 'SessionLoadPost' }, {
+  pattern = '*',
+  callback = function()
+    loaded = false
+  end,
+})
+
 ---pre render hook, load and save tab names
 function tab_name.pre_render()
   if not loaded then
