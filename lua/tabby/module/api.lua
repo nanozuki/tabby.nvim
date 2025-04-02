@@ -38,6 +38,7 @@ function api.get_tab_number(tabid)
   return vim.api.nvim_tabpage_get_number(tabid)
 end
 
+---@return integer[]
 function api.get_wins()
   local wins = vim.api.nvim_list_wins()
   return vim.tbl_filter(api.is_not_float_win, wins)
