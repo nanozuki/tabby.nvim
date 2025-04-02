@@ -17,13 +17,15 @@ function win_picker.select()
   local new_win = function(winid)
     return win_module.new_win(winid, opt)
   end
-  local wins = vim.iter(api.get_wins()):map(new_win):totable()
+  local wins = vim.iter(api.get_wins()):map(new_win):totable() ---@type TabbyWin[]
   vim.ui.select(wins, {
     format_item = function(win)
       return string.format('Tab %s: %s', win.tab().name(), win.buf_name())
     end,
   }, function(win)
-    vim.api.nvim_set_current_win(win.id)
+    if win ~= nil then
+      vim.api.nvim_set_current_win(win.id)
+    end
   end)
 end
 
