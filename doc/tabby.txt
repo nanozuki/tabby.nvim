@@ -12,6 +12,8 @@ Table of Contents                                    *tabby-table-of-contents*
   - Jump mode for tabs                     |tabby-features-jump-mode-for-tabs|
 3. Playground                                               |tabby-playground|
 4. Install                                                     |tabby-install|
+  - Optional Dependencies                |tabby-install-optional-dependencies|
+  - Lazy load                                        |tabby-install-lazy-load|
 5. Setup                                                         |tabby-setup|
   - Tabline option                                |tabby-setup-tabline-option|
   - Save and restore in session      |tabby-setup-save-and-restore-in-session|
@@ -140,13 +142,36 @@ If you use `lazy.nvim`, you can refer the following example:
 >lua
     {
       'nanozuki/tabby.nvim',
-      -- event = 'VimEnter', -- if you want lazy load, see below
-      dependencies = 'nvim-tree/nvim-web-devicons',
       config = function()
         -- configs...
       end,
     }
 <
+
+Or you can use opts to setup:
+
+>lua
+    {
+      'nanozuki/tabby.nvim',
+      ---@type TabbyConfig
+      opts = {
+        -- configs...
+      },
+    }
+<
+
+
+OPTIONAL DEPENDENCIES                    *tabby-install-optional-dependencies*
+
+If you use `file_icon()` in your config, you need to install one of these
+dependencies:
+
+- nvim-tree/nvim-web-devicons <https://github.com/nvim-tree/nvim-web-devicons>
+- echasnovski/mini.nvim <https://github.com/echasnovski/mini.nvim>
+- echasnovski/mini.icons <https://github.com/echasnovski/mini.icons>
+
+
+LAZY LOAD                                            *tabby-install-lazy-load*
 
 You don’t need lazy load since 'tabby.nvim' is not slow. If you really want,
 you can use `VimEnter` or `VeryLazy` or anything else you like. Some of them

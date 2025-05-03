@@ -107,13 +107,34 @@ If you use `lazy.nvim`, you can refer the following example:
 ```lua
 {
   'nanozuki/tabby.nvim',
-  -- event = 'VimEnter', -- if you want lazy load, see below
-  dependencies = 'nvim-tree/nvim-web-devicons',
   config = function()
     -- configs...
   end,
 }
 ```
+
+Or you can use opts to setup:
+
+```lua
+{
+  'nanozuki/tabby.nvim',
+  ---@type TabbyConfig
+  opts = {
+    -- configs...
+  },
+}
+```
+
+### Optional Dependencies
+
+If you use `file_icon()` in your config, you need to install one of these
+dependencies:
+
+- [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons)
+- [echasnovski/mini.nvim](https://github.com/echasnovski/mini.nvim)
+- [echasnovski/mini.icons](https://github.com/echasnovski/mini.icons)
+
+### Lazy load
 
 You don't need lazy load since 'tabby.nvim' is not slow. If you really want,
 you can use `VimEnter` or `VeryLazy` or anything else you like. Some of them
