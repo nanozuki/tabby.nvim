@@ -5,27 +5,27 @@ local api = require('tabby.module.api')
 ---@field id number buffer id
 ---@field is_current fun():boolean return if buffer is a buffer of the current window
 ---@field is_changed fun():boolean return if buffer is changed
----@field file_icon fun():string? file icon, require devicons
+---@field file_icon fun():string file icon, require devicons
 ---@field name fun():string file name
 ---@field type fun():string return buffer type
 
 ---@param bufid number
----@return TabbyNode
+---@return string
 local function get_icon_by_mini(bufid)
   local path = vim.api.nvim_buf_get_name(bufid)
   local category = 'file'
   if vim.fn.isdirectory(path) == 1 then
     category = 'directory'
   end
-  local ok, icon, hl = pcall(require('mini.icons').get, category, path)
+  local ok, icon = pcall(require('mini.icons').get, category, path)
   if not ok then
     return ''
   end
-  return { icon, hl = hl }
+  return icon
 end
 
 ---@param bufid number
----@return TabbyNode
+---@return string
 local function get_icon_by_devicons(bufid)
   local path = vim.api.nvim_buf_get_name(bufid)
   local is_dir = vim.fn.isdirectory(path)
@@ -34,13 +34,11 @@ local function get_icon_by_devicons(bufid)
   end
   local tail = vim.fn.fnamemodify(path, ':t')
   local ext = vim.fn.fnamemodify(path, ':e')
-  local icon, color = require('nvim-web-devicons').get_icon_color(tail, ext)
-  if icon == nil then
-    icon = ''
-  end
-  return { icon, hl = { fg = color } }
+  local icon = require('nvim-web-devicons').get_icon_color(tail, ext)
+  return icon or ''
 end
 
+---@type fun(bufid:number):string
 M.buf_icon = (function()
   if pcall(require, 'mini.icons') then
     return get_icon_by_mini

@@ -6,7 +6,7 @@ local api = require('tabby.module.api')
 ---@field tab fun():TabbyTab return tab this window belonged
 ---@field buf fun():TabbyBuf return the buf of this window
 ---@field is_current fun():boolean return if this window is current window
----@field file_icon fun():string? file icon, require devicons
+---@field file_icon fun():string file icon, require devicons
 ---@field buf_name fun():string file name
 
 ---new TabbyWin
