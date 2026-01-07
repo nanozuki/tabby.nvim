@@ -51,3 +51,6 @@ playground/*
 # environment
 .envrc
 .direnv/
+
+# vim generated
+doc/tags

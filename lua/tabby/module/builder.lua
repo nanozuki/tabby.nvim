@@ -43,9 +43,9 @@ end
 ---@param tails fun()[]
 function LineBuilder:add_click(click, heads, tails)
   if vim.fn.has('nvim-0.11.2') == 1 then
-    vim.validate('click', click, 'table', true)
-    vim.validate('click[1]', click[1], 'string', true)
-    vim.validate('click[2]', click[2], 'number', true)
+    vim.validate('click', click, 'table')
+    vim.validate('click[1]', click[1], 'string')
+    vim.validate('click[2]', click[2], 'number')
   else
     vim.validate({
       click = { click, 'table' },

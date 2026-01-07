@@ -172,14 +172,14 @@ function render.layout(lo, text)
   if vim.fn.has('nvim-0.11.2') == 1 then
     vim.validate('lo', lo, 'table')
     vim.validate('text', text, 'string')
-    vim.validate('lo.justify', lo.justify, 'boolean', true)
+    vim.validate('lo.justify', lo.justify, 'string', true)
     vim.validate('lo.min_width', lo.min_width, 'number', true)
     vim.validate('lo.max_width', lo.max_width, 'number', true)
   else
     vim.validate({
       lo = { lo, 'table' },
       text = { text, 'string' },
-      ['lo.justify'] = { lo.justify, 'boolean', true },
+      ['lo.justify'] = { lo.justify, 'string', true },
       ['lo.min_width'] = { lo.min_width, 'number', true },
       ['lo.max_width'] = { lo.max_width, 'number', true },
     })
