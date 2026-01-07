@@ -44,11 +44,17 @@ end
 ---@return string, TabbyRendererContext rendered string and context
 function render.node(node, ctx)
   if ctx ~= nil then
-    vim.validate({
-      node = { node, { 'string', 'number', 'table' }, true },
-      ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
-      ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
-    })
+    if vim.fn.has('nvim-0.11.2') == 1 then
+      vim.validate('node', node, { 'string', 'number', 'table' }, true)
+      vim.validate('ctx.current_hl', ctx.current_hl, { 'string', 'table' }, true)
+      vim.validate('ctx.parent_hl', ctx.parent_hl, { 'string', 'table' }, true)
+    else
+      vim.validate({
+        node = { node, { 'string', 'number', 'table' }, true },
+        ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
+        ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
+      })
+    end
   end
   ctx = ctx or {}
   if type(node) == 'nil' then
@@ -80,12 +86,19 @@ end
 ---@return string, TabbyRendererContext nvim statusline-styled string
 function render.raw_element(el, ctx)
   ctx = ctx or {}
-  vim.validate({
-    el = { el, 'table' },
-    content = { el[1], { 'string', 'number' } },
-    ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
-    ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('el', el, 'table')
+    vim.validate('content', el[1], { 'string', 'number' })
+    vim.validate('ctx.current_hl', ctx.current_hl, { 'string', 'table' }, true)
+    vim.validate('ctx.parent_hl', ctx.parent_hl, { 'string', 'table' }, true)
+  else
+    vim.validate({
+      el = { el, 'table' },
+      content = { el[1], { 'string', 'number' } },
+      ['ctx.current_hl'] = { ctx.current_hl, { 'string', 'table' }, true },
+      ['ctx.parent_hl'] = { ctx.parent_hl, { 'string', 'table' }, true },
+    })
+  end
   local text = tostring(el[1])
   if el.click ~= nil then
     text = render.click_handler(el.click, text)
@@ -132,10 +145,15 @@ end
 ---@param text string
 ---@return string
 function render.highlight(hl, text)
-  vim.validate({
-    hl = { hl, { 'string', 'table' } },
-    text = { text, 'string' },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('hl', hl, { 'string', 'table' })
+    vim.validate('text', text, 'string')
+  else
+    vim.validate({
+      hl = { hl, { 'string', 'table' } },
+      text = { text, 'string' },
+    })
+  end
   ---@type string
   local group
   if type(hl) == 'string' then
@@ -151,13 +169,21 @@ end
 ---@param text string
 ---@return string
 function render.layout(lo, text)
-  vim.validate({
-    lo = { lo, 'table' },
-    text = { text, 'string' },
-    ['lo.justify'] = { lo.justify, 'boolean', true },
-    ['lo.min_width'] = { lo.min_width, 'number', true },
-    ['lo.max_width'] = { lo.max_width, 'number', true },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('lo', lo, 'table')
+    vim.validate('text', text, 'string')
+    vim.validate('lo.justify', lo.justify, 'boolean', true)
+    vim.validate('lo.min_width', lo.min_width, 'number', true)
+    vim.validate('lo.max_width', lo.max_width, 'number', true)
+  else
+    vim.validate({
+      lo = { lo, 'table' },
+      text = { text, 'string' },
+      ['lo.justify'] = { lo.justify, 'boolean', true },
+      ['lo.min_width'] = { lo.min_width, 'number', true },
+      ['lo.max_width'] = { lo.max_width, 'number', true },
+    })
+  end
   if (lo.max_width or 0 == 0) and (lo.min_width or 0 == 0) then
     return text
   end
@@ -181,12 +207,19 @@ end
 ---@param text string
 ---@return string
 function render.click_handler(click, text)
-  vim.validate({
-    click = { click, 'table' },
-    ['click[1]'] = { click[1], 'string' },
-    ['click[2]'] = { click[2], 'number' },
-    text = { text, 'string' },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('click', click, 'table')
+    vim.validate('click[1]', click[1], 'string')
+    vim.validate('click[2]', click[2], 'number')
+    vim.validate('text', text, 'string')
+  else
+    vim.validate({
+      click = { click, 'table' },
+      ['click[1]'] = { click[1], 'string' },
+      ['click[2]'] = { click[2], 'number' },
+      text = { text, 'string' },
+    })
+  end
   local prefix, suffix
   if click[1] == 'to_tab' then
     local number = vim.api.nvim_tabpage_get_number(click[2])

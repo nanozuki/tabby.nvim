@@ -72,11 +72,17 @@ vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
 ---@param hl TabbyHighlightObject
 ---@return string highlight group name
 function highlight.register(hl)
-  vim.validate({
-    fg = { hl.fg, { 'string', 'number' }, true },
-    bg = { hl.bg, { 'string', 'number' }, true },
-    style = { hl.style, 'string', true },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('fg', hl.fg, { 'string', 'number' }, true)
+    vim.validate('bg', hl.bg, { 'string', 'number' }, true)
+    vim.validate('style', hl.style, 'string', true)
+  else
+    vim.validate({
+      fg = { hl.fg, { 'string', 'number' }, true },
+      bg = { hl.bg, { 'string', 'number' }, true },
+      style = { hl.style, 'string', true },
+    })
+  end
 
   local groups = { 'TabbyHL', hl.fg or 'NONE', hl.bg or 'NONE', hl.style or 'NONE' }
   local group = string.gsub(table.concat(groups, '_'), '#', '')

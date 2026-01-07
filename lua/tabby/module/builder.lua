@@ -42,11 +42,17 @@ end
 ---@param heads fun()[]
 ---@param tails fun()[]
 function LineBuilder:add_click(click, heads, tails)
-  vim.validate({
-    click = { click, 'table' },
-    ['click[1]'] = { click[1], 'string' },
-    ['click[2]'] = { click[2], 'number' },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('click', click, 'table', true)
+    vim.validate('click[1]', click[1], 'string', true)
+    vim.validate('click[2]', click[2], 'number', true)
+  else
+    vim.validate({
+      click = { click, 'table' },
+      ['click[1]'] = { click[1], 'string' },
+      ['click[2]'] = { click[2], 'number' },
+    })
+  end
   if click[1] == 'to_tab' then
     local number = vim.api.nvim_tabpage_get_number(click[2])
     heads[#heads + 1] = self:lazy_add(string.format('%%%dT', number))
@@ -70,12 +76,19 @@ end
 ---@param heads fun()[]
 ---@param tails fun()[]
 function LineBuilder:add_layout(lo, heads, tails)
-  vim.validate({
-    lo = { lo, 'table' },
-    ['lo.justify'] = { lo.justify, 'string', true },
-    ['lo.min_width'] = { lo.min_width, 'number', true },
-    ['lo.max_width'] = { lo.max_width, 'number', true },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('lo', lo, 'table')
+    vim.validate('lo.justify', lo.justify, 'string', true)
+    vim.validate('lo.min_width', lo.min_width, 'number', true)
+    vim.validate('lo.max_width', lo.max_width, 'number', true)
+  else
+    vim.validate({
+      lo = { lo, 'table' },
+      ['lo.justify'] = { lo.justify, 'string', true },
+      ['lo.min_width'] = { lo.min_width, 'number', true },
+      ['lo.max_width'] = { lo.max_width, 'number', true },
+    })
+  end
   -- text is: %-{min_width}.{maxwid}(<string>%)
   local head = ((lo.justify or 'left') == 'right') and '%' or '%-'
   local width = ''
@@ -89,9 +102,13 @@ function LineBuilder:add_layout(lo, heads, tails)
 end
 
 local function parse_highlight(hl)
-  vim.validate({
-    hl = { hl, { 'string', 'table' } },
-  })
+  if vim.fn.has('nvim-0.11.2') == 1 then
+    vim.validate('hl', hl, { 'string', 'table' })
+  else
+    vim.validate({
+      hl = { hl, { 'string', 'table' } },
+    })
+  end
   local group ---@type string
   if type(hl) == 'string' then
     group = hl
